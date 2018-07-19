@@ -6,9 +6,11 @@
 
     <StackLayout>
         <!-- Place new controls here -->
-    	<Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
+    	<Button Text="Scan for Devices" 
+                x:Name="scanButton"
+                Clicked="onScanClicked"
+                HorizontalOptions="CenterAndExpand"
+                VerticalOptions="Start" />
     </StackLayout>
 
 </ContentPage>

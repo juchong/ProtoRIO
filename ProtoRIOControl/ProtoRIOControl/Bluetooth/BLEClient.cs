@@ -19,12 +19,12 @@ namespace ProtoRIO.Bluetooth {
 
         #region Properties
         protected BLEDelegate Delegate { get; set; }
-        protected List<string> Services { get; set; }
-        protected List<string> Characteristics { get; set; }
-        protected List<string> Descriptors { get; set; }
-        protected List<string> ScanServices { get; set; }
-        protected bool IsScanning { get; set; }
-        protected bool IsConnected { get; set; }
+        protected List<string> Services = new List<string>();
+        protected List<string> Characteristics = new List<string>();
+        protected List<string> Descriptors = new List<string>();
+        protected List<string> ScanServices = new List<string>();
+        protected bool IsScanning = false;
+        protected bool IsConnected = false;
         #endregion
         #region Client Control
         public abstract void ScanForService(string service, bool scanFor = true);
@@ -49,13 +49,13 @@ namespace ProtoRIO.Bluetooth {
         /// <summary>
         /// Create the apropriate BLEClient based on the targeted platform
         /// </summary>
-        public static BLEClient Create() {
+        public static BLEClient Create(BLEDelegate bleDelegate) {
 #if __ANDROID__
-            return new AndroidBLEClient();
+            return new ProtoRIOControl.Droid.Bluetooth.AndroidBLEClient(bleDelegate);
 #elif __IOS__
-            return new IOSBLEClient();
+            return new IOSBLEClient(bleDelegate);
 #else // UWP
-            return new UWPBLEClient();
+            return new UWPBLEClient(bleDelegate);
 #endif
         }
     }

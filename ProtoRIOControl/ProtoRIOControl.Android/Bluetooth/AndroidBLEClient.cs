@@ -16,7 +16,7 @@ using Java.Util;
 using ProtoRIO.Bluetooth;
 
 namespace ProtoRIOControl.Droid.Bluetooth {
-    class AndroidBLEClient : BLEClient {
+    public class AndroidBLEClient : BLEClient {
 
         // Platform Specific Objects
         private List<BluetoothGattService> serviceObjects = new List<BluetoothGattService>();
