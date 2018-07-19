@@ -51,10 +51,71 @@ namespace ProtoRIOControl.iOS.Bluetooth {
 
         public IOSBLEClient(BLEDelegate bleDelegate) {
             cmDelegate = new MyCentralmanagerDelegate(this);
+            peripheralDelegate = new MyCBPeripheralDelegate(this);
             Delegate = bleDelegate;
             CBCentralInitOptions opts = new CBCentralInitOptions();
             opts.ShowPowerAlert = false;
             centralManager = new CBCentralManager(cmDelegate, null, opts);
+        }
+
+        public override void ScanForService(string service, bool scanFor = true) {
+            throw new NotImplementedException();
+        }
+
+        public override BtError CheckBluetooth() {
+            throw new NotImplementedException();
+        }
+
+        public override void RequestEnableBt() {
+            throw new NotImplementedException();
+        }
+
+        public override BtError ScanForDevices() {
+            throw new NotImplementedException();
+        }
+
+        public override void StopScanning() {
+            throw new NotImplementedException();
+        }
+
+        public override void ConnectToDevice(string deviceAddress) {
+            throw new NotImplementedException();
+        }
+
+        public override void Disconnect() {
+            throw new NotImplementedException();
+        }
+
+        public override void SubscribeToCharacteristic(string characteristic, bool subscribe = true) {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteCharacteristic(string characteristic, byte[] data) {
+            throw new NotImplementedException();
+        }
+
+        public override void ReadCharacteristic(string characteristic) {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteDescriptor(string descriptor, byte[] data) {
+            throw new NotImplementedException();
+        }
+
+        public override void ReadDescriptor(string descriptor) {
+            throw new NotImplementedException();
+        }
+
+        public override bool HasService(string service) {
+            throw new NotImplementedException();
+        }
+
+        public override bool HasCharacteristic(string characteristic) {
+            throw new NotImplementedException();
+        }
+
+        public override bool HasDescriptor(string descriptor) {
+            throw new NotImplementedException();
         }
 
         private MyCentralmanagerDelegate cmDelegate;
@@ -95,6 +156,19 @@ namespace ProtoRIOControl.iOS.Bluetooth {
                 }
                 client.Delegate.OnDeviceDiscovered(address: peripheral.Identifier.AsString().ToUpper(), name: peripheral.Name, rssi: RSSI.Int32Value);
             }
+        }
+
+        /*
+         * Get a desc/char/service from a UUID
+         */
+        private BLEDescriptor getDescriptor(CBUUID uuid) {
+            return descriptorObjects.FirstOrDefault((item) => item.UUID.Equals(uuid));
+        }
+        private BLECharacteristic getCharacteristic(CBUUID uuid) {
+            return characteristicObjects.FirstOrDefault((item) => item.UUID.Equals(uuid));
+        }
+        private CBService getService(CBUUID uuid) {
+            return serviceObjects.FirstOrDefault((item) => item.UUID.Equals(uuid));
         }
 
         /**
@@ -189,6 +263,7 @@ namespace ProtoRIOControl.iOS.Bluetooth {
                 client.Delegate.OnCharacteristicWrite(client.expand(characteristic.UUID.ToString()).ToUpper(), error == null, characteristic.Value.ToArray());
             }
 
+
             public override void WroteDescriptorValue(CBPeripheral peripheral, CBDescriptor descriptor, NSError error) {
                 client.Delegate.OnDescriptorWrite(client.expand(descriptor.UUID.ToString()).ToUpper(), error == null, value: ((NSData)descriptor.Value).ToArray());
             }
@@ -202,5 +277,6 @@ namespace ProtoRIOControl.iOS.Bluetooth {
                 Delegate.OnServicesDiscovered();
             }
         }
+
     }
 }
