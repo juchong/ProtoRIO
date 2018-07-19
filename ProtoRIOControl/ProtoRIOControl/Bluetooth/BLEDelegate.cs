@@ -6,9 +6,9 @@ namespace ProtoRIO.Bluetooth {
     public interface BLEDelegate {
 
         // Connection events
-        void OnDeviceDiscovered(string address, string name);
-        void OnConnectToDevice(string address, bool success);
-        void OnDisconnectFromDevice(string address);
+        void OnDeviceDiscovered(string address, string name, int rssi);
+        void OnConnectToDevice(string address, string name, bool success);
+        void OnDisconnectFromDevice(string address, string name);
         void OnServicesDiscovered();
 
         // Data events
