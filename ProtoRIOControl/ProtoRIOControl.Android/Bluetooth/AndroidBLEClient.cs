@@ -44,6 +44,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             btManager = (BluetoothManager)MainActivity.MainContext.GetSystemService(Context.BluetoothService);
             btAdapter = btManager.Adapter;
             scanCallback = new MyScanCallback(this);
+            bluetoothGattCallback = new MyGattCallback(this);
             // Watch for Bluetooth Power Changes
             new Thread(new ThreadStart(() => {
                 bool lastState = false;
@@ -86,27 +87,51 @@ namespace ProtoRIOControl.Droid.Bluetooth {
         }
 
         public override void Disconnect() {
-            throw new NotImplementedException();
+            if (IsConnected) {
+                Services.Clear();
+                Characteristics.Clear();
+                Descriptors.Clear();
+                serviceObjects.Clear();
+                characteristicObjects.Clear();
+                descriptorObjects.Clear();
+                gattConnection?.Disconnect();
+                gattConnection = null;
+                IsConnected = false;
+            }
         }
 
         public override bool HasCharacteristic(string characteristic) {
-            throw new NotImplementedException();
+            return Characteristics.Contains(characteristic.ToUpper());
         }
 
         public override bool HasDescriptor(string descriptor) {
-            throw new NotImplementedException();
+            return Descriptors.Contains(descriptor.ToUpper());
         }
 
         public override bool HasService(string service) {
-            throw new NotImplementedException();
+            return Services.Contains(service.ToUpper());
         }
 
         public override void ReadCharacteristic(string characteristic) {
-            throw new NotImplementedException();
+            var c = getCharacteristic(UUID.FromString(characteristic));
+            if (c != null) {
+                gattConnection.ReadCharacteristic(c);
+            } else {
+                mainThread.Post(() => {
+                    Delegate.OnCharacteristicRead(characteristic.ToUpper(), false, null);
+                });
+            }
         }
 
         public override void ReadDescriptor(string descriptor) {
-            throw new NotImplementedException();
+            var desc = getDescriptor(UUID.FromString(descriptor));
+            if (desc != null) {
+                gattConnection.ReadDescriptor(desc);
+            } else {
+                mainThread.Post(() => {
+                    Delegate.OnDescriptorRead(descriptor.ToUpper(), false, null);
+                });
+            }
         }
 
         public override void RequestEnableBt() {
@@ -160,15 +185,57 @@ namespace ProtoRIOControl.Droid.Bluetooth {
         }
 
         public override void SubscribeToCharacteristic(string characteristic, bool subscribe = true) {
-            throw new NotImplementedException();
+            var c = getCharacteristic(UUID.FromString(characteristic));
+            if (c != null) {
+                gattConnection.SetCharacteristicNotification(c, subscribe);
+                var descriptor = c.GetDescriptor(UUID.FromString("00002902-0000-1000-8000-00805f9b34fb")); // Client characteristic config UUID
+                if (descriptor != null) {
+                    descriptor.SetValue((subscribe ? BluetoothGattDescriptor.EnableNotificationValue : BluetoothGattDescriptor.DisableNotificationValue).ToArray());
+                    gattConnection.WriteDescriptor(descriptor);
+                }
+            }
         }
 
         public override void WriteCharacteristic(string characteristic, byte[] data) {
-            throw new NotImplementedException();
+            var c = getCharacteristic(UUID.FromString(characteristic));
+            if (c != null) {
+                c.SetValue(data);
+                if (gattConnection.WriteCharacteristic(c) != true) {
+                    mainThread.Post(() => {
+                        // If there is no write permission the onCharacteristicWrite BluetoothGattCallback method is never called
+                        Delegate.OnCharacteristicWrite(characteristic.ToUpper(), false, null);
+                    });
+                }
+            } else {
+                mainThread.Post(() => {
+                    Delegate.OnCharacteristicWrite(characteristic.ToUpper(), false, null);
+                });
+            }
         }
 
         public override void WriteDescriptor(string descriptor, byte[] data) {
-            throw new NotImplementedException();
+            var desc = getDescriptor(UUID.FromString(descriptor));
+            if (desc != null) {
+                desc.SetValue(data);
+                gattConnection.WriteDescriptor(desc);
+            } else {
+                mainThread.Post(() => {
+                    Delegate.OnDescriptorWrite(descriptor.ToUpper(), false, null);
+                });
+            }
+        }
+
+        /*
+         * Get a desc/char/service from a UUID
+         */
+        private BluetoothGattDescriptor getDescriptor(UUID uuid) {
+            return descriptorObjects.FirstOrDefault((item) => item.Uuid.Equals(uuid));
+        }
+        private BluetoothGattCharacteristic getCharacteristic(UUID uuid) {
+            return characteristicObjects.FirstOrDefault((item) => item.Uuid.Equals(uuid));
+        }
+        private BluetoothGattService getService(UUID uuid) {
+            return serviceObjects.FirstOrDefault((item) => item.Uuid.Equals(uuid));
         }
 
         // Supoort func to hadle all the mess of enumerating chars and descs
