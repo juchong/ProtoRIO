@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{86057DD6-F04D-4597-8AC9-544335C22D50}</ProjectGuid>
+    <ProjectGuid>{FC15D27A-59B0-4B69-92D3-58A7F2759340}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TemplateGuid>{c9e5eea5-ca05-42a1-839b-61506e0a37df}</TemplateGuid>
     <OutputType>Library</OutputType>
@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bluetooth\AndroidBLEClient.cs" />
+    <Compile Include="Localization\Localize.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,6 +92,11 @@
     <Folder Include="Resources\drawable-xxxhdpi\" />
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
-  <Import Project="..\ProtoRIOControl\ProtoRIOControl.projitems" Label="Shared" />
+  <ItemGroup>
+    <ProjectReference Include="..\ProtoRIOControl\ProtoRIOControl.csproj">
+      <Project>{53FE7524-E550-4FBF-82CC-D5514EA2F1F0}</Project>
+      <Name>ProtoRIOControl</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

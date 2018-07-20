@@ -46,17 +46,9 @@ namespace ProtoRIO.Bluetooth {
         public abstract bool HasDescriptor(string descriptor);
         #endregion
 
-        /// <summary>
-        /// Create the apropriate BLEClient based on the targeted platform
-        /// </summary>
-        public static BLEClient Create(BLEDelegate bleDelegate) {
-#if __ANDROID__
-            return new ProtoRIOControl.Droid.Bluetooth.AndroidBLEClient(bleDelegate);
-#elif __IOS__
-            return new IOSBLEClient(bleDelegate);
-#else // UWP
-            return new UWPBLEClient(bleDelegate);
-#endif
-        }
+        public static BLEClientBuilder Builder;
+    }
+    public interface BLEClientBuilder {
+        BLEClient Create(BLEDelegate bleDelegate);
     }
 }

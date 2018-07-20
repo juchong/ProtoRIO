@@ -2,15 +2,14 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:ProtoRIOControl"
-             x:Class="ProtoRIOControl.MainPage">
+             x:Class="ProtoRIOControl.MainPage"
+             xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl">
 
     <StackLayout>
         <!-- Place new controls here -->
-    	<Button Text="Scan for Devices" 
-                x:Name="scanButton"
-                Clicked="onScanClicked"
-                HorizontalOptions="CenterAndExpand"
-                VerticalOptions="Start" />
+        <Label Text="{lang:Translate CenterText}" 
+           HorizontalOptions="Center"
+           VerticalOptions="CenterAndExpand" />
     </StackLayout>
 
 </ContentPage>

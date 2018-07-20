@@ -9,6 +9,11 @@ using UIKit;
 using CoreBluetooth;
 
 namespace ProtoRIOControl.iOS.Bluetooth {
+    public class IOSBLEClientBuilder : BLEClientBuilder {
+        public BLEClient Create(BLEDelegate bleDelegate) {
+            return new IOSBLEClient(bleDelegate);
+        }
+    }
     class BLEDescriptor : CBMutableDescriptor {
         public NSObject dynamicValue;
         public BLEDescriptor(CBUUID UUID, NSObject value): base(UUID, null) {

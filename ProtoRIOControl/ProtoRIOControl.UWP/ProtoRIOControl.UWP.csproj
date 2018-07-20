@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{E63A09DB-FA49-464E-A441-14C8EBFBE5A2}</ProjectGuid>
+    <ProjectGuid>{EE5EC391-B4A6-4283-B39C-9C80A0C07F33}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ProtoRIOControl.UWP</RootNamespace>
@@ -146,7 +146,12 @@
     <PackageReference Include="Xamarin.Forms" Version="3.0.0.561731" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1" />
   </ItemGroup>
-  <Import Project="..\ProtoRIOControl\ProtoRIOControl.projitems" Label="Shared" />
+  <ItemGroup>
+    <ProjectReference Include="..\ProtoRIOControl\ProtoRIOControl.csproj">
+      <Project>{53FE7524-E550-4FBF-82CC-D5514EA2F1F0}</Project>
+      <Name>ProtoRIOControl</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

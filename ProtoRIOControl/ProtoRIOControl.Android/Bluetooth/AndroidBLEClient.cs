@@ -16,6 +16,12 @@ using Java.Util;
 using ProtoRIO.Bluetooth;
 
 namespace ProtoRIOControl.Droid.Bluetooth {
+    public class AndroidBLEClientBuilder : BLEClientBuilder {
+        public BLEClient Create(BLEDelegate bleDelegate) {
+            return new AndroidBLEClient(bleDelegate);
+        }
+    }
+
     public class AndroidBLEClient : BLEClient {
 
         // Platform Specific Objects

@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="d4c2d2a4-89ce-46ac-8979-481a5d728268"
-    Publisher="CN=6a0e46d8-3fde-43e6-9a66-1e33c5de531e"
+    Name="11f7726e-d764-417f-8a4f-d625cadabfcb"
+    Publisher="CN=6174973c-bd55-455d-a34b-415c12f52762"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="ec0cc741-fd3e-485c-81be-68815c480690" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>ProtoRIOControl.UWP</DisplayName>
-    <PublisherDisplayName>6a0e46d8-3fde-43e6-9a66-1e33c5de531e</PublisherDisplayName>
+    <PublisherDisplayName>6174973c-bd55-455d-a34b-415c12f52762</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

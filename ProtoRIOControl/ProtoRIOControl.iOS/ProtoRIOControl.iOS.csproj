@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{8BEEF00F-855A-48F1-B1DA-C559F3C0237D}</ProjectGuid>
+    <ProjectGuid>{2CD0627E-34DF-421A-80D0-F8A0AC2E8CDB}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TemplateGuid>{6143fdea-f3c2-4a09-aafa-6e230626515e}</TemplateGuid>
     <OutputType>Exe</OutputType>
@@ -90,6 +90,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Bluetooth\IOSBLEClient.cs" />
+    <Compile Include="Localization\Localize.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <None Include="Entitlements.plist" />
@@ -151,5 +152,10 @@
     <PackageReference Include="Xamarin.Forms" Version="3.0.0.561731" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
-  <Import Project="..\ProtoRIOControl\ProtoRIOControl.projitems" Label="Shared" />
+  <ItemGroup>
+    <ProjectReference Include="..\ProtoRIOControl\ProtoRIOControl.csproj">
+      <Project>{53FE7524-E550-4FBF-82CC-D5514EA2F1F0}</Project>
+      <Name>ProtoRIOControl</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
