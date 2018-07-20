@@ -61,11 +61,11 @@ namespace ProtoRIOControl.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This is English.
+        ///   Looks up a localized string similar to Not Connected.
         /// </summary>
-        public static string CenterText {
+        public static string StatusNotConnected {
             get {
-                return ResourceManager.GetString("CenterText", resourceCulture);
+                return ResourceManager.GetString("StatusNotConnected", resourceCulture);
             }
         }
     }

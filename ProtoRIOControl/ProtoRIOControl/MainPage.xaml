@@ -5,11 +5,16 @@
              x:Class="ProtoRIOControl.MainPage"
              xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl">
 
-    <StackLayout>
-        <!-- Place new controls here -->
-        <Label Text="{lang:Translate CenterText}" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
-    </StackLayout>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Label x:Name="statusLabel"
+               TextColor="Red"
+               Text="{lang:Translate StatusNotConnected}"
+               Grid.Row="2"/>
+    </Grid>
 
 </ContentPage>
