@@ -61,6 +61,15 @@ namespace ProtoRIOControl.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connect.
+        /// </summary>
+        public static string ConnectText {
+            get {
+                return ResourceManager.GetString("ConnectText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not Connected.
         /// </summary>
         public static string StatusNotConnected {
