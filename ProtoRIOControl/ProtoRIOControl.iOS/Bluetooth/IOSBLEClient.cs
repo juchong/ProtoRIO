@@ -59,63 +59,184 @@ namespace ProtoRIOControl.iOS.Bluetooth {
         }
 
         public override void ScanForService(string service, bool scanFor = true) {
-            throw new NotImplementedException();
+            if (scanFor && !ScanServices.Contains(service.ToUpper())) {
+                ScanServices.Add(service.ToUpper());
+            } else if (!scanFor && ScanServices.Contains(service.ToUpper())) {
+                ScanServices.RemoveAt(ScanServices.IndexOf(service.ToUpper()));
+            }
         }
 
         public override BtError CheckBluetooth() {
-            throw new NotImplementedException();
+            CBCentralManagerState error = centralManager.State;
+            switch(error){
+                case CBCentralManagerState.PoweredOn:
+                    return BtError.None;
+                case CBCentralManagerState.PoweredOff:
+                    return BtError.Disabled;
+                case CBCentralManagerState.Unsupported:
+                    return BtError.NoBluetooth;
+                default:
+                    return BtError.Unknown;
+                    
+            }
         }
 
         public override void RequestEnableBt() {
-            throw new NotImplementedException();
+            var vc = UIApplication.SharedApplication.KeyWindow.RootViewController;
+            var alert = UIAlertController.Create(REQUEST_BT_TITLE, REQUEST_BT_MESSAGE, UIAlertControllerStyle.Alert);
+            var cancelAction = UIAlertAction.Create(REQUEST_BT_DENY, UIAlertActionStyle.Cancel, (action) => {
+                alert.DismissViewController(true, null);
+            });
+            var settingsAction = UIAlertAction.Create(REQUEST_BT_CONFIRM, UIAlertActionStyle.Default, (Action) => {
+                var btSettings = new NSUrl("App-Prefs:root=Bluetooth");
+                if (btSettings != null) {
+                    if (UIApplication.SharedApplication.CanOpenUrl(btSettings)) {
+                        if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0)) {
+                            UIApplication.SharedApplication.OpenUrl(btSettings, new UIApplicationOpenUrlOptions(), null);
+                        } else {
+                            UIApplication.SharedApplication.OpenUrl(btSettings);
+                        }
+                    }
+                }
+                alert.DismissViewController(true, null);
+            });
+            alert.AddAction(settingsAction);
+            alert.AddAction(cancelAction);
+            vc.PresentViewController(alert, true, null);
         }
 
         public override BtError ScanForDevices() {
-            throw new NotImplementedException();
+            if (!IsScanning) {
+                Services.Clear();
+                Characteristics.Clear();
+                Descriptors.Clear();
+                serviceObjects.Clear();
+                characteristicObjects.Clear();
+                descriptorObjects.Clear();
+                var error = CheckBluetooth();
+                if (error != BtError.None) {
+                        return error;
+                }
+                var uuids = new List<CBUUID>();
+                foreach(var s in ScanServices){
+                    uuids.Add(CBUUID.FromString(s));
+                }
+                var options = new PeripheralScanningOptions();
+                options.AllowDuplicatesKey = true;
+                centralManager.ScanForPeripherals(uuids.ToArray(), options);
+                IsScanning = true;
+                return BtError.None;
+            }else{
+                return BtError.AlreadyRunning;
+            }
         }
 
         public override void StopScanning() {
-            throw new NotImplementedException();
+            if (IsScanning) {
+                centralManager.StopScan();
+                IsScanning = false;
+            }
         }
 
         public override void ConnectToDevice(string deviceAddress) {
-            throw new NotImplementedException();
+            if (connectedPeripheral != null) {
+                Disconnect();
+            }
+            var dev = devices.FirstOrDefault((item) => item.Identifier.ToString().ToUpper().Equals(deviceAddress.ToUpper()));
+            if (dev == null) {
+                return;
+            }
+            var options = new PeripheralConnectionOptions();
+            options.NotifyOnConnection = true;
+            options.NotifyOnDisconnection = true;
+            options.NotifyOnNotification = true;
+
+            centralManager.ConnectPeripheral(dev, options);
         }
 
         public override void Disconnect() {
-            throw new NotImplementedException();
+            if (IsConnected) {
+                centralManager.CancelPeripheralConnection(connectedPeripheral);
+                Services.Clear();
+                Characteristics.Clear();
+                Descriptors.Clear();
+                serviceObjects.Clear();
+                characteristicObjects.Clear();
+                descriptorObjects.Clear();
+                connectedPeripheral = null;
+                IsConnected = false;
+            }
         }
 
         public override void SubscribeToCharacteristic(string characteristic, bool subscribe = true) {
-            throw new NotImplementedException();
+            var c = getCharacteristic(CBUUID.FromString(characteristic));
+            if (c != null && connectedPeripheral != null) {
+                connectedPeripheral.SetNotifyValue(subscribe, c);
+            }
         }
 
         public override void WriteCharacteristic(string characteristic, byte[] data) {
-            throw new NotImplementedException();
+            var c = getCharacteristic(CBUUID.FromString(characteristic));
+            if (c != null && connectedPeripheral != null) {
+                connectedPeripheral.WriteValue(NSData.FromArray(data), c, CBCharacteristicWriteType.WithResponse);
+            }
         }
 
         public override void ReadCharacteristic(string characteristic) {
-            throw new NotImplementedException();
+            var c = getCharacteristic(CBUUID.FromString(characteristic));
+            if (c != null && connectedPeripheral != null) {
+                connectedPeripheral.ReadValue(c);
+            }
         }
 
         public override void WriteDescriptor(string descriptor, byte[] data) {
-            throw new NotImplementedException();
+            var desc = getDescriptor(CBUUID.FromString(descriptor));
+            if (desc != null && connectedPeripheral != null) {
+                connectedPeripheral.WriteValue(NSData.FromArray(data), desc);
+            }
         }
 
         public override void ReadDescriptor(string descriptor) {
-            throw new NotImplementedException();
+            var desc = getDescriptor(CBUUID.FromString(descriptor));
+            if (desc != null && connectedPeripheral != null) {
+                connectedPeripheral.ReadValue(desc);
+            }
         }
 
         public override bool HasService(string service) {
-            throw new NotImplementedException();
+            return Services.Contains(service.ToUpper());
         }
 
         public override bool HasCharacteristic(string characteristic) {
-            throw new NotImplementedException();
+            return Characteristics.Contains(characteristic.ToUpper());
         }
 
         public override bool HasDescriptor(string descriptor) {
-            throw new NotImplementedException();
+            return Descriptors.Contains(descriptor.ToUpper());
+        }
+
+        /*
+         * Get a desc/char/service from a UUID
+         */
+        private BLEDescriptor getDescriptor(CBUUID uuid) {
+            return descriptorObjects.FirstOrDefault((item) => item.UUID.Equals(uuid));
+        }
+        private BLECharacteristic getCharacteristic(CBUUID uuid) {
+            return characteristicObjects.FirstOrDefault((item) => item.UUID.Equals(uuid));
+        }
+        private CBService getService(CBUUID uuid) {
+            return serviceObjects.FirstOrDefault((item) => item.UUID.Equals(uuid));
+        }
+
+        /**
+         Expand UUID if it is only 4 chars (stick it into BLE Base UUID)
+        */
+        private string expand(string uuidString){
+            if(uuidString.Length == 4){
+                // Add the BLE Base UUID
+                return "0000" + uuidString + "-0000-1000-8000-00805F9B34FB";
+            }
+            return uuidString;
         }
 
         private MyCentralmanagerDelegate cmDelegate;
@@ -156,30 +277,6 @@ namespace ProtoRIOControl.iOS.Bluetooth {
                 }
                 client.Delegate.OnDeviceDiscovered(address: peripheral.Identifier.AsString().ToUpper(), name: peripheral.Name, rssi: RSSI.Int32Value);
             }
-        }
-
-        /*
-         * Get a desc/char/service from a UUID
-         */
-        private BLEDescriptor getDescriptor(CBUUID uuid) {
-            return descriptorObjects.FirstOrDefault((item) => item.UUID.Equals(uuid));
-        }
-        private BLECharacteristic getCharacteristic(CBUUID uuid) {
-            return characteristicObjects.FirstOrDefault((item) => item.UUID.Equals(uuid));
-        }
-        private CBService getService(CBUUID uuid) {
-            return serviceObjects.FirstOrDefault((item) => item.UUID.Equals(uuid));
-        }
-
-        /**
-         Expand UUID if it is only 4 chars (stick it into BLE Base UUID)
-        */
-        private string expand(string uuidString){
-            if(uuidString.Length == 4){
-                // Add the BLE Base UUID
-                return "0000" + uuidString + "-0000-1000-8000-00805F9B34FB";
-            }
-            return uuidString;
         }
 
         // Keep track of how many responses there should be and have been for discovering chars/incServices/descs
@@ -277,6 +374,8 @@ namespace ProtoRIOControl.iOS.Bluetooth {
                 Delegate.OnServicesDiscovered();
             }
         }
+
+
 
     }
 }
