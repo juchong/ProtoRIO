@@ -61,6 +61,15 @@ namespace ProtoRIOControl.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ProtoRIO Control.
+        /// </summary>
+        public static string AppName {
+            get {
+                return ResourceManager.GetString("AppName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connect.
         /// </summary>
         public static string ConnectText {
@@ -70,11 +79,47 @@ namespace ProtoRIOControl.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pneumatics.
+        /// </summary>
+        public static string PneumaticsTab {
+            get {
+                return ResourceManager.GetString("PneumaticsTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PWM.
+        /// </summary>
+        public static string PWMTab {
+            get {
+                return ResourceManager.GetString("PWMTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sensors.
+        /// </summary>
+        public static string SensorsTab {
+            get {
+                return ResourceManager.GetString("SensorsTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not Connected.
         /// </summary>
         public static string StatusNotConnected {
             get {
                 return ResourceManager.GetString("StatusNotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        public static string StatusTab {
+            get {
+                return ResourceManager.GetString("StatusTab", resourceCulture);
             }
         }
     }

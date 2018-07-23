@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace ProtoRIOControl {
-    public partial class MainPage : ContentPage, BLEDelegate{
+    public partial class MainPage : TabbedPage, BLEDelegate{
 
         BLEClient client;
 

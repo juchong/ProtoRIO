@@ -120,7 +120,22 @@
   <data name="ConnectText" xml:space="preserve">
     <value>Connect</value>
   </data>
+  <data name="PneumaticsTab" xml:space="preserve">
+    <value>Pneumatics</value>
+  </data>
+  <data name="PWMTab" xml:space="preserve">
+    <value>PWM</value>
+  </data>
+  <data name="SensorsTab" xml:space="preserve">
+    <value>Sensors</value>
+  </data>
   <data name="StatusNotConnected" xml:space="preserve">
     <value>Not Connected</value>
+  </data>
+  <data name="AppName" xml:space="preserve">
+    <value>ProtoRIO Control</value>
+  </data>
+  <data name="StatusTab" xml:space="preserve">
+    <value>Status</value>
   </data>
 </root>

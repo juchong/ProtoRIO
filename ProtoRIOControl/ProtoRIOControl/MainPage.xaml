@@ -1,25 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:ProtoRIOControl"
              x:Class="ProtoRIOControl.MainPage"
-             xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Name="Connect" 
-                     Text="{lang:Translate ConnectText}" 
-                     Icon=""/>
-    </ContentPage.ToolbarItems>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="auto" />
-        </Grid.RowDefinitions>
-        <Label x:Name="statusLabel"
-               FontSize="Large"
-               TextColor="Red"
-               Text="{lang:Translate StatusNotConnected}"
-               Grid.Row="2"/>
-    </Grid>
+             xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl"
+             Title="{lang:Translate AppName}">
 
-</ContentPage>
+    <local:StatusPage />
+    <local:PWMPage />
+    <local:SensorsPage />
+    <local:PneumaticsPage />
+</TabbedPage>
