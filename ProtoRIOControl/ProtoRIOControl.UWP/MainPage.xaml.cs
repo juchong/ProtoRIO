@@ -13,12 +13,9 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace ProtoRIOControl.UWP
-{
-    public sealed partial class MainPage
-    {
-        public MainPage()
-        {
+namespace ProtoRIOControl.UWP {
+    public sealed partial class MainPage {
+        public MainPage() {
             this.InitializeComponent();
 
             LoadApplication(new ProtoRIOControl.App());

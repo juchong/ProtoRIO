@@ -18,6 +18,11 @@ using ProtoRIO.Bluetooth;
 //       This is required to conform to the BLEClient interface.
 
 namespace ProtoRIOControl.UWP.Bluetooth {
+    public class UWPBLEClientBuilder : BLEClientBuilder {
+        public BLEClient Create(BLEDelegate bleDelegate) {
+            return new UWPBLEClient(bleDelegate);
+        }
+    }
     public class UWPBLEClient : BLEClient{
         #region Variables and Properties
 
