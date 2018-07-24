@@ -6,7 +6,7 @@
              xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl"
              Title="{lang:Translate AppName}">
     <TabbedPage.ToolbarItems>
-        <ToolbarItem Name="ConnectOption" Clicked="OnConnectClicked" Text="Connect"/>
+        <ToolbarItem Name="ConnectOption" Clicked="OnConnectClicked" Text="Connect" Icon="bluetooth.png"/>
     </TabbedPage.ToolbarItems>
     <local:StatusPage />
     <local:PWMPage />

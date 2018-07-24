@@ -56,7 +56,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             // Watch for Bluetooth Power Changes
             btCheckThread = new Thread(new ThreadStart(() => {
                 bool lastState = false;
-                while (true) {
+                while (true && btAdapter != null) {
                     bool state = btAdapter.IsEnabled;
                     if (state != lastState) {
                         lastState = state;
@@ -147,7 +147,8 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             var builder = new AlertDialog.Builder(MainActivity.MainContext);
             builder.SetTitle(REQUEST_BT_TITLE).SetMessage(REQUEST_BT_MESSAGE);
             builder.SetPositiveButton(REQUEST_BT_CONFIRM, (src, which) => {
-                btAdapter.Enable();
+                if(btAdapter != null)
+                    btAdapter.Enable();
             });
             builder.SetNegativeButton(REQUEST_BT_DENY, (src, which) => { });
             builder.Create().Show();
@@ -190,7 +191,8 @@ namespace ProtoRIOControl.Droid.Bluetooth {
 
         public override void StopScanning() {
             if (IsScanning) {
-                btAdapter.BluetoothLeScanner.StopScan(scanCallback);
+                if(btAdapter != null)
+                    btAdapter.BluetoothLeScanner.StopScan(scanCallback);
                 IsScanning = false;
             }
         }

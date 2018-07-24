@@ -140,43 +140,33 @@
     <ImageAsset Include="Assets.xcassets\gauge.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\gauge.imageset\gauge.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\gauge.imageset\gauge@2x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\gauge.imageset\gauge@3x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\scan.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\wave.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\scan.imageset\scan.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\scan.imageset\scan@2x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\scan.imageset\scan@3x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\wave.imageset\wave.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\wave.imageset\wave@2x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\wave.imageset\wave@3x.png">
-      <Visible>false</Visible>
-    </ImageAsset>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\info.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\scan.imageset\scan1x.png" />
+    <ImageAsset Include="Assets.xcassets\scan.imageset\scan2x.png" />
+    <ImageAsset Include="Assets.xcassets\scan.imageset\scan3x.png" />
+    <ImageAsset Include="Assets.xcassets\wave.imageset\wave1x.png" />
+    <ImageAsset Include="Assets.xcassets\wave.imageset\wave2x.png" />
+    <ImageAsset Include="Assets.xcassets\wave.imageset\wave3x.png" />
+    <ImageAsset Include="Assets.xcassets\info.imageset\info1x.png" />
+    <ImageAsset Include="Assets.xcassets\info.imageset\info2x.png" />
+    <ImageAsset Include="Assets.xcassets\info.imageset\info3x.png" />
+    <ImageAsset Include="Assets.xcassets\gauge.imageset\gauge1x.png" />
+    <ImageAsset Include="Assets.xcassets\gauge.imageset\gauge2x.png" />
+    <ImageAsset Include="Assets.xcassets\gauge.imageset\gauge3x.png" />
+    <ImageAsset Include="Assets.xcassets\bluetooth.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\bluetooth.imageset\bluetooth1x.png" />
+    <ImageAsset Include="Assets.xcassets\bluetooth.imageset\bluetooth2x.png" />
+    <ImageAsset Include="Assets.xcassets\bluetooth.imageset\bluetooth3x.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -190,8 +180,12 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\ProtoRIOControl\ProtoRIOControl.csproj">
-      <Project>{53FE7524-E550-4FBF-82CC-D5514EA2F1F0}</Project>
+      <Project>{5A8D6EF2-D13B-4655-AF05-A0798B1BB089}</Project>
       <Name>ProtoRIOControl</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets.xcassets\info.imageset\" />
+    <Folder Include="Assets.xcassets\bluetooth.imageset\" />
   </ItemGroup>
 </Project>

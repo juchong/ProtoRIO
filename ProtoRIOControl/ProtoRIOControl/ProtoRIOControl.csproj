@@ -34,4 +34,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Images\gauge.png" />
+    <None Remove="Images\scan.png" />
+    <None Remove="Images\wave.png" />
+  </ItemGroup>
 </Project>

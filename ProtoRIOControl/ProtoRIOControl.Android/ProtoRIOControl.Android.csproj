@@ -84,11 +84,21 @@
     <AndroidResource Include="Resources\mipmap-xxhdpi\launcher_foreground.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\Icon.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\launcher_foreground.png" />
+    <AndroidResource Include="Resources\drawable\info.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\info.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\info.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\info.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\info.png" />
+    <AndroidResource Include="Resources\drawable\bluetooth.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\bluetooth.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\bluetooth.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\bluetooth.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\bluetooth.png" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\ProtoRIOControl\ProtoRIOControl.csproj">
-      <Project>{53FE7524-E550-4FBF-82CC-D5514EA2F1F0}</Project>
+      <Project>{5A8D6EF2-D13B-4655-AF05-A0798B1BB089}</Project>
       <Name>ProtoRIOControl</Name>
     </ProjectReference>
   </ItemGroup>
