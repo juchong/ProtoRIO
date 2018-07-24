@@ -29,7 +29,7 @@ namespace ProtoRIOControl {
 
         #region BLEDelegate
         public void OnBluetoothPowerChanged(bool enabled) {
-
+            Debug.WriteLine("BT Status: " + enabled);
         }
 
         public void OnCharacteristicRead(string characteristic, bool success, byte[] value) {
@@ -53,7 +53,7 @@ namespace ProtoRIOControl {
         }
 
         public void OnDeviceDiscovered(string address, string name, int rssi) {
-            if(name.Equals("RN_BLE")){
+            if(name != null && name.Equals("RN_BLE")){
                 Debug.WriteLine("Found BT Module. Connecting...");
                 Debug.WriteLine("Address: " + address);
                 client.ConnectToDevice(address);

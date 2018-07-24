@@ -45,6 +45,8 @@ namespace ProtoRIOControl.Droid.Bluetooth {
         string REQUEST_BT_CONFIRM = "Yes";
         string REQUEST_BT_DENY = "No";
 
+        Thread btCheckThread;
+
         public AndroidBLEClient(BLEDelegate bleDelegate) {
             this.Delegate = bleDelegate;
             btManager = (BluetoothManager)MainActivity.MainContext.GetSystemService(Context.BluetoothService);
@@ -52,7 +54,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             scanCallback = new MyScanCallback(this);
             bluetoothGattCallback = new MyGattCallback(this);
             // Watch for Bluetooth Power Changes
-            new Thread(new ThreadStart(() => {
+            btCheckThread = new Thread(new ThreadStart(() => {
                 bool lastState = false;
                 while (true) {
                     bool state = btAdapter.IsEnabled;
@@ -69,6 +71,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                     Thread.Sleep(100);
                 }
             }));
+            btCheckThread.Start();
         }
 
         public override BtError CheckBluetooth() {
@@ -370,11 +373,10 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             public override void OnConnectionStateChange(BluetoothGatt gatt, GattStatus status, ProfileState newState) {
                 base.OnConnectionStateChange(gatt, status, newState);
                 if (gatt != null) {
-                    System.Diagnostics.Debug.Write("Status " + status);
-                    if (newState == ProfileState.Connected && status == GattStatus.Success) {
+                    if (newState == ProfileState.Connected) {
                         gatt.DiscoverServices();
                         client.mainThread.Post(() => {
-                            client.Delegate.OnConnectToDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name, true);
+                            client.Delegate.OnConnectToDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name, status == GattStatus.Success);
                         });
                         client.IsConnected = true;
                     }
