@@ -152,6 +152,8 @@ namespace ProtoRIOControl.Droid.Bluetooth {
 
         public override BtError ScanForDevices() {
             if (!IsScanning && !IsConnected) {
+                devices.Clear();
+                deviceAddresses.Clear();
                 Services.Clear();
                 Characteristics.Clear();
                 Descriptors.Clear();
@@ -368,23 +370,22 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             public override void OnConnectionStateChange(BluetoothGatt gatt, GattStatus status, ProfileState newState) {
                 base.OnConnectionStateChange(gatt, status, newState);
                 if (gatt != null) {
-                    if (status == GattStatus.Success) {
-                        if (newState == ProfileState.Connected) {
-                            gatt.DiscoverServices();
-                            client.mainThread.Post(() => {
-                                client.Delegate.OnConnectToDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name, true);
-                            });
-                            client.IsConnected = true;
-                        }
-                        if (newState == ProfileState.Disconnected) {
-                            client.Services.Clear();
-                            client.Characteristics.Clear();
-                            client.Descriptors.Clear();
-                            client.mainThread.Post(() => {
-                                client.Delegate.OnDisconnectFromDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name);
-                            });
-                            client.IsConnected = false;
-                        }
+                    System.Diagnostics.Debug.Write("Status " + status);
+                    if (newState == ProfileState.Connected && status == GattStatus.Success) {
+                        gatt.DiscoverServices();
+                        client.mainThread.Post(() => {
+                            client.Delegate.OnConnectToDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name, true);
+                        });
+                        client.IsConnected = true;
+                    }
+                    if (newState == ProfileState.Disconnected) {
+                        client.Services.Clear();
+                        client.Characteristics.Clear();
+                        client.Descriptors.Clear();
+                        client.mainThread.Post(() => {
+                            client.Delegate.OnDisconnectFromDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name);
+                        });
+                        client.IsConnected = false;
                     }
                 }
             }

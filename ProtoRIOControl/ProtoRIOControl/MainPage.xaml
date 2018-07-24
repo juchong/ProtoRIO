@@ -1,11 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:ProtoRIOControl"
              x:Class="ProtoRIOControl.MainPage"
              xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl"
              Title="{lang:Translate AppName}">
-
+    <TabbedPage.ToolbarItems>
+        <ToolbarItem Name="ConnectOption" Clicked="OnConnectClicked" Text="Connect"/>
+    </TabbedPage.ToolbarItems>
     <local:StatusPage />
     <local:PWMPage />
     <local:SensorsPage />

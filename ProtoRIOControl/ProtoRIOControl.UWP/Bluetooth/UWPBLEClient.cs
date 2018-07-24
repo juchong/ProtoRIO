@@ -130,6 +130,8 @@ namespace ProtoRIOControl.UWP.Bluetooth {
 
         private async Task<BtError> _ScanForDevices() {
             if (!IsScanning && !IsConnected) {
+                devices.Clear();
+                deviceAddresses.Clear();
                 Services.Clear();
                 Characteristics.Clear();
                 Descriptors.Clear();

@@ -112,6 +112,8 @@ namespace ProtoRIOControl.iOS.Bluetooth {
 
         public override BtError ScanForDevices() {
             if (!IsScanning) {
+                devices.Clear();
+                deviceAddresses.Clear();
                 Services.Clear();
                 Characteristics.Clear();
                 Descriptors.Clear();
