@@ -138,4 +138,16 @@
   <data name="StatusTab" xml:space="preserve">
     <value>Status</value>
   </data>
+  <data name="EnableBTTitle" xml:space="preserve">
+    <value>Bluetooth Required</value>
+  </data>
+  <data name="EnableBTMessage" xml:space="preserve">
+    <value>Please enable bluetooth in Settings.</value>
+  </data>
+  <data name="EnableBTConfirm" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="EnableBTCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
 </root>

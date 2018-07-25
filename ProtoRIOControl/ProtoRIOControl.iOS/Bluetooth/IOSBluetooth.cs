@@ -9,31 +9,13 @@ using UIKit;
 using CoreBluetooth;
 
 namespace ProtoRIOControl.iOS.Bluetooth {
-    class BLEDescriptor : CBMutableDescriptor {
-        public NSObject dynamicValue;
-        public BLEDescriptor(CBUUID UUID, NSObject value): base(UUID, null) {
-            dynamicValue = value;
-        }
-        public BLEDescriptor(CBDescriptor descriptor) : base(descriptor.UUID, null) {
-            dynamicValue = descriptor.Value;
-        }
-    }
-    class BLECharacteristic : CBMutableCharacteristic {
-        public NSData dynamicValue;
-        public BLECharacteristic(CBUUID UUID, CBCharacteristicProperties properties, NSData value, CBAttributePermissions permissions): base(UUID, properties, null, permissions) {
-            dynamicValue = value;
-        }
-        public BLECharacteristic(CBCharacteristic characteristic): base(characteristic.UUID, characteristic.Properties, null, CBAttributePermissions.Readable) {
-            dynamicValue = characteristic.Value;
-        }
-    }
 
     public class IOSBluetooth : IBluetooth {
 
         // Platform Specific Objects
         private List<CBService> serviceObjects = new List<CBService>();
-        private List<BLECharacteristic> characteristicObjects = new List<BLECharacteristic>();
-        private List<BLEDescriptor> descriptorObjects = new List<BLEDescriptor>();
+        private List<CBCharacteristic> characteristicObjects = new List<CBCharacteristic>();
+        private List<CBDescriptor> descriptorObjects = new List<CBDescriptor>();
         private List<string> scanServices = new List<string>();
 
         private bool isScanning = false;
@@ -172,13 +154,14 @@ namespace ProtoRIOControl.iOS.Bluetooth {
         public void writeToUart(byte[] data) {
             var c = getCharacteristic(CBUUID.FromString(BTValues.rxCharacteristic));
             if (c != null && connectedPeripheral != null) {
-                connectedPeripheral.WriteValue(NSData.FromArray(data), c, CBCharacteristicWriteType.WithResponse);
+                connectedPeripheral.WriteValue(NSData.FromArray(data), c, CBCharacteristicWriteType.WithoutResponse);
+                callback.onUartDataSent(data);
             }
         }
 
         public bool hasUartService() {
             foreach (CBService s in serviceObjects) {
-                if (s.UUID.ToString().ToUpper().Equals(BTValues.uartService.ToUpper()))
+                if (s.UUID.Uuid.ToUpper().Equals(BTValues.uartService.ToUpper()))
                     return true;
             }
             return false;
@@ -187,10 +170,10 @@ namespace ProtoRIOControl.iOS.Bluetooth {
         /*
          * Get a desc/char/service from a UUID
          */
-        private BLEDescriptor getDescriptor(CBUUID uuid) {
+        private CBDescriptor getDescriptor(CBUUID uuid) {
             return descriptorObjects.FirstOrDefault((item) => item.UUID.Equals(uuid));
         }
-        private BLECharacteristic getCharacteristic(CBUUID uuid) {
+        private CBCharacteristic getCharacteristic(CBUUID uuid) {
             return characteristicObjects.FirstOrDefault((item) => item.UUID.Equals(uuid));
         }
         private CBService getService(CBUUID uuid) {
@@ -295,7 +278,7 @@ namespace ProtoRIOControl.iOS.Bluetooth {
                 if (service.Characteristics != null) {
                     client.descCallCount += service.Characteristics.Count();
                     foreach(var characteristic in service.Characteristics){
-                        client.characteristicObjects.Add(new BLECharacteristic(characteristic));
+                        client.characteristicObjects.Add(characteristic);
                         peripheral.DiscoverDescriptors(characteristic) ;
                     }
                 }
@@ -306,35 +289,29 @@ namespace ProtoRIOControl.iOS.Bluetooth {
                 client.completedDesc += 1;
                 if (characteristic.Descriptors != null) {
                     foreach (var descriptor in characteristic.Descriptors) {
-                        client.descriptorObjects.Add(new BLEDescriptor(descriptor));
+                        client.descriptorObjects.Add(descriptor);
                     }
                 }
                 client.allDiscovered();
             }
 
             public override void UpdatedCharacterteristicValue(CBPeripheral peripheral, CBCharacteristic characteristic, NSError error) {
-                if (characteristic.UUID.ToString().ToUpper().Equals(BTValues.txCharacteristic.ToUpper()) && error == null) {
-                    client.callback.onUartDataReceived(characteristic.Value.ToArray());
+                if (characteristic.UUID.Uuid.ToUpper().Equals(BTValues.txCharacteristic.ToUpper()) && error == null){
+                    byte[] value = new byte[]{0};
+                    if (characteristic.Value != null)
+                        value = characteristic.Value.ToArray();
+                    client.callback.onUartDataReceived(value);
                 }
             }
-
-            public override void WroteCharacteristicValue(CBPeripheral peripheral, CBCharacteristic characteristic, NSError error) {
-                if (characteristic != null && characteristic.UUID.ToString().ToUpper().Equals(BTValues.rxCharacteristic.ToString().ToUpper())) {
-                    client.callback.onUartDataSent(characteristic.Value.ToArray(), error == null);
-                }
-            }
-
         }
 
         // Check if all services chars and descs have been discovered
         // All chars must be discovered before the client can subscribe to notifications (this is solution on iOS and macOS)
         private void allDiscovered() {
-            if (charCallCount <= completedChar && incCallCount <= completedInc && descCallCount <= completedDesc ){
-                callback.onConnectToDevice(connectedPeripheral.UUID.ToString().ToUpper(), connectedPeripheral.Name, true);
+            if (charCallCount <= completedChar && incCallCount <= completedInc && descCallCount <= completedDesc) {
+                callback.onConnectToDevice(connectedPeripheral.Identifier.AsString().ToUpper(), connectedPeripheral.Name, true);
             }
         }
-
-
 
     }
 }

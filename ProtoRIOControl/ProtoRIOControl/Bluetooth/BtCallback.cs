@@ -12,7 +12,7 @@ namespace ProtoRIO.Bluetooth {
 
         // Data events
         void onUartDataReceived(byte[] data);
-        void onUartDataSent(byte[] value, bool success);
+        void onUartDataSent(byte[] value);
         void onBluetoothPowerChanged(bool enabled);
     }
 }

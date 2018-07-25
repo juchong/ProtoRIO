@@ -104,8 +104,8 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             var builder = new AlertDialog.Builder(MainActivity.MainContext);
             builder.SetTitle(title).SetMessage(message);
             builder.SetPositiveButton(confirmText, (src, which) => {
-                if(btAdapter != null)
-                    btAdapter.Enable();
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ActionRequestEnable);
+                MainActivity.MainContext.StartActivity(enableBtIntent);
             });
             builder.SetNegativeButton(cancelText, (src, which) => { });
             builder.Create().Show();
@@ -165,16 +165,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             var rx = getCharacteristic(UUID.FromString(BTValues.rxCharacteristic));
             if (rx != null) {
                 rx.SetValue(data);
-                if (gattConnection.WriteCharacteristic(rx) != true) {
-                    mainThread.Post(() => {
-                        // If there is no write permission the onCharacteristicWrite BluetoothGattCallback method is never called
-                        callback.onUartDataSent(data, false);
-                    });
-                }
-            } else {
-                mainThread.Post(() => {
-                    callback.onUartDataSent(data, false);
-                });
+                gattConnection.WriteCharacteristic(rx);
             }
         }
 
@@ -268,7 +259,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
 
             public override void OnCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, GattStatus status) {
                 base.OnCharacteristicRead(gatt, characteristic, status);
-                if (characteristic != null && characteristic.Uuid.ToString().ToUpper().Equals(BTValues.txCharacteristic.ToString().ToUpper()) && status == GattStatus.Success) {
+                if (characteristic != null && characteristic.Uuid.ToString().ToUpper().Equals(BTValues.txCharacteristic.ToUpper()) && status == GattStatus.Success) {
                     client.mainThread.Post(() => {
                         client.callback.onUartDataReceived(characteristic.GetValue());
                     });
@@ -276,9 +267,9 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             }
             public override void OnCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, GattStatus status) {
                 base.OnCharacteristicWrite(gatt, characteristic, status);
-                if (characteristic != null && characteristic.Uuid.ToString().ToUpper().Equals(BTValues.rxCharacteristic.ToString().ToUpper())) {
+                if (characteristic != null && characteristic.Uuid.ToString().ToUpper().Equals(BTValues.rxCharacteristic.ToUpper())) {
                     client.mainThread.Post(() => {
-                        client.callback.onUartDataSent(characteristic.GetValue(), status == GattStatus.Success);
+                        client.callback.onUartDataSent(characteristic.GetValue());
                     });
                 }
             }

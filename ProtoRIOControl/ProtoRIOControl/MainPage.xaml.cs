@@ -22,7 +22,11 @@ namespace ProtoRIOControl {
         }
 
         void OnConnectClicked(object src, EventArgs e) {
-            Debug.WriteLine("ScanError: " + bluetooth.enumerateDevices());
+            BtError error = bluetooth.enumerateDevices();
+            Debug.WriteLine("ScanError: " + error);
+            if(error == BtError.Disabled){
+                bluetooth.showEnableBtPrompt(AppResources.EnableBTTitle, AppResources.EnableBTMessage, AppResources.EnableBTConfirm, AppResources.EnableBTCancel);
+            }
         }
 
         public class MyBtCallback : BTCallback {
@@ -41,8 +45,14 @@ namespace ProtoRIOControl {
                 }
             }
             public void onConnectToDevice(string address, string name, bool success) {
-                bluetooth.subscribeToUartChars();
                 Debug.WriteLine("Connected to " + name + ".");
+
+                if (bluetooth.hasUartService()) {
+                    bluetooth.subscribeToUartChars();
+                } else {
+                    bluetooth.disconnect();
+                    Debug.WriteLine("Disconnecting as no UART service was found.");
+                }
             }
             public void onDisconnectFromDevice(string address, string name) {
                 Debug.WriteLine("Disconnected from " + name + ".");
@@ -52,8 +62,8 @@ namespace ProtoRIOControl {
             public void onUartDataReceived(byte[] data) {
                 bluetooth.writeToUart(data);
             }
-            public void onUartDataSent(byte[] value, bool success) {
-
+            public void onUartDataSent(byte[] value) {
+            
             }
             public void onBluetoothPowerChanged(bool enabled) {
                 Debug.WriteLine("Bluetooth Enabled: " + enabled);
