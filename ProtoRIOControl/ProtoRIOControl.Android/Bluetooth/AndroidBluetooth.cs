@@ -305,6 +305,8 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                             client.callback.onConnectToDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name, false);
                         });
                         client.isConnected = true;
+                    }else if(newState == ProfileState.Connected){
+                        gatt.DiscoverServices();
                     }
                     if (newState == ProfileState.Disconnected) {
                         client.serviceObjects.Clear();
