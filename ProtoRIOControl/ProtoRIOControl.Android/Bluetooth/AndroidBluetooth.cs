@@ -16,18 +16,13 @@ using Java.Util;
 using ProtoRIO.Bluetooth;
 
 namespace ProtoRIOControl.Droid.Bluetooth {
-    public class AndroidBLEClientBuilder : BLEClientBuilder {
-        public BLEClient Create(BLEDelegate bleDelegate) {
-            return new AndroidBLEClient(bleDelegate);
-        }
-    }
-
-    public class AndroidBLEClient : BLEClient {
+    public class AndroidBluetooth : IBluetooth {
 
         // Platform Specific Objects
         private List<BluetoothGattService> serviceObjects = new List<BluetoothGattService>();
         private List<BluetoothGattCharacteristic> characteristicObjects = new List<BluetoothGattCharacteristic>();
         private List<BluetoothGattDescriptor> descriptorObjects = new List<BluetoothGattDescriptor>();
+        private List<string> scanServices = new List<string>();
 
         // Keep track of detected devices
         private List<string> deviceAddresses = new List<string>();
@@ -39,16 +34,15 @@ namespace ProtoRIOControl.Droid.Bluetooth {
         private BluetoothAdapter btAdapter;
         private BluetoothGatt gattConnection = null;
 
-        // Enable BT Dialog Text
-        string REQUEST_BT_TITLE = "Bluetooth Required";
-        string REQUEST_BT_MESSAGE = "Enable bluetooth?";
-        string REQUEST_BT_CONFIRM = "Yes";
-        string REQUEST_BT_DENY = "No";
+        private bool isScanning = false;
+        private bool isConnected = false;
 
         Thread btCheckThread;
 
-        public AndroidBLEClient(BLEDelegate bleDelegate) {
-            this.Delegate = bleDelegate;
+        BTCallback callback;
+
+        public AndroidBluetooth(BTCallback btCallback) {
+            this.callback = btCallback;
             btManager = (BluetoothManager)MainActivity.MainContext.GetSystemService(Context.BluetoothService);
             btAdapter = btManager.Adapter;
             scanCallback = new MyScanCallback(this);
@@ -61,11 +55,11 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                     if (state != lastState) {
                         lastState = state;
                         if (!state) {
-                            StopScanning();
-                            Disconnect();
+                            endEnumeration();
+                            disconnect();
                         }
                         mainThread.Post(() => {
-                            Delegate.OnBluetoothPowerChanged(state);
+                            callback.onBluetoothPowerChanged(state);
                         });
                     }
                     Thread.Sleep(100);
@@ -74,7 +68,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             btCheckThread.Start();
         }
 
-        public override BtError CheckBluetooth() {
+        public BtError checkBtSupport() {
             if (!MainActivity.MainContext.PackageManager.HasSystemFeature(PackageManager.FeatureBluetooth))
                 return BtError.NoBluetooth;
             if (!MainActivity.MainContext.PackageManager.HasSystemFeature(PackageManager.FeatureBluetoothLe))
@@ -84,9 +78,9 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             return BtError.None;
         }
 
-        public override void ConnectToDevice(string deviceAddress) {
+        public void connect(string deviceAddress) {
             if (gattConnection != null) {
-                Disconnect();
+                disconnect();
             }
             var device = devices.FirstOrDefault((dev) => dev.Address.ToUpper().Equals(deviceAddress.ToUpper()));
             if (device != null) {
@@ -95,147 +89,101 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             }
         }
 
-        public override void Disconnect() {
-            if (IsConnected) {
-                Services.Clear();
-                Characteristics.Clear();
-                Descriptors.Clear();
+        public void disconnect() {
+            if (isConnected) {
                 serviceObjects.Clear();
                 characteristicObjects.Clear();
                 descriptorObjects.Clear();
                 gattConnection?.Disconnect();
                 gattConnection = null;
-                IsConnected = false;
+                isConnected = false;
             }
         }
 
-        public override bool HasCharacteristic(string characteristic) {
-            return Characteristics.Contains(characteristic.ToUpper());
-        }
-
-        public override bool HasDescriptor(string descriptor) {
-            return Descriptors.Contains(descriptor.ToUpper());
-        }
-
-        public override bool HasService(string service) {
-            return Services.Contains(service.ToUpper());
-        }
-
-        public override void ReadCharacteristic(string characteristic) {
-            var c = getCharacteristic(UUID.FromString(characteristic));
-            if (c != null) {
-                gattConnection.ReadCharacteristic(c);
-            } else {
-                mainThread.Post(() => {
-                    Delegate.OnCharacteristicRead(characteristic.ToUpper(), false, null);
-                });
-            }
-        }
-
-        public override void ReadDescriptor(string descriptor) {
-            var desc = getDescriptor(UUID.FromString(descriptor));
-            if (desc != null) {
-                gattConnection.ReadDescriptor(desc);
-            } else {
-                mainThread.Post(() => {
-                    Delegate.OnDescriptorRead(descriptor.ToUpper(), false, null);
-                });
-            }
-        }
-
-        public override void RequestEnableBt() {
+        public void showEnableBtPrompt(string title, string message, string confirmText, string cancelText) {
             var builder = new AlertDialog.Builder(MainActivity.MainContext);
-            builder.SetTitle(REQUEST_BT_TITLE).SetMessage(REQUEST_BT_MESSAGE);
-            builder.SetPositiveButton(REQUEST_BT_CONFIRM, (src, which) => {
+            builder.SetTitle(title).SetMessage(message);
+            builder.SetPositiveButton(confirmText, (src, which) => {
                 if(btAdapter != null)
                     btAdapter.Enable();
             });
-            builder.SetNegativeButton(REQUEST_BT_DENY, (src, which) => { });
+            builder.SetNegativeButton(cancelText, (src, which) => { });
             builder.Create().Show();
         }
 
-        public override BtError ScanForDevices() {
-            if (!IsScanning && !IsConnected) {
+        public BtError enumerateDevices() {
+            if (!isScanning && !isConnected) {
                 devices.Clear();
                 deviceAddresses.Clear();
-                Services.Clear();
-                Characteristics.Clear();
-                Descriptors.Clear();
                 serviceObjects.Clear();
                 characteristicObjects.Clear();
                 descriptorObjects.Clear();
-                var error = CheckBluetooth();
+                var error = checkBtSupport();
                 if (error != BtError.None) {
                         return error;
                 }
                 var settings = new ScanSettings.Builder().SetScanMode(Android.Bluetooth.LE.ScanMode.Balanced).Build();
                 var filters = new List<ScanFilter>();
-                ScanServices.ForEach((item) => {
+                scanServices.ForEach((item) => {
                     filters.Add(new ScanFilter.Builder().SetServiceUuid(new ParcelUuid(UUID.FromString(item))).Build());
                 });
                 btAdapter.BluetoothLeScanner.StartScan(filters, settings, scanCallback);
-                IsScanning = true;
+                isScanning = true;
                 return BtError.None;
             } else {
                 return BtError.AlreadyRunning;
             }
         }
 
-        public override void ScanForService(string service, bool scanFor = true) {
-            if (scanFor && !ScanServices.Contains(service.ToUpper())) {
-                ScanServices.Add(service.ToUpper());
-            } else if (!scanFor && ScanServices.Contains(service.ToUpper())) {
-                ScanServices.Remove(service.ToUpper());
-            }
+        public void scanForService(string service) {
+            if (!scanServices.Contains(service.ToUpper())) {
+                scanServices.Add(service.ToUpper());
+            } 
         }
 
-        public override void StopScanning() {
-            if (IsScanning) {
+        public void endEnumeration() {
+            if (isScanning) {
                 if(btAdapter != null)
                     btAdapter.BluetoothLeScanner.StopScan(scanCallback);
-                IsScanning = false;
+                isScanning = false;
             }
         }
 
-        public override void SubscribeToCharacteristic(string characteristic, bool subscribe = true) {
-            var c = getCharacteristic(UUID.FromString(characteristic));
-            if (c != null) {
-                gattConnection.SetCharacteristicNotification(c, subscribe);
-                var descriptor = c.GetDescriptor(UUID.FromString("00002902-0000-1000-8000-00805f9b34fb")); // Client characteristic config UUID
+        public void subscribeToUartChars() {
+            var tx = getCharacteristic(UUID.FromString(BTValues.txCharacteristic));
+            if (tx != null) {
+                gattConnection.SetCharacteristicNotification(tx, true);
+                var descriptor = tx.GetDescriptor(UUID.FromString("00002902-0000-1000-8000-00805f9b34fb")); // Client characteristic config UUID
                 if (descriptor != null) {
-                    descriptor.SetValue((subscribe ? BluetoothGattDescriptor.EnableNotificationValue : BluetoothGattDescriptor.DisableNotificationValue).ToArray());
+                    descriptor.SetValue(BluetoothGattDescriptor.EnableNotificationValue.ToArray());
                     gattConnection.WriteDescriptor(descriptor);
                 }
             }
         }
 
-        public override void WriteCharacteristic(string characteristic, byte[] data) {
-            var c = getCharacteristic(UUID.FromString(characteristic));
-            if (c != null) {
-                c.SetValue(data);
-                if (gattConnection.WriteCharacteristic(c) != true) {
+        public void writeToUart(byte[] data) {
+            var rx = getCharacteristic(UUID.FromString(BTValues.rxCharacteristic));
+            if (rx != null) {
+                rx.SetValue(data);
+                if (gattConnection.WriteCharacteristic(rx) != true) {
                     mainThread.Post(() => {
                         // If there is no write permission the onCharacteristicWrite BluetoothGattCallback method is never called
-                        Delegate.OnCharacteristicWrite(characteristic.ToUpper(), false, null);
+                        callback.onUartDataSent(data, false);
                     });
                 }
             } else {
                 mainThread.Post(() => {
-                    Delegate.OnCharacteristicWrite(characteristic.ToUpper(), false, null);
+                    callback.onUartDataSent(data, false);
                 });
             }
         }
 
-        public override void WriteDescriptor(string descriptor, byte[] data) {
-            var desc = getDescriptor(UUID.FromString(descriptor));
-            if (desc != null) {
-                desc.SetValue(data);
-                gattConnection.WriteDescriptor(desc);
-            } else {
-                mainThread.Post(() => {
-                    Delegate.OnDescriptorWrite(descriptor.ToUpper(), false, null);
-                });
+        public bool hasUartService() {
+            foreach(BluetoothGattService s in serviceObjects) {
+                if (s.Uuid.ToString().ToUpper().Equals(BTValues.uartService.ToUpper()))
+                    return true;
             }
+            return false;
         }
 
         /*
@@ -266,23 +214,20 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                         foreach(var d in c.Descriptors) {
                             if (!descriptorObjects.Contains(d)) {
                                 descriptorObjects.Add(d);
-                                Descriptors.Add(d.Uuid.ToString().ToUpper());
                             }
                         }
                         characteristicObjects.Add(c);
-                        Characteristics.Add(c.Uuid.ToString().ToUpper());
                     }
                 }
                 serviceObjects.Add(service);
-                Services.Add(service.Uuid.ToString().ToUpper());
             }
         }
 
         MyScanCallback scanCallback;
         class MyScanCallback : ScanCallback {
 
-            AndroidBLEClient client;
-            public MyScanCallback(AndroidBLEClient client) {
+            AndroidBluetooth client;
+            public MyScanCallback(AndroidBluetooth client) {
                 this.client = client;
             }
 
@@ -297,7 +242,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                         client.deviceAddresses.Add(result.Device.Address);
                     }
                     client.mainThread.Post(() => {
-                        client.Delegate.OnDeviceDiscovered(result.Device.Address.ToUpper(), result.Device.Name, result.Rssi);
+                        client.callback.onDeviceDiscovered(result.Device.Address.ToUpper(), result.Device.Name, result.Rssi);
                     });
                 }
             }
@@ -307,7 +252,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                     foreach(var result in results){
                         client.devices.Add(result.Device);
                         client.mainThread.Post(() => {
-                            client.Delegate.OnDeviceDiscovered(result.Device.Address.ToUpper(), result.Device.Name, result.Rssi);
+                            client.callback.onDeviceDiscovered(result.Device.Address.ToUpper(), result.Device.Name, result.Rssi);
                         });
                     }
                 }
@@ -316,24 +261,24 @@ namespace ProtoRIOControl.Droid.Bluetooth {
 
         MyGattCallback bluetoothGattCallback;
         class MyGattCallback : BluetoothGattCallback {
-            private AndroidBLEClient client;
-            public MyGattCallback(AndroidBLEClient client) {
+            private AndroidBluetooth client;
+            public MyGattCallback(AndroidBluetooth client) {
                 this.client = client;
             }
 
             public override void OnCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, GattStatus status) {
                 base.OnCharacteristicRead(gatt, characteristic, status);
-                if (characteristic != null) {
+                if (characteristic != null && characteristic.Uuid.ToString().ToUpper().Equals(BTValues.txCharacteristic.ToString().ToUpper()) && status == GattStatus.Success) {
                     client.mainThread.Post(() => {
-                        client.Delegate.OnCharacteristicRead(characteristic.Uuid.ToString().ToUpper(), status == GattStatus.Success, characteristic.GetValue());
+                        client.callback.onUartDataReceived(characteristic.GetValue());
                     });
                 }
             }
             public override void OnCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, GattStatus status) {
                 base.OnCharacteristicWrite(gatt, characteristic, status);
-                if (characteristic != null) {
+                if (characteristic != null && characteristic.Uuid.ToString().ToUpper().Equals(BTValues.rxCharacteristic.ToString().ToUpper())) {
                     client.mainThread.Post(() => {
-                        client.Delegate.OnCharacteristicWrite(characteristic.Uuid.ToString().ToUpper(), status == GattStatus.Success, characteristic.GetValue());
+                        client.callback.onUartDataSent(characteristic.GetValue(), status == GattStatus.Success);
                     });
                 }
             }
@@ -344,52 +289,31 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                         client.AddService(service);
                     }
                     client.mainThread.Post(() => {
-                        client.Delegate.OnServicesDiscovered();
-                    });
-                }
-            }
-            public override void OnDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, GattStatus status) {
-                base.OnDescriptorWrite(gatt, descriptor, status);
-                if (descriptor != null) {
-                    client.mainThread.Post(() => {
-                        client.Delegate.OnDescriptorWrite(descriptor.Uuid.ToString().ToUpper(), status == GattStatus.Success, descriptor.GetValue());
+                        client.callback.onConnectToDevice(client.gattConnection.Device.Address, client.gattConnection.Device.Name, true);
                     });
                 }
             }
             public override void OnCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-                base.OnCharacteristicChanged(gatt, characteristic);
-                if (characteristic != null) {
-                    client.mainThread.Post(() => {
-                        client.Delegate.OnCharacteristicRead(characteristic.Uuid.ToString().ToUpper(), true, characteristic.GetValue());
-                    });
-                }
-            }
-            public override void OnDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, GattStatus status) {
-                base.OnDescriptorRead(gatt, descriptor, status);
-                if (descriptor != null) {
-                    client.mainThread.Post(() => {
-                        client.Delegate.OnDescriptorRead(descriptor.Uuid.ToString().ToUpper(), status == GattStatus.Success, descriptor.GetValue());
-                    });
-                }
+                OnCharacteristicRead(gatt, characteristic, GattStatus.Success);
             }
             public override void OnConnectionStateChange(BluetoothGatt gatt, GattStatus status, ProfileState newState) {
                 base.OnConnectionStateChange(gatt, status, newState);
                 if (gatt != null) {
-                    if (newState == ProfileState.Connected) {
+                    if (newState == ProfileState.Connected && status != GattStatus.Success) {
                         gatt.DiscoverServices();
                         client.mainThread.Post(() => {
-                            client.Delegate.OnConnectToDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name, status == GattStatus.Success);
+                            client.callback.onConnectToDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name, false);
                         });
-                        client.IsConnected = true;
+                        client.isConnected = true;
                     }
                     if (newState == ProfileState.Disconnected) {
-                        client.Services.Clear();
-                        client.Characteristics.Clear();
-                        client.Descriptors.Clear();
+                        client.serviceObjects.Clear();
+                        client.characteristicObjects.Clear();
+                        client.descriptorObjects.Clear();
                         client.mainThread.Post(() => {
-                            client.Delegate.OnDisconnectFromDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name);
+                            client.callback.onDisconnectFromDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name);
                         });
-                        client.IsConnected = false;
+                        client.isConnected = false;
                     }
                 }
             }

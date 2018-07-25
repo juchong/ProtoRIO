@@ -150,23 +150,57 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\info.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\scan.imageset\scan1x.png" />
-    <ImageAsset Include="Assets.xcassets\scan.imageset\scan2x.png" />
-    <ImageAsset Include="Assets.xcassets\scan.imageset\scan3x.png" />
-    <ImageAsset Include="Assets.xcassets\wave.imageset\wave1x.png" />
-    <ImageAsset Include="Assets.xcassets\wave.imageset\wave2x.png" />
-    <ImageAsset Include="Assets.xcassets\wave.imageset\wave3x.png" />
-    <ImageAsset Include="Assets.xcassets\info.imageset\info1x.png" />
-    <ImageAsset Include="Assets.xcassets\info.imageset\info2x.png" />
-    <ImageAsset Include="Assets.xcassets\info.imageset\info3x.png" />
-    <ImageAsset Include="Assets.xcassets\gauge.imageset\gauge1x.png" />
-    <ImageAsset Include="Assets.xcassets\gauge.imageset\gauge2x.png" />
-    <ImageAsset Include="Assets.xcassets\gauge.imageset\gauge3x.png" />
-    <ImageAsset Include="Assets.xcassets\bluetooth.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\bluetooth.imageset\bluetooth1x.png" />
-    <ImageAsset Include="Assets.xcassets\bluetooth.imageset\bluetooth2x.png" />
-    <ImageAsset Include="Assets.xcassets\bluetooth.imageset\bluetooth3x.png" />
+    <ImageAsset Include="Assets.xcassets\info.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\scan.imageset\scan1x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\scan.imageset\scan2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\scan.imageset\scan3x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\wave.imageset\wave1x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\wave.imageset\wave2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\wave.imageset\wave3x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\info.imageset\info1x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\info.imageset\info2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\info.imageset\info3x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\gauge.imageset\gauge1x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\gauge.imageset\gauge2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\gauge.imageset\gauge3x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\bluetooth.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\bluetooth.imageset\bluetooth1x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\bluetooth.imageset\bluetooth2x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\bluetooth.imageset\bluetooth3x.png">
+      <Visible>false</Visible>
+    </ImageAsset>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

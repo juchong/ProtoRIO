@@ -25,7 +25,7 @@ namespace ProtoRIOControl.Droid {
 
             setupPermissions();
 
-            BLEClient.Builder = new AndroidBLEClientBuilder();
+            MainPage.bluetooth = new AndroidBluetooth(MainPage.btCallback);
 
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;

@@ -9,11 +9,6 @@ using UIKit;
 using CoreBluetooth;
 
 namespace ProtoRIOControl.iOS.Bluetooth {
-    public class IOSBLEClientBuilder : BLEClientBuilder {
-        public BLEClient Create(BLEDelegate bleDelegate) {
-            return new IOSBLEClient(bleDelegate);
-        }
-    }
     class BLEDescriptor : CBMutableDescriptor {
         public NSObject dynamicValue;
         public BLEDescriptor(CBUUID UUID, NSObject value): base(UUID, null) {
@@ -33,18 +28,18 @@ namespace ProtoRIOControl.iOS.Bluetooth {
         }
     }
 
-    public class IOSBLEClient : BLEClient {
+    public class IOSBluetooth : IBluetooth {
 
         // Platform Specific Objects
         private List<CBService> serviceObjects = new List<CBService>();
         private List<BLECharacteristic> characteristicObjects = new List<BLECharacteristic>();
         private List<BLEDescriptor> descriptorObjects = new List<BLEDescriptor>();
+        private List<string> scanServices = new List<string>();
 
-        // Enable BT Dialog Text
-        string REQUEST_BT_TITLE = "Bluetooth Required";
-        string REQUEST_BT_MESSAGE = "Please enable bluetooth in Settings.";
-        string REQUEST_BT_CONFIRM = "Settings";
-        string REQUEST_BT_DENY = "Cancel";
+        private bool isScanning = false;
+        private bool isConnected = false;
+
+        BTCallback callback;
 
         //Apple Specific Bluetooth Objects
         private CBCentralManager centralManager;
@@ -54,24 +49,22 @@ namespace ProtoRIOControl.iOS.Bluetooth {
         private List<string> deviceAddresses = new List<string>();
         private List<CBPeripheral> devices = new List<CBPeripheral>();
 
-        public IOSBLEClient(BLEDelegate bleDelegate) {
+        public IOSBluetooth(BTCallback btCallback) {
             cmDelegate = new MyCentralmanagerDelegate(this);
             peripheralDelegate = new MyCBPeripheralDelegate(this);
-            Delegate = bleDelegate;
+            callback = btCallback;
             CBCentralInitOptions opts = new CBCentralInitOptions();
             opts.ShowPowerAlert = false;
             centralManager = new CBCentralManager(cmDelegate, null, opts);
         }
 
-        public override void ScanForService(string service, bool scanFor = true) {
-            if (scanFor && !ScanServices.Contains(service.ToUpper())) {
-                ScanServices.Add(service.ToUpper());
-            } else if (!scanFor && ScanServices.Contains(service.ToUpper())) {
-                ScanServices.RemoveAt(ScanServices.IndexOf(service.ToUpper()));
+        public void scanForService(string service) {
+            if (scanServices.Contains(service.ToUpper())) {
+                scanServices.Add(service.ToUpper());
             }
         }
 
-        public override BtError CheckBluetooth() {
+        public BtError checkBtSupport() {
             CBCentralManagerState error = centralManager.State;
             switch(error){
                 case CBCentralManagerState.PoweredOn:
@@ -86,13 +79,13 @@ namespace ProtoRIOControl.iOS.Bluetooth {
             }
         }
 
-        public override void RequestEnableBt() {
+        public void showEnableBtPrompt(string title, string message, string confirmText, string cancelText) {
             var vc = UIApplication.SharedApplication.KeyWindow.RootViewController;
-            var alert = UIAlertController.Create(REQUEST_BT_TITLE, REQUEST_BT_MESSAGE, UIAlertControllerStyle.Alert);
-            var cancelAction = UIAlertAction.Create(REQUEST_BT_DENY, UIAlertActionStyle.Cancel, (action) => {
+            var alert = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert);
+            var cancelAction = UIAlertAction.Create(cancelText, UIAlertActionStyle.Cancel, (action) => {
                 alert.DismissViewController(true, null);
             });
-            var settingsAction = UIAlertAction.Create(REQUEST_BT_CONFIRM, UIAlertActionStyle.Default, (Action) => {
+            var settingsAction = UIAlertAction.Create(confirmText, UIAlertActionStyle.Default, (Action) => {
                 var btSettings = new NSUrl("App-Prefs:root=Bluetooth");
                 if (btSettings != null) {
                     if (UIApplication.SharedApplication.CanOpenUrl(btSettings)) {
@@ -110,44 +103,41 @@ namespace ProtoRIOControl.iOS.Bluetooth {
             vc.PresentViewController(alert, true, null);
         }
 
-        public override BtError ScanForDevices() {
-            if (!IsScanning) {
+        public BtError enumerateDevices() {
+            if (!isScanning) {
                 devices.Clear();
                 deviceAddresses.Clear();
-                Services.Clear();
-                Characteristics.Clear();
-                Descriptors.Clear();
                 serviceObjects.Clear();
                 characteristicObjects.Clear();
                 descriptorObjects.Clear();
-                var error = CheckBluetooth();
+                var error = checkBtSupport();
                 if (error != BtError.None) {
                         return error;
                 }
                 var uuids = new List<CBUUID>();
-                foreach(var s in ScanServices){
+                foreach(var s in scanServices){
                     uuids.Add(CBUUID.FromString(s));
                 }
                 var options = new PeripheralScanningOptions();
                 options.AllowDuplicatesKey = true;
                 centralManager.ScanForPeripherals(uuids.ToArray(), options);
-                IsScanning = true;
+                isScanning = true;
                 return BtError.None;
             }else{
                 return BtError.AlreadyRunning;
             }
         }
 
-        public override void StopScanning() {
-            if (IsScanning) {
+        public void endEnumeration() {
+            if (isScanning) {
                 centralManager.StopScan();
-                IsScanning = false;
+                isScanning = false;
             }
         }
 
-        public override void ConnectToDevice(string deviceAddress) {
+        public void connect(string deviceAddress) {
             if (connectedPeripheral != null) {
-                Disconnect();
+                disconnect();
             }
             var dev = devices.FirstOrDefault((item) => item.Identifier.ToString().ToUpper().Equals(deviceAddress.ToUpper()));
             if (dev == null) {
@@ -161,65 +151,37 @@ namespace ProtoRIOControl.iOS.Bluetooth {
             centralManager.ConnectPeripheral(dev, options);
         }
 
-        public override void Disconnect() {
-            if (IsConnected) {
+        public void disconnect() {
+            if (isConnected) {
                 centralManager.CancelPeripheralConnection(connectedPeripheral);
-                Services.Clear();
-                Characteristics.Clear();
-                Descriptors.Clear();
                 serviceObjects.Clear();
                 characteristicObjects.Clear();
                 descriptorObjects.Clear();
                 connectedPeripheral = null;
-                IsConnected = false;
+                isConnected = false;
             }
         }
 
-        public override void SubscribeToCharacteristic(string characteristic, bool subscribe = true) {
-            var c = getCharacteristic(CBUUID.FromString(characteristic));
-            if (c != null && connectedPeripheral != null) {
-                connectedPeripheral.SetNotifyValue(subscribe, c);
+        public void subscribeToUartChars() {
+            var tx = getCharacteristic(CBUUID.FromString(BTValues.txCharacteristic));
+            if (tx != null && connectedPeripheral != null) {
+                connectedPeripheral.SetNotifyValue(true, tx);
             }
         }
 
-        public override void WriteCharacteristic(string characteristic, byte[] data) {
-            var c = getCharacteristic(CBUUID.FromString(characteristic));
+        public void writeToUart(byte[] data) {
+            var c = getCharacteristic(CBUUID.FromString(BTValues.rxCharacteristic));
             if (c != null && connectedPeripheral != null) {
                 connectedPeripheral.WriteValue(NSData.FromArray(data), c, CBCharacteristicWriteType.WithResponse);
             }
         }
 
-        public override void ReadCharacteristic(string characteristic) {
-            var c = getCharacteristic(CBUUID.FromString(characteristic));
-            if (c != null && connectedPeripheral != null) {
-                connectedPeripheral.ReadValue(c);
+        public bool hasUartService() {
+            foreach (CBService s in serviceObjects) {
+                if (s.UUID.ToString().ToUpper().Equals(BTValues.uartService.ToUpper()))
+                    return true;
             }
-        }
-
-        public override void WriteDescriptor(string descriptor, byte[] data) {
-            var desc = getDescriptor(CBUUID.FromString(descriptor));
-            if (desc != null && connectedPeripheral != null) {
-                connectedPeripheral.WriteValue(NSData.FromArray(data), desc);
-            }
-        }
-
-        public override void ReadDescriptor(string descriptor) {
-            var desc = getDescriptor(CBUUID.FromString(descriptor));
-            if (desc != null && connectedPeripheral != null) {
-                connectedPeripheral.ReadValue(desc);
-            }
-        }
-
-        public override bool HasService(string service) {
-            return Services.Contains(service.ToUpper());
-        }
-
-        public override bool HasCharacteristic(string characteristic) {
-            return Characteristics.Contains(characteristic.ToUpper());
-        }
-
-        public override bool HasDescriptor(string descriptor) {
-            return Descriptors.Contains(descriptor.ToUpper());
+            return false;
         }
 
         /*
@@ -248,41 +210,40 @@ namespace ProtoRIOControl.iOS.Bluetooth {
 
         private MyCentralmanagerDelegate cmDelegate;
         class MyCentralmanagerDelegate : CBCentralManagerDelegate {
-            private IOSBLEClient client;
+            private IOSBluetooth client;
 
-            public MyCentralmanagerDelegate(IOSBLEClient client) {
+            public MyCentralmanagerDelegate(IOSBluetooth client) {
                 this.client = client;
             }
 
             public override void UpdatedState(CBCentralManager central) {
                 var result = central.State == CBCentralManagerState.PoweredOn;
                 if (!result) {
-                    client.StopScanning();
-                    client.Disconnect();
+                    client.endEnumeration();
+                    client.disconnect();
                 }
-                client.Delegate.OnBluetoothPowerChanged(result);
+                client.callback.onBluetoothPowerChanged(result);
             }
             public override void ConnectedPeripheral(CBCentralManager central, CBPeripheral peripheral) {
                 peripheral.Delegate = client.peripheralDelegate;
                 peripheral.DiscoverServices(null);
                 client.connectedPeripheral = peripheral;
-                client.Services.Clear();
-                client.Characteristics.Clear();
-                client.Descriptors.Clear();
-                client.Delegate.OnConnectToDevice(peripheral.Identifier.AsString().ToUpper(), peripheral.Name, true);
+                client.serviceObjects.Clear();
+                client.characteristicObjects.Clear();
+                client.descriptorObjects.Clear();
             }
             public override void FailedToConnectPeripheral(CBCentralManager central, CBPeripheral peripheral, NSError error) {
-                client.Delegate.OnConnectToDevice(address: peripheral.Identifier.AsString().ToUpper(), name: peripheral.Name, success: false);
+                client.callback.onConnectToDevice(address: peripheral.Identifier.AsString().ToUpper(), name: peripheral.Name, success: false);
             }
             public override void DisconnectedPeripheral(CBCentralManager central, CBPeripheral peripheral, NSError error) {
-                client.Delegate.OnDisconnectFromDevice(address: peripheral.Identifier.AsString().ToUpper(), name: peripheral.Name);
+                client.callback.onDisconnectFromDevice(address: peripheral.Identifier.AsString().ToUpper(), name: peripheral.Name);
             }
             public override void DiscoveredPeripheral(CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber RSSI) {
                 if (!client.deviceAddresses.Contains(peripheral.Identifier.AsString().ToUpper())) {
                     client.devices.Add(peripheral);
                     client.deviceAddresses.Add(peripheral.Identifier.AsString().ToUpper());
                 }
-                client.Delegate.OnDeviceDiscovered(address: peripheral.Identifier.AsString().ToUpper(), name: peripheral.Name, rssi: RSSI.Int32Value);
+                client.callback.onDeviceDiscovered(address: peripheral.Identifier.AsString().ToUpper(), name: peripheral.Name, rssi: RSSI.Int32Value);
             }
         }
 
@@ -298,8 +259,8 @@ namespace ProtoRIOControl.iOS.Bluetooth {
 
         private MyCBPeripheralDelegate peripheralDelegate;
         class MyCBPeripheralDelegate : CBPeripheralDelegate {
-            private IOSBLEClient client;
-            public MyCBPeripheralDelegate(IOSBLEClient client) {
+            private IOSBluetooth client;
+            public MyCBPeripheralDelegate(IOSBluetooth client) {
                 this.client = client;
             }
 
@@ -311,7 +272,6 @@ namespace ProtoRIOControl.iOS.Bluetooth {
                     client.incCallCount = client.serviceObjects.Count;
                     client.descCallCount = 0;
                     foreach(var service in peripheral.Services){
-                        client.Services.Add(client.expand(service.UUID.Uuid));
                         peripheral.DiscoverIncludedServices(null, service);
                         peripheral.DiscoverCharacteristics(null, service);
                     }
@@ -324,7 +284,6 @@ namespace ProtoRIOControl.iOS.Bluetooth {
                     client.serviceObjects.AddRange(service.IncludedServices);
                     client.charCallCount += service.IncludedServices.Count();
                     foreach(var s in service.IncludedServices){
-                        client.Services.Add(client.expand(s.UUID.ToString()));
                         peripheral.DiscoverCharacteristics(null, s);
                     }
                 }
@@ -337,7 +296,6 @@ namespace ProtoRIOControl.iOS.Bluetooth {
                     client.descCallCount += service.Characteristics.Count();
                     foreach(var characteristic in service.Characteristics){
                         client.characteristicObjects.Add(new BLECharacteristic(characteristic));
-                        client.Characteristics.Add(client.expand(uuidString: characteristic.UUID.ToString()));
                         peripheral.DiscoverDescriptors(characteristic) ;
                     }
                 }
@@ -349,27 +307,21 @@ namespace ProtoRIOControl.iOS.Bluetooth {
                 if (characteristic.Descriptors != null) {
                     foreach (var descriptor in characteristic.Descriptors) {
                         client.descriptorObjects.Add(new BLEDescriptor(descriptor));
-                        client.Descriptors.Add(client.expand(uuidString: descriptor.UUID.ToString()));
                     }
                 }
                 client.allDiscovered();
             }
 
-            public override void UpdatedValue(CBPeripheral peripheral, CBDescriptor descriptor, NSError error) {
-                client.Delegate.OnDescriptorRead(client.expand(descriptor.UUID.ToString()).ToUpper(), error == null, ((NSData)descriptor.Value).ToArray());
-            }
-
             public override void UpdatedCharacterteristicValue(CBPeripheral peripheral, CBCharacteristic characteristic, NSError error) {
-                client.Delegate.OnCharacteristicRead(client.expand(characteristic.UUID.ToString()).ToUpper(), error == null, characteristic.Value.ToArray());
+                if (characteristic.UUID.ToString().ToUpper().Equals(BTValues.txCharacteristic.ToUpper()) && error == null) {
+                    client.callback.onUartDataReceived(characteristic.Value.ToArray());
+                }
             }
 
             public override void WroteCharacteristicValue(CBPeripheral peripheral, CBCharacteristic characteristic, NSError error) {
-                client.Delegate.OnCharacteristicWrite(client.expand(characteristic.UUID.ToString()).ToUpper(), error == null, characteristic.Value.ToArray());
-            }
-
-
-            public override void WroteDescriptorValue(CBPeripheral peripheral, CBDescriptor descriptor, NSError error) {
-                client.Delegate.OnDescriptorWrite(client.expand(descriptor.UUID.ToString()).ToUpper(), error == null, value: ((NSData)descriptor.Value).ToArray());
+                if (characteristic != null && characteristic.UUID.ToString().ToUpper().Equals(BTValues.rxCharacteristic.ToString().ToUpper())) {
+                    client.callback.onUartDataSent(characteristic.Value.ToArray(), error == null);
+                }
             }
 
         }
@@ -378,7 +330,7 @@ namespace ProtoRIOControl.iOS.Bluetooth {
         // All chars must be discovered before the client can subscribe to notifications (this is solution on iOS and macOS)
         private void allDiscovered() {
             if (charCallCount <= completedChar && incCallCount <= completedInc && descCallCount <= completedDesc ){
-                Delegate.OnServicesDiscovered();
+                callback.onConnectToDevice(connectedPeripheral.UUID.ToString().ToUpper(), connectedPeripheral.Name, true);
             }
         }
 

@@ -179,6 +179,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
             if (result.Status == GattCommunicationStatus.Success) {
                 IsConnected = true;
                 connectedDevice = device;
+                device.ConnectionStatusChanged += ConnectionStatusChanged;
                 await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
                     clientDelegate.OnConnectToDevice((device.BluetoothAddress + "").ToUpper(), device.Name, true);
                 });
@@ -194,6 +195,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
                 });
             }
         }
+
         public override void ConnectToDevice(string deviceAddress) {
             var task = Task.Run(async () => {
                 await _ConnectToDevice(deviceAddress);
@@ -478,6 +480,9 @@ namespace ProtoRIOControl.UWP.Bluetooth {
             await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
                 clientDelegate.OnCharacteristicRead(sender.Uuid.ToString().ToUpper(), true, args.CharacteristicValue.ToArray());
             });
+        }
+        private void ConnectionStatusChanged(BluetoothLEDevice sender, object args) {
+            clientDelegate.OnDisconnectFromDevice((sender.BluetoothAddress + "").ToUpper(), sender.Name);
         }
         #endregion
     }
