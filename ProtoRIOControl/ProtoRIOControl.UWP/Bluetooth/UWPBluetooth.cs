@@ -18,18 +18,13 @@ using ProtoRIO.Bluetooth;
 //       This is required to conform to the BLEClient interface.
 
 namespace ProtoRIOControl.UWP.Bluetooth {
-    public class UWPBLEClientBuilder : BLEClientBuilder {
-        public BLEClient Create(BLEDelegate bleDelegate) {
-            return new UWPBLEClient(bleDelegate);
-        }
-    }
-    public class UWPBLEClient : BLEClient{
-        #region Variables and Properties
+    public class UWPBluetooth : IBluetooth{
 
         // Platform Specific Objects
         private List<GattDeviceService> serviceObjects = new List<GattDeviceService>();
         private List<GattCharacteristic> characteristicObjects = new List<GattCharacteristic>();
         private List<GattDescriptor> descriptorObjects = new List<GattDescriptor>();
+        private List<string> scanServices = new List<string>();
 
         // Which characteristics we are subscribed to notifications from
         private List<GattCharacteristic> subscribeCharacteristics = new List<GattCharacteristic>();
@@ -38,11 +33,6 @@ namespace ProtoRIOControl.UWP.Bluetooth {
         List<ulong> deviceAddresses = new List<ulong>();
         List<BluetoothLEDevice> devices = new List<BluetoothLEDevice>();
 
-        // Enable BT Dialog Text
-        public string REQUEST_BT_TITLE = "Bluetooth Required";
-        public string REQUEST_BT_MESSAGE = "Please enable bluetooth in Settings";
-        public string REQUEST_BT_CONFIRM = "Settings";
-        public string REQUEST_BT_DENY = "Cancel";
 
         // UWP Bluetooth stuff
         BluetoothLEAdvertisementWatcher watcher;
@@ -50,27 +40,29 @@ namespace ProtoRIOControl.UWP.Bluetooth {
         BluetoothAdapter adapter;
 
         // The delegate
-        private BLEDelegate clientDelegate;
+        private BTCallback callback;
+
+        private bool isScanning = false;
+        private bool isConnected = false;
 
         private CoreDispatcher mainThread = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
 
-        #endregion
 
-        public UWPBLEClient(BLEDelegate clientDelegate) {
-            this.clientDelegate = clientDelegate;
+        public UWPBluetooth(BTCallback btCallback) {
+            this.callback = btCallback;
             Task.Run(async () => {
-                BtError error = await _CheckBluetooth();
+                BtError error = await _checkBtSupport();
                 if (error != BtError.NoBluetooth && error != BtError.NoBLE && error != BtError.NoServer) {
                     var lastState = error == BtError.None;
                     // Watch for bt power changes
                     while (true) {
-                        BtError e = await _CheckBluetooth();
+                        BtError e = await _checkBtSupport();
                         var state = e == BtError.None;
                         if (state != lastState) {
                             lastState = state;
                             // Should not wait for this. That would slow down checking for power changes
                             mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                                clientDelegate.OnBluetoothPowerChanged(state);
+                                callback.onBluetoothPowerChanged(state);
                             });
                         }
                         await Task.Delay(100);
@@ -79,17 +71,13 @@ namespace ProtoRIOControl.UWP.Bluetooth {
             });
         }
 
-        #region Client Control
-        public override void ScanForService(string service, bool scanFor = true) {
-            if (scanFor && !ScanServices.Contains(service.ToUpper())) {
-                ScanServices.Add(service.ToUpper());
-            }
-            if (!scanFor && ScanServices.Contains(service.ToUpper())) {
-                ScanServices.Remove(service);
+        public void scanForService(string service) {
+            if (!scanServices.Contains(service.ToUpper())) {
+                scanServices.Add(service.ToUpper());
             }
         }
 
-        private async Task<BtError> _CheckBluetooth() {
+        private async Task<BtError> _checkBtSupport() {
             var radios = await Radio.GetRadiosAsync();
             var r = radios.FirstOrDefault(radio => radio.Kind == RadioKind.Bluetooth);
             if (r == null) {
@@ -106,113 +94,109 @@ namespace ProtoRIOControl.UWP.Bluetooth {
             }
             return BtError.None;
         }
-        public override BtError CheckBluetooth() {
+        public BtError checkBtSupport() {
             var task = Task<BtError>.Run(async () => {
-                return await _CheckBluetooth();
+                return await _checkBtSupport();
             });
             task.Wait();
             return task.Result;
         }
 
-        private async Task _RequestEnabeBt() {
+        private async Task _showEnableBtPrompt(string title, string message, string confirmText, string cancelText) {
             ContentDialog locationPromptDialog = new ContentDialog {
-                Title = REQUEST_BT_TITLE,
-                Content = REQUEST_BT_MESSAGE,
-                CloseButtonText = REQUEST_BT_DENY,
-                PrimaryButtonText = REQUEST_BT_CONFIRM
+                Title = title,
+                Content = message,
+                CloseButtonText = cancelText,
+                PrimaryButtonText = confirmText
             };
             ContentDialogResult result = await locationPromptDialog.ShowAsync();
             if (result == ContentDialogResult.Primary) {
                 await Windows.System.Launcher.LaunchUriAsync(new Uri(@"ms-settings:bluetooth"));
             }
         }
-        public override void RequestEnableBt() {
+        public void showEnableBtPrompt(string title, string message, string confirmText, string cancelText) {
             var task = Task.Run(async () => {
-                await _RequestEnabeBt();
+                await _showEnableBtPrompt(title, message, confirmText, cancelText);
             });
-            task.Wait();
+            //task.Wait();
         }
 
-        private async Task<BtError> _ScanForDevices() {
-            if (!IsScanning && !IsConnected) {
+        private async Task<BtError> _enumerateDevices() {
+            if (!isScanning && !isConnected) {
                 devices.Clear();
                 deviceAddresses.Clear();
-                Services.Clear();
-                Characteristics.Clear();
-                Descriptors.Clear();
                 serviceObjects.Clear();
                 characteristicObjects.Clear();
                 descriptorObjects.Clear();
                 subscribeCharacteristics.Clear();
-                BtError error = await _CheckBluetooth();
+                BtError error = await _checkBtSupport();
                 if (error != BtError.None) {
                     return error;
                 }
                 watcher = new BluetoothLEAdvertisementWatcher();
                 watcher.Received += DeviceDiscovered;
                 watcher.Start();
-                IsScanning = true;
+                isScanning = true;
                 return BtError.None;
             } else {
                 return BtError.AlreadyRunning;
             }
         }
-        public override BtError ScanForDevices() {
+        public BtError enumerateDevices() {
             var task = Task<BtError>.Run(async () => {
-                return await _ScanForDevices();
+                return await _enumerateDevices();
             });
             task.Wait();
             return task.Result;
         }
 
-        public override void StopScanning() {
-            if (IsScanning) {
+        public void endEnumeration() {
+            if (isScanning) {
                 watcher.Stop();
                 watcher = null;
-                IsScanning = false;
+                isScanning = false;
             }
         }
 
-        private async Task _ConnectToDevice(string deviceAddress) {
+        private async Task _connect(string deviceAddress) {
             BluetoothLEDevice device = devices.First(f => (f.BluetoothAddress + "").ToUpper().Equals(deviceAddress.ToUpper()));
             GattDeviceServicesResult result = await device.GetGattServicesAsync(BluetoothCacheMode.Uncached);
             if (result.Status == GattCommunicationStatus.Success) {
-                IsConnected = true;
+                isConnected = true;
                 connectedDevice = device;
                 device.ConnectionStatusChanged += ConnectionStatusChanged;
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnConnectToDevice((device.BluetoothAddress + "").ToUpper(), device.Name, true);
-                });
                 foreach (GattDeviceService service in result.Services) {
                     await AddService(service);
                 }
                 await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnServicesDiscovered();
+                    callback.onConnectToDevice((device.BluetoothAddress + "").ToUpper(), device.Name, true);
                 });
             } else {
                 await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnConnectToDevice((device.BluetoothAddress + "").ToUpper(), device.Name, false);
+                    callback.onConnectToDevice((device.BluetoothAddress + "").ToUpper(), device.Name, false);
                 });
             }
         }
-
-        public override void ConnectToDevice(string deviceAddress) {
+        public void connect(string deviceAddress) {
             var task = Task.Run(async () => {
-                await _ConnectToDevice(deviceAddress);
+                await _connect(deviceAddress);
             });
-            task.Wait();
+            //task.Wait();
         }
 
-        public override void Disconnect() {
-            if (IsConnected) {
+        public void disconnect() {
+            if (isConnected) {
                 // Don't need to watch value changes anymore
                 foreach (GattCharacteristic c in characteristicObjects) {
                     c.ValueChanged -= CharacteristicValueChanged;
                 }
-                // Unsubscribe from characteristics
-                foreach (GattCharacteristic c in subscribeCharacteristics) {
-                    SubscribeToCharacteristic(c.Uuid.ToString(), false);
-                }
+                var task = Task.Run(async () => {
+                    // Unsubscribe from characteristics
+                    foreach (GattCharacteristic c in subscribeCharacteristics) {
+                        await _subscribeToCharacteristic(c.Uuid.ToString().ToUpper(), false);
+                    }
+                });
+                task.Wait();
                 int i = devices.IndexOf(connectedDevice);
                 connectedDevice.Dispose();
                 connectedDevice = null;
@@ -220,18 +204,20 @@ namespace ProtoRIOControl.UWP.Bluetooth {
                 // Force it to get a new device id
                 devices.RemoveAt(i);
                 deviceAddresses.RemoveAt(i);
-                Services.Clear();
-                Characteristics.Clear();
-                Descriptors.Clear();
                 serviceObjects.Clear();
                 characteristicObjects.Clear();
                 descriptorObjects.Clear();
                 subscribeCharacteristics.Clear();
-                IsConnected = false;
+                isConnected = false;
             }
         }
 
-        private async Task _SubscribeToCharacteristic(string characteristic, bool subscribe) {
+        /// <summary>
+        /// Subscribe to a characteristic to receive notifications when its value is changed
+        /// </summary>
+        /// <param name="characteristic">The characteristic to subscribe to</param>
+        /// <param name="subscribe">Whether not to subscribe to the characteristic (false to unsubscribe)</param>
+        private async Task _subscribeToCharacteristic(string characteristic, bool subscribe = true) {
             GattCharacteristic c = GetCharacteristic(new Guid(characteristic));
             if (c == null)
                 return;
@@ -256,11 +242,12 @@ namespace ProtoRIOControl.UWP.Bluetooth {
                 c.ValueChanged += CharacteristicValueChanged;
             }
         }
-        public override void SubscribeToCharacteristic(string characteristic, bool subscribe = true) {
+
+        public void subscribeToUartChars() {
             var task = Task.Run(async () => {
-                await _SubscribeToCharacteristic(characteristic, subscribe);
+                await _subscribeToCharacteristic(BTValues.txCharacteristic, true);
             });
-            task.Wait();
+            //task.Wait();
         }
 
         private GattDeviceService GetService(Guid service) {
@@ -294,57 +281,20 @@ namespace ProtoRIOControl.UWP.Bluetooth {
                         if (descRes.Status == GattCommunicationStatus.Success) {
                             foreach (GattDescriptor d in descRes.Descriptors) {
                                 descriptorObjects.Add(d);
-                                Descriptors.Add(d.Uuid.ToString().ToUpper());
                             }
                         }
                         characteristicObjects.Add(c);
-                        Characteristics.Add(c.Uuid.ToString().ToUpper());
                     }
                 }
                 serviceObjects.Add(service);
-                Services.Add(service.Uuid.ToString().ToUpper());
             }
         }
 
-        #endregion
-
-        #region Characteristics and Descriptors
-        private async Task _ReadCharacteristic(string characteristic) {
-            GattCharacteristic c = GetCharacteristic(new Guid(characteristic));
+        private async Task _writeToUart(byte[] value) {
+            GattCharacteristic c = GetCharacteristic(new Guid(BTValues.rxCharacteristic));
             if (c == null) {
                 await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnCharacteristicRead(characteristic.ToUpper(), false, null);
-                });
-                return;
-            }
-            GattReadResult result = null;
-            try {
-                result = await c.ReadValueAsync();
-            } catch (Exception e) {
-
-            }
-            if (result != null && result.Status == GattCommunicationStatus.Success) {
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnCharacteristicRead(characteristic.ToUpper(), true, result.Value.ToArray());
-                });
-            } else {
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnCharacteristicRead(characteristic.ToUpper(), false, null);
-                });
-            }
-        }
-        public override void ReadCharacteristic(string characteristic) {
-            var task = Task.Run(async () => {
-                await _ReadCharacteristic(characteristic);
-            });
-            task.Wait();
-        }
-
-        private async Task _WriteCharacteristic(string characteristic, byte[] value) {
-            GattCharacteristic c = GetCharacteristic(new Guid(characteristic));
-            if (c == null) {
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnCharacteristicWrite(characteristic.ToUpper(), false, null);
+                    callback.onUartDataSent(value, false);
                 });
                 return;
             }
@@ -356,103 +306,36 @@ namespace ProtoRIOControl.UWP.Bluetooth {
             }
             if (result?.Status == GattCommunicationStatus.Success) {
                 await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnCharacteristicWrite(characteristic.ToUpper(), true, value);
+                    callback.onUartDataSent(value, true);
                 });
             } else {
                 await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnCharacteristicWrite(characteristic.ToUpper(), false, null);
+                    callback.onUartDataSent(value, false);
                 });
             }
         }
-        public override void WriteCharacteristic(string characteristic, byte[] value) {
+        public void writeToUart(byte[] value) {
             var task = Task.Run(async () => {
-                await _WriteCharacteristic(characteristic, value);
+                await _writeToUart(value);
             });
-            task.Wait();
+            //task.Wait();
         }
 
-        private async Task _ReadDescriptor(string descriptor) {
-            GattDescriptor d = GetDescriptor(new Guid(descriptor));
-            if (d == null) {
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnDescriptorRead(descriptor.ToUpper(), false, null);
-                });
-                return;
+        public bool hasUartService() {
+            foreach (GattDeviceService s in serviceObjects) {
+                if (s.Uuid.ToString().ToUpper().Equals(BTValues.uartService.ToUpper()))
+                    return true;
             }
-            GattReadResult result = null;
-            try {
-                result = await d.ReadValueAsync();
-            } catch (Exception e) {
-
-            }
-            if (result?.Status == GattCommunicationStatus.Success) {
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnDescriptorRead(descriptor.ToUpper(), true, result.Value.ToArray());
-                });
-            } else {
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnDescriptorRead(descriptor.ToUpper(), false, null);
-                });
-            }
+            return false;
         }
-        public override void ReadDescriptor(string descriptor) {
-            var task = Task.Run(async () => {
-                await _ReadDescriptor(descriptor);
-            });
-            task.Wait();
-        }
-
-        private async Task _WriteDescriptor(string descriptor, byte[] value) {
-            GattDescriptor d = GetDescriptor(new Guid(descriptor));
-            if (d == null) {
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnDescriptorWrite(descriptor.ToUpper(), false, null);
-                });
-                return;
-            }
-            GattWriteResult result = null;
-            try {
-                result = await d.WriteValueWithResultAsync(WindowsRuntimeBufferExtensions.AsBuffer(value));
-            } catch (Exception e) {
-
-            }
-            if (result?.Status == GattCommunicationStatus.Success) {
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnDescriptorWrite(descriptor.ToUpper(), true, value);
-                });
-            } else {
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnDescriptorWrite(descriptor.ToUpper(), false, null);
-                });
-            }
-        }
-        public override void WriteDescriptor(string descriptor, byte[] value) {
-            var task = Task.Run(async () => {
-                await _WriteDescriptor(descriptor, value);
-            });
-            task.Wait();
-        }
-
-        public override bool HasService(string service) {
-            return Services.Contains(service.ToUpper());
-        }
-
-        public override bool HasCharacteristic(string characteristic) {
-            return Characteristics.Contains(characteristic.ToUpper());
-        }
-
-        public override bool HasDescriptor(string descriptor) {
-            return Descriptors.Contains(descriptor.ToUpper());
-        }
-        #endregion
 
         #region Event Handlers
         // AdvertisementWatcher Detected device
         private async void DeviceDiscovered(BluetoothLEAdvertisementWatcher sender, BluetoothLEAdvertisementReceivedEventArgs args) {
-            bool returnDevice = ScanServices.Count == 0;
+            bool returnDevice = scanServices.Count == 0;
             if (!returnDevice) {
                 foreach (Guid uuid in args.Advertisement.ServiceUuids) {
-                    returnDevice = ScanServices.Contains(uuid.ToString().ToUpper());
+                    returnDevice = scanServices.Contains(uuid.ToString().ToUpper());
                     if (returnDevice)
                         break;
                 }
@@ -472,17 +355,19 @@ namespace ProtoRIOControl.UWP.Bluetooth {
                     advertisedName = Encoding.UTF8.GetString(smallName[0].Data.ToArray());
                 }
                 await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    clientDelegate.OnDeviceDiscovered((device.BluetoothAddress + "").ToUpper(), advertisedName, args.RawSignalStrengthInDBm);
+                    callback.onDeviceDiscovered((device.BluetoothAddress + "").ToUpper(), advertisedName, args.RawSignalStrengthInDBm);
                 });
             }
         }
         private async void CharacteristicValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args) {
-            await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                clientDelegate.OnCharacteristicRead(sender.Uuid.ToString().ToUpper(), true, args.CharacteristicValue.ToArray());
-            });
+            if (sender.Uuid.ToString().ToUpper().Equals(BTValues.txCharacteristic.ToUpper())) {
+                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
+                    callback.onUartDataReceived(args.CharacteristicValue.ToArray());
+                });
+            }
         }
         private void ConnectionStatusChanged(BluetoothLEDevice sender, object args) {
-            clientDelegate.OnDisconnectFromDevice((sender.BluetoothAddress + "").ToUpper(), sender.Name);
+            callback.onDisconnectFromDevice((sender.BluetoothAddress + "").ToUpper(), sender.Name);
         }
         #endregion
     }

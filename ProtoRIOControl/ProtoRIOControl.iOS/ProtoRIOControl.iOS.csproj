@@ -89,7 +89,7 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Bluetooth\IOSBLEClient.cs" />
+    <Compile Include="Bluetooth\IOSBluetooth.cs" />
     <Compile Include="Localization\Localize.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
@@ -218,8 +218,5 @@
       <Name>ProtoRIOControl</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assets.xcassets\info.imageset\" />
-    <Folder Include="Assets.xcassets\bluetooth.imageset\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

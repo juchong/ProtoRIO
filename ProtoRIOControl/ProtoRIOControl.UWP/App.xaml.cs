@@ -28,7 +28,7 @@ namespace ProtoRIOControl.UWP {
         public App() {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-            ProtoRIO.Bluetooth.BLEClient.Builder = new UWPBLEClientBuilder();
+            ProtoRIOControl.MainPage.bluetooth = new UWPBluetooth(ProtoRIOControl.MainPage.btCallback);
         }
 
         /// <summary>

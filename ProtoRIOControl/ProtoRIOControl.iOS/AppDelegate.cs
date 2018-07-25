@@ -22,7 +22,7 @@ namespace ProtoRIOControl.iOS {
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options) {
 
-            BLEClient.Builder = new IOSBLEClientBuilder();
+            MainPage.bluetooth = new IOSBluetooth(MainPage.btCallback);
 
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
