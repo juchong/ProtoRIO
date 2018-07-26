@@ -28,12 +28,12 @@ namespace ProtoRIOControl {
         }
 
         void OnConnectClicked(object src, EventArgs e) {
-            BtError error = bluetooth.enumerateDevices();
+            /*BtError error = bluetooth.enumerateDevices();
             Debug.WriteLine("ScanError: " + error);
             if(error == BtError.Disabled){
                 bluetooth.showEnableBtPrompt(AppResources.EnableBTTitle, AppResources.EnableBTMessage, AppResources.EnableBTConfirm, AppResources.EnableBTCancel);
                 Debug.WriteLine("Done showing prompt");
-            }
+            }*/
         }
 
         public class MyBtCallback : BTCallback {

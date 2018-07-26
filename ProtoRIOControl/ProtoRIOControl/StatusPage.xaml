@@ -6,10 +6,50 @@
              Title="{lang:Translate StatusTab}"
              Icon="info.png">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="ProtoRIO Status"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
+            <Grid HorizontalOptions="FillAndExpand"
+                  VerticalOptions="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Text="{lang:Translate BatteryVoltage}"
+                           HorizontalTextAlignment="Center"
+                           FontSize="Small"/>
+                    <Label Grid.Row="0"
+                           Grid.Column="1"
+                           Text="{lang:Translate BatteryCurrent}"
+                           HorizontalTextAlignment="Center"
+                           FontSize="Small"/>
+                    <Label Grid.Row="1"
+                           Grid.Column="0"
+                           Text="0 V"
+                           BackgroundColor="Red"
+                           HorizontalTextAlignment="Center"
+                           FontSize="Large"/>
+                    <Label Grid.Row="1"
+                           Grid.Column="1"
+                           Text="0 A"
+                           HorizontalTextAlignment="Center"
+                           FontSize="Large"/>
+                </Grid>
+            
+            <Label Grid.Row="1"
+                   x:Name="connectionStatusLabel"
+                   Text="{lang:Translate StatusNotConnected}"
+                   TextColor="Red"
+                   FontSize="Medium"/>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

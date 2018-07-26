@@ -150,4 +150,28 @@
   <data name="EnableBTCancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="StatusNotConnected" xml:space="preserve">
+    <value>Not Connected</value>
+  </data>
+  <data name="BatteryVoltage" xml:space="preserve">
+    <value>Battery Voltage</value>
+  </data>
+  <data name="BatteryCurrent" xml:space="preserve">
+    <value>Battery Current</value>
+  </data>
+  <data name="PWMA" xml:space="preserve">
+    <value>PWM A</value>
+  </data>
+  <data name="PWMB" xml:space="preserve">
+    <value>PWM B</value>
+  </data>
+  <data name="NegFull" xml:space="preserve">
+    <value>-100</value>
+  </data>
+  <data name="Full" xml:space="preserve">
+    <value>100</value>
+  </data>
+  <data name="Neutral" xml:space="preserve">
+    <value>0</value>
+  </data>
 </root>

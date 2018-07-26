@@ -6,10 +6,97 @@
              Title="{lang:Translate PWMTab}"
              Icon="wave.png">    
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="PWMDevices Here"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0"
+                  VerticalOptions="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.ColumnSpan="2"
+                       FontSize="Medium"
+                       Text="{lang:Translate PWMA}"/>
+                <Switch Grid.Column="2"
+                        IsToggled="false"
+                        HorizontalOptions="End"
+                        x:Name="pwmaSwitch"/>
+                <Slider Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        x:Name="pwmaSlider"
+                        Minimum="-100"
+                        Maximum="100"
+                        Value="0"
+                        ValueChanged="pwmaChanged"/>
+                <Button Grid.Row="2"
+                        Grid.Column="0"
+                        Text="{lang:Translate NegFull}"
+                        x:Name="pwmaReverseButton"
+                        HorizontalOptions="Start"/>
+                <Button Grid.Row="2"
+                        Grid.Column="1"
+                        Text="{lang:Translate Neutral}"
+                        x:Name="pwmaNeutralButton"
+                        HorizontalOptions="Center"/>
+                <Button Grid.Row="2"
+                        Grid.Column="2"
+                        Text="{lang:Translate Full}"
+                        x:Name="pwmaForward"
+                        HorizontalOptions="End"/>
+            </Grid>
+            <Grid Grid.Row="1"
+                  VerticalOptions="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.ColumnSpan="2"
+                       FontSize="Medium"
+                       Text="{lang:Translate PWMB}"/>
+                <Switch Grid.Column="2"
+                        IsToggled="false"
+                        HorizontalOptions="End"
+                        x:Name="pwmbSwitch"/>
+                <Slider Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        x:Name="pwmbSlider"
+                        Minimum="-100"
+                        Maximum="100"
+                        Value="0"
+                        ValueChanged="pwmbChanged"/>
+                <Button Grid.Row="2"
+                        Grid.Column="0"
+                        Text="{lang:Translate NegFull}"
+                        x:Name="pwmbReverseButton"
+                        HorizontalOptions="Start"/>
+                <Button Grid.Row="2"
+                        Grid.Column="1"
+                        Text="{lang:Translate Neutral}"
+                        x:Name="pwmbNeutralButton"
+                        HorizontalOptions="Center"/>
+                <Button Grid.Row="2"
+                        Grid.Column="2"
+                        Text="{lang:Translate Full}"
+                        x:Name="pwmbForward"
+                        HorizontalOptions="End"/>
+            </Grid>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

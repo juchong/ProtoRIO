@@ -112,5 +112,47 @@ namespace ProtoRIOControl.Localization {
                 return ResourceManager.GetString("EnableBTCancel", resourceCulture);
             }
         }
+        
+        public static string BatteryVoltage {
+            get {
+                return ResourceManager.GetString("BatteryVoltage", resourceCulture);
+            }
+        }
+        
+        public static string BatteryCurrent {
+            get {
+                return ResourceManager.GetString("BatteryCurrent", resourceCulture);
+            }
+        }
+        
+        public static string PWMA {
+            get {
+                return ResourceManager.GetString("PWMA", resourceCulture);
+            }
+        }
+        
+        public static string PWMB {
+            get {
+                return ResourceManager.GetString("PWMB", resourceCulture);
+            }
+        }
+        
+        public static string NegFull {
+            get {
+                return ResourceManager.GetString("NegFull", resourceCulture);
+            }
+        }
+        
+        public static string Full {
+            get {
+                return ResourceManager.GetString("Full", resourceCulture);
+            }
+        }
+        
+        public static string Neutral {
+            get {
+                return ResourceManager.GetString("Neutral", resourceCulture);
+            }
+        }
     }
 }
