@@ -21,11 +21,18 @@ namespace ProtoRIOControl {
             MyBtCallback.mainPage = this;
         }
 
+        protected override void OnDisappearing() {
+            base.OnDisappearing();
+            bluetooth.endEnumeration();
+            bluetooth.disconnect();
+        }
+
         void OnConnectClicked(object src, EventArgs e) {
             BtError error = bluetooth.enumerateDevices();
             Debug.WriteLine("ScanError: " + error);
             if(error == BtError.Disabled){
                 bluetooth.showEnableBtPrompt(AppResources.EnableBTTitle, AppResources.EnableBTMessage, AppResources.EnableBTConfirm, AppResources.EnableBTCancel);
+                Debug.WriteLine("Done showing prompt");
             }
         }
 
@@ -36,6 +43,7 @@ namespace ProtoRIOControl {
             // Connection events
             public void onDeviceDiscovered(string address, string name, int rssi) {
                 if(!mainPage.discoveredDevices.Contains(address)){
+                    Debug.WriteLine("Have name of discovered device: " + (name != null)); //TODO: Fix this!!!
                     mainPage.discoveredDevices.Add(address);
                     if (name != null && name.Equals("RN_BLE")) {
                         Debug.WriteLine("Connecting to " + name + "...");

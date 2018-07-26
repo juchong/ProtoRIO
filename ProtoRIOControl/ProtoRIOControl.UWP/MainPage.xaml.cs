@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProtoRIOControl.UWP.Bluetooth;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace ProtoRIOControl.UWP {
     public sealed partial class MainPage {
         public MainPage() {
             this.InitializeComponent();
-
+            ProtoRIOControl.MainPage.bluetooth = new UWPBluetooth(ProtoRIOControl.MainPage.btCallback);
             LoadApplication(new ProtoRIOControl.App());
         }
     }

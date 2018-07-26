@@ -12,6 +12,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using ProtoRIO.Bluetooth;
+using System.Diagnostics;
 
 
 // NOTE: All async methods are private and are forced to run syncrenously in order to work the same way as other platforms do
@@ -47,7 +48,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
 
         private CoreDispatcher mainThread = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
 
-
+#pragma warning disable 4014
         public UWPBluetooth(BTCallback btCallback) {
             this.callback = btCallback;
             Task.Run(async () => {
@@ -70,6 +71,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
                 }
             });
         }
+#pragma warning restore 4014
 
         public void scanForService(string service) {
             if (!scanServices.Contains(service.ToUpper())) {
@@ -102,24 +104,24 @@ namespace ProtoRIOControl.UWP.Bluetooth {
             return task.Result;
         }
 
-        private async Task _showEnableBtPrompt(string title, string message, string confirmText, string cancelText) {
-            ContentDialog locationPromptDialog = new ContentDialog {
-                Title = title,
-                Content = message,
-                CloseButtonText = cancelText,
-                PrimaryButtonText = confirmText
-            };
-            ContentDialogResult result = await locationPromptDialog.ShowAsync();
-            if (result == ContentDialogResult.Primary) {
-                await Windows.System.Launcher.LaunchUriAsync(new Uri(@"ms-settings:bluetooth"));
-            }
-        }
+#pragma warning disable 4014
         public void showEnableBtPrompt(string title, string message, string confirmText, string cancelText) {
-            var task = Task.Run(async () => {
-                await _showEnableBtPrompt(title, message, confirmText, cancelText);
+            // This should not be awaited. This function needs to return like it does on other platforms
+            // This code must run on the main thread because it is UI code
+            mainThread.RunAsync(CoreDispatcherPriority.Normal, async () => {
+                ContentDialog locationPromptDialog = new ContentDialog {
+                    Title = title,
+                    Content = message,
+                    CloseButtonText = cancelText,
+                    PrimaryButtonText = confirmText
+                };
+                ContentDialogResult result = await locationPromptDialog.ShowAsync();
+                if (result == ContentDialogResult.Primary) {
+                    await Windows.System.Launcher.LaunchUriAsync(new Uri(@"ms-settings:bluetooth"));
+                }
             });
-            //task.Wait();
         }
+#pragma warning restore 4014
 
         private async Task<BtError> _enumerateDevices() {
             if (!isScanning && !isConnected) {
@@ -134,6 +136,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
                     return error;
                 }
                 watcher = new BluetoothLEAdvertisementWatcher();
+                watcher.ScanningMode = BluetoothLEScanningMode.Active;
                 watcher.Received += DeviceDiscovered;
                 watcher.Start();
                 isScanning = true;
@@ -293,9 +296,6 @@ namespace ProtoRIOControl.UWP.Bluetooth {
         private async Task _writeToUart(byte[] value) {
             GattCharacteristic c = GetCharacteristic(new Guid(BTValues.rxCharacteristic));
             if (c == null) {
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    callback.onUartDataSent(value, false);
-                });
                 return;
             }
             GattWriteResult result = null;
@@ -306,11 +306,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
             }
             if (result?.Status == GattCommunicationStatus.Success) {
                 await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    callback.onUartDataSent(value, true);
-                });
-            } else {
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    callback.onUartDataSent(value, false);
+                    callback.onUartDataSent(value);
                 });
             }
         }
@@ -342,21 +338,27 @@ namespace ProtoRIOControl.UWP.Bluetooth {
             }
             if (returnDevice) {
                 BluetoothLEDevice device = await BluetoothLEDevice.FromBluetoothAddressAsync(args.BluetoothAddress);
-                if (!deviceAddresses.Contains(device.BluetoothAddress)) {
-                    devices.Add(device);
-                    deviceAddresses.Add(device.BluetoothAddress);
+                if(device != null) {
+                    if (!deviceAddresses.Contains(device.BluetoothAddress)) {
+                        devices.Add(device);
+                        deviceAddresses.Add(device.BluetoothAddress);
+                    }
+                    string advertisedName = device.Name;
+                    List<BluetoothLEAdvertisementDataSection> complete = new List<BluetoothLEAdvertisementDataSection>(args.Advertisement.GetSectionsByType(BluetoothLEAdvertisementDataTypes.CompleteLocalName));
+                    List<BluetoothLEAdvertisementDataSection> smallName = new List<BluetoothLEAdvertisementDataSection>(args.Advertisement.GetSectionsByType(BluetoothLEAdvertisementDataTypes.ShortenedLocalName));
+                    if (complete.Count > 0) {
+                        advertisedName = Encoding.UTF8.GetString(complete[0].Data.ToArray());
+                    } else if (smallName.Count > 0) {
+                        advertisedName = Encoding.UTF8.GetString(smallName[0].Data.ToArray());
+                    }
+                    await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
+                        callback.onDeviceDiscovered((device.BluetoothAddress + "").ToUpper(), advertisedName, args.RawSignalStrengthInDBm);
+                    });
+                } else {
+                    Debug.WriteLine("-------------Error:------------");
+                    Debug.WriteLine("Devie with address " + args.BluetoothAddress + " was a null device!");
+                    Debug.WriteLine("-------------------------------");
                 }
-                string advertisedName = device.Name;
-                List<BluetoothLEAdvertisementDataSection> complete = new List<BluetoothLEAdvertisementDataSection>(args.Advertisement.GetSectionsByType(BluetoothLEAdvertisementDataTypes.CompleteLocalName));
-                List<BluetoothLEAdvertisementDataSection> smallName = new List<BluetoothLEAdvertisementDataSection>(args.Advertisement.GetSectionsByType(BluetoothLEAdvertisementDataTypes.ShortenedLocalName));
-                if (complete.Count > 0) {
-                    advertisedName = Encoding.UTF8.GetString(complete[0].Data.ToArray());
-                } else if (smallName.Count > 0) {
-                    advertisedName = Encoding.UTF8.GetString(smallName[0].Data.ToArray());
-                }
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    callback.onDeviceDiscovered((device.BluetoothAddress + "").ToUpper(), advertisedName, args.RawSignalStrengthInDBm);
-                });
             }
         }
         private async void CharacteristicValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args) {
