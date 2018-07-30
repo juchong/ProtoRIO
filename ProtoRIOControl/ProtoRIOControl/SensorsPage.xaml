@@ -6,10 +6,45 @@
              Title="{lang:Translate SensorsTab}"
              Icon="scan.png">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Sensors Here"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0"
+                  VerticalOptions="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Label FontSize="Medium"
+                       Text="{lang:Translate SensorA}"
+                       HorizontalTextAlignment="Center"/>
+                <Picker Grid.Row="1"
+                        x:Name="sensorAPicker"
+                        Title="{lang:Translate SelectSensor}"/>
+                <Label Grid.Row="2"
+                       x:Name="sensorAResults1"
+                       Text="Results" />
+            </Grid>
+            <Grid Grid.Row="1"
+                  VerticalOptions="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Label FontSize="Medium"
+                       Text="{lang:Translate SensorB}"
+                       HorizontalTextAlignment="Center"/>
+                <Picker Grid.Row="1"
+                        x:Name="sensorBPicker"
+                        Title="{lang:Translate SelectSensor}"/>
+                <Label Grid.Row="2"
+                       x:Name="sensorBResults1"
+                       Text="Results" />
+            </Grid>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

@@ -6,10 +6,55 @@
              Title="{lang:Translate PneumaticsTab}"
              Icon="gauge.png">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Pneumatics Devices Here"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0"
+                  VerticalOptions="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Label FontSize="Medium"
+                       Text="{lang:Translate SolenoidA}"
+                       HorizontalTextAlignment="Center"/>
+                <Button Grid.Row="1"
+                        x:Name="solenoidAButton"
+                        Text="{lang:Translate Off}"
+                        BackgroundColor="Red"
+                        FontSize="Large"/>
+            </Grid>
+            <Grid Grid.Row="1"
+                  VerticalOptions="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Label FontSize="Medium"
+                       Text="{lang:Translate SolenoidB}"
+                       HorizontalTextAlignment="Center"/>
+                <Button Grid.Row="1"
+                        x:Name="solenoidBButton"
+                        Text="{lang:Translate Off}"
+                        BackgroundColor="Red"
+                        FontSize="Large"/>
+            </Grid>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Switch x:Name="allowBothSwitch"
+                        IsToggled="false"/>
+                <Label Grid.Column="1"
+                       VerticalTextAlignment="Center"
+                       Text="{lang:Translate AllowBothSolenoid}"
+                       FontAttributes="Bold"
+                       TextColor="Red"/>
+            </Grid>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

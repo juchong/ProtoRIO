@@ -23,9 +23,10 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.ColumnSpan="2"
+                <Label Grid.Column="1"
                        FontSize="Medium"
-                       Text="{lang:Translate PWMA}"/>
+                       Text="{lang:Translate PWMA}"
+                       HorizontalTextAlignment="Center"/>
                 <Switch Grid.Column="2"
                         IsToggled="false"
                         HorizontalOptions="End"
@@ -66,9 +67,10 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.ColumnSpan="2"
+                <Label Grid.Column="1"
                        FontSize="Medium"
-                       Text="{lang:Translate PWMB}"/>
+                       Text="{lang:Translate PWMB}"
+                       HorizontalTextAlignment="Center"/>
                 <Switch Grid.Column="2"
                         IsToggled="false"
                         HorizontalOptions="End"

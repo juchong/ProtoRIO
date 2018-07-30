@@ -150,9 +150,6 @@
   <data name="EnableBTCancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="StatusNotConnected" xml:space="preserve">
-    <value>Not Connected</value>
-  </data>
   <data name="BatteryVoltage" xml:space="preserve">
     <value>Battery Voltage</value>
   </data>
@@ -173,5 +170,29 @@
   </data>
   <data name="Neutral" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="SolenoidA" xml:space="preserve">
+    <value>Solenoid A</value>
+  </data>
+  <data name="SolenoidB" xml:space="preserve">
+    <value>Solenoid B</value>
+  </data>
+  <data name="AllowBothSolenoid" xml:space="preserve">
+    <value>Allow both on at the same time</value>
+  </data>
+  <data name="Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="SelectSensor" xml:space="preserve">
+    <value>Select Sensor</value>
+  </data>
+  <data name="SensorA" xml:space="preserve">
+    <value>Sensor A</value>
+  </data>
+  <data name="SensorB" xml:space="preserve">
+    <value>Sensor B</value>
   </data>
 </root>
