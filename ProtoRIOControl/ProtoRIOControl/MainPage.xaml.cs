@@ -43,18 +43,14 @@ namespace ProtoRIOControl {
                     bluetooth.showEnableBtPrompt(AppResources.EnableBTTitle, AppResources.EnableBTMessage, AppResources.EnableBTConfirm, AppResources.EnableBTCancel);
                     requestTime = Environment.TickCount;
                     break;
-                case BtError.NoBLE:
-                case BtError.NoBluetooth:
-                case BtError.Unknown:
-                case BtError.UnsupportedPlatform:
-                default:
-                    DisplayAlert(AppResources.AlertBtErrorTitle, AppResources.AlertBtErrorMessage, AppResources.AlertOk);
-                    break;
                 case BtError.None:
                     discoveredDevices.Clear();
                     deviceNames.Clear();
-                    //bluetoothDevicePage = new BluetoothDevicePage();
-                    //Navigation.PushModalAsync(bluetoothDevicePage);
+                    bluetoothDevicePage = new BluetoothDevicePage(bluetooth);
+                    Navigation.PushModalAsync(bluetoothDevicePage);
+                    break;
+                default:
+                    DisplayAlert(AppResources.AlertBtErrorTitle, AppResources.AlertBtErrorMessage, AppResources.AlertOk);
                     break;
             }
         }

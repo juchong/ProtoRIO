@@ -29,7 +29,6 @@ namespace ProtoRIOControl.Droid.Bluetooth {
         private List<BluetoothDevice> devices = new List<BluetoothDevice>();
 
         // Android Specific Bluetooth Objects
-        private Handler mainThread = new Handler(Looper.MainLooper);
         private BluetoothManager btManager;
         private BluetoothAdapter btAdapter;
         private BluetoothGatt gattConnection = null;
@@ -58,9 +57,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                             endEnumeration();
                             disconnect();
                         }
-                        mainThread.Post(() => {
-                            callback.onBluetoothPowerChanged(state);
-                        });
+                        callback.onBluetoothPowerChanged(state);
                     }
                     Thread.Sleep(100);
                 }
@@ -236,9 +233,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                         client.devices.Add(result.Device);
                         client.deviceAddresses.Add(result.Device.Address);
                     }
-                    client.mainThread.Post(() => {
-                        client.callback.onDeviceDiscovered(result.Device.Address.ToUpper(), result.Device.Name, result.Rssi);
-                    });
+                    client.callback.onDeviceDiscovered(result.Device.Address.ToUpper(), result.Device.Name, result.Rssi);
                 }
             }
             public override void OnBatchScanResults(IList<ScanResult> results) {
@@ -246,9 +241,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                 if (results != null) {
                     foreach(var result in results){
                         client.devices.Add(result.Device);
-                        client.mainThread.Post(() => {
-                            client.callback.onDeviceDiscovered(result.Device.Address.ToUpper(), result.Device.Name, result.Rssi);
-                        });
+                        client.callback.onDeviceDiscovered(result.Device.Address.ToUpper(), result.Device.Name, result.Rssi);
                     }
                 }
             }
@@ -264,17 +257,13 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             public override void OnCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, GattStatus status) {
                 base.OnCharacteristicRead(gatt, characteristic, status);
                 if (characteristic != null && characteristic.Uuid.ToString().ToUpper().Equals(BTValues.txCharacteristic.ToUpper()) && status == GattStatus.Success) {
-                    client.mainThread.Post(() => {
-                        client.callback.onUartDataReceived(characteristic.GetValue());
-                    });
+                    client.callback.onUartDataReceived(characteristic.GetValue());
                 }
             }
             public override void OnCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, GattStatus status) {
                 base.OnCharacteristicWrite(gatt, characteristic, status);
                 if (characteristic != null && characteristic.Uuid.ToString().ToUpper().Equals(BTValues.rxCharacteristic.ToUpper())) {
-                    client.mainThread.Post(() => {
-                        client.callback.onUartDataSent(characteristic.GetValue());
-                    });
+                    client.callback.onUartDataSent(characteristic.GetValue());
                 }
             }
             public override void OnServicesDiscovered(BluetoothGatt gatt, GattStatus status) {
@@ -283,9 +272,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                     foreach(var service in gatt.Services) {
                         client.AddService(service);
                     }
-                    client.mainThread.Post(() => {
-                        client.callback.onConnectToDevice(client.gattConnection.Device.Address, client.gattConnection.Device.Name, true);
-                    });
+                    client.callback.onConnectToDevice(client.gattConnection.Device.Address, client.gattConnection.Device.Name, true);
                 }
             }
             public override void OnCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
@@ -296,9 +283,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                 if (gatt != null) {
                     if (newState == ProfileState.Connected && status != GattStatus.Success) {
                         gatt.DiscoverServices();
-                        client.mainThread.Post(() => {
-                            client.callback.onConnectToDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name, false);
-                        });
+                        client.callback.onConnectToDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name, false);
                         client.isConnected = true;
                     }else if(newState == ProfileState.Connected){
                         gatt.DiscoverServices();
@@ -307,9 +292,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                         client.serviceObjects.Clear();
                         client.characteristicObjects.Clear();
                         client.descriptorObjects.Clear();
-                        client.mainThread.Post(() => {
-                            client.callback.onDisconnectFromDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name);
-                        });
+                        client.callback.onDisconnectFromDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name);
                         client.isConnected = false;
                     }
                 }

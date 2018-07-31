@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using ProtoRIO.Bluetooth;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,6 +15,11 @@ namespace ProtoRIOControl {
         public BluetoothDevicePage() {
             InitializeComponent();
             devicesList.ItemsSource = MainPage.deviceNames;
+        }
+
+        protected override void OnAppearing() {
+            // DO NOT START ENUMERATING BEFORE THIS PAGE IS SHOWN!!!
+            // Otherwise the callback events will be missed due beacause the main thread will be busy.
             MainPage.bluetooth.enumerateDevices();
         }
 

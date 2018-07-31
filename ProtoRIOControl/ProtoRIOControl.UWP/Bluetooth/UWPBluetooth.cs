@@ -62,9 +62,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
                         if (state != lastState) {
                             lastState = state;
                             // Should not wait for this. That would slow down checking for power changes
-                            mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                                callback.onBluetoothPowerChanged(state);
-                            });
+                            callback.onBluetoothPowerChanged(state);
                         }
                         await Task.Delay(100);
                     }
@@ -171,13 +169,9 @@ namespace ProtoRIOControl.UWP.Bluetooth {
                 foreach (GattDeviceService service in result.Services) {
                     await AddService(service);
                 }
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    callback.onConnectToDevice((device.BluetoothAddress + "").ToUpper(), device.Name, true);
-                });
+                callback.onConnectToDevice((device.BluetoothAddress + "").ToUpper(), device.Name, true);
             } else {
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    callback.onConnectToDevice((device.BluetoothAddress + "").ToUpper(), device.Name, false);
-                });
+                callback.onConnectToDevice((device.BluetoothAddress + "").ToUpper(), device.Name, false);
             }
         }
         public void connect(string deviceAddress) {
@@ -305,9 +299,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
 
             }
             if (result?.Status == GattCommunicationStatus.Success) {
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    callback.onUartDataSent(value);
-                });
+                callback.onUartDataSent(value);
             }
         }
         public void writeToUart(byte[] value) {
@@ -351,9 +343,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
                     } else if (smallName.Count > 0) {
                         advertisedName = Encoding.UTF8.GetString(smallName[0].Data.ToArray());
                     }
-                    await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                        callback.onDeviceDiscovered((device.BluetoothAddress + "").ToUpper(), advertisedName, args.RawSignalStrengthInDBm);
-                    });
+                    callback.onDeviceDiscovered((device.BluetoothAddress + "").ToUpper(), advertisedName, args.RawSignalStrengthInDBm);
                 } else {
                     Debug.WriteLine("-------------Error:------------");
                     Debug.WriteLine("Devie with address " + args.BluetoothAddress + " was a null device!");
@@ -363,9 +353,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
         }
         private async void CharacteristicValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args) {
             if (sender.Uuid.ToString().ToUpper().Equals(BTValues.txCharacteristic.ToUpper())) {
-                await mainThread.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    callback.onUartDataReceived(args.CharacteristicValue.ToArray());
-                });
+                callback.onUartDataReceived(args.CharacteristicValue.ToArray());
             }
         }
         private void ConnectionStatusChanged(BluetoothLEDevice sender, object args) {
