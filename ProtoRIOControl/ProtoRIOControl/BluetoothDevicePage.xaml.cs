@@ -22,13 +22,11 @@ namespace ProtoRIOControl {
         }
 
         private void onCancelClicked(object sender, EventArgs e) {
-            MainPage.bluetooth.endEnumeration();
             Navigation.PopModalAsync();
         }
 
         private void onDeviceSelected(object sender, SelectedItemChangedEventArgs e) {
-            MainPage.bluetooth.endEnumeration();
-            MainPage.bluetooth.connect(MainPage.discoveredDevices[MainPage.deviceNames.IndexOf((string)e.SelectedItem)]);
+            MainPage.deviceToConnectTo = MainPage.deviceNames.IndexOf((string)e.SelectedItem);
             Navigation.PopModalAsync();
         }
     }

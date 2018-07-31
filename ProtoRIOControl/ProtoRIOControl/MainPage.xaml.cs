@@ -1,4 +1,5 @@
-﻿using ProtoRIO.Bluetooth;
+﻿using Acr.UserDialogs;
+using ProtoRIO.Bluetooth;
 using ProtoRIOControl.Localization;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,10 @@ namespace ProtoRIOControl {
         public static BluetoothDevicePage bluetoothDevicePage;
         public static string connectedDeviceName = AppResources.UnknownDevice;
         public static int requestTime = -1;
+
+        public static int deviceToConnectTo = -1;
+
+        private static IProgressDialog connectProgressDialog;
 
         public MainPage() {
             InitializeComponent();
@@ -57,20 +62,43 @@ namespace ProtoRIOControl {
 
         protected override void OnAppearing() {
             // Just returned from some other page that no longer exists
-            bluetoothDevicePage = null;
+            if(bluetoothDevicePage != null){
+                bluetoothDevicePage = null;
+                bluetooth.endEnumeration();
+                if(deviceToConnectTo > 0){
+                    if(deviceToConnectTo >= discoveredDevices.Count){
+                        Debug.WriteLine("An invalid device was selected. Index was " + deviceToConnectTo + " but there were only " + discoveredDevices.Count + " devices.");
+                        return;
+                    }
+                    bluetooth.connect(discoveredDevices[deviceToConnectTo]);
+                    connectProgressDialog = UserDialogs.Instance.Progress(
+                        new ProgressDialogConfig() {
+                            Title = AppResources.Connecting + deviceNames[deviceToConnectTo],
+                            IsDeterministic = false,
+                            OnCancel = () => { bluetooth.disconnect(); },
+                            CancelText = AppResources.Cancel
+                        }
+                    );
+                    connectProgressDialog.Show();
+                    deviceToConnectTo = -1;
+                }
+            }
         }
 
         public class MyBtCallback : BTCallback {
 
             // Connection events
             public void onDeviceDiscovered(string address, string name, int rssi) {
-                Debug.WriteLine("GOT A DEVICE!!!");
                 if (!discoveredDevices.Contains(address)){
                     discoveredDevices.Add(address);
                     deviceNames.Add(name == null ? AppResources.UnknownDevice : name);
                 }
             }
             public void onConnectToDevice(string address, string name, bool success) {
+                Device.BeginInvokeOnMainThread(() => {
+                    connectProgressDialog.Hide();
+                    connectProgressDialog = null;
+                });
                 if (bluetooth.hasUartService()) {
                     bluetooth.subscribeToUartChars();
                     connectedDeviceName = name;

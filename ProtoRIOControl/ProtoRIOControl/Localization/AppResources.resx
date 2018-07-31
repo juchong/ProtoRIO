@@ -228,4 +228,7 @@
   <data name="StatusConnected" xml:space="preserve">
     <value>Connected to </value>
   </data>
+  <data name="Connecting" xml:space="preserve">
+    <value>Connecting to </value>
+  </data>
 </root>
