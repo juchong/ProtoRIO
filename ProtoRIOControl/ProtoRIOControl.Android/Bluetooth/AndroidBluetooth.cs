@@ -186,10 +186,14 @@ namespace ProtoRIOControl.Droid.Bluetooth {
 
         public void cancelConnect(){
             if (gattConnection != null) {
-                gattConnection.Close();
-                gattConnection.Disconnect();
-                gattConnection.Dispose();
-                gattConnection = null;
+                if (_isConnected) {
+                    disconnect();
+                } else {
+                    gattConnection.Close();
+                    gattConnection.Disconnect();
+                    gattConnection.Dispose();
+                    gattConnection = null;
+                }
             }
         }
 

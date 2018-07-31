@@ -176,7 +176,10 @@ namespace ProtoRIOControl.iOS.Bluetooth {
 
         public void cancelConnect(){
             if(connectedPeripheral != null){
-                centralManager.CancelPeripheralConnection(connectedPeripheral);
+                if (_isConnected)
+                    disconnect();
+                else
+                    centralManager.CancelPeripheralConnection(connectedPeripheral);
             }
         }
 

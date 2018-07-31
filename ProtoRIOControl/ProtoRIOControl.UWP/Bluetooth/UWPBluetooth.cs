@@ -325,8 +325,16 @@ namespace ProtoRIOControl.UWP.Bluetooth {
             return isScanning;
         }
 
+        public async void _cancelConnection() {
+
+        }
         public void cancelConnection() {
-            throw new NotImplementedException("I NEED TO DO THIS STILL!!!!");
+            if(connectedDevice != null) {
+                if (_isConnected)
+                    disconnect();
+                else
+                    connectedDevice.Dispose();
+            }
         }
 
         #region Event Handlers
