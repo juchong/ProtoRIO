@@ -252,4 +252,13 @@
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
+  <data name="Results" xml:space="preserve">
+    <value>Results</value>
+  </data>
+  <data name="Unit" xml:space="preserve">
+    <value>Unit</value>
+  </data>
+  <data name="Config" xml:space="preserve">
+    <value>Sensor Setting</value>
+  </data>
 </root>

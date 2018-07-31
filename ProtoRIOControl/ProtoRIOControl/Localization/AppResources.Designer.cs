@@ -316,5 +316,23 @@ namespace ProtoRIOControl.Localization {
                 return ResourceManager.GetString("No", resourceCulture);
             }
         }
+        
+        public static string Results {
+            get {
+                return ResourceManager.GetString("Results", resourceCulture);
+            }
+        }
+        
+        public static string Unit {
+            get {
+                return ResourceManager.GetString("Unit", resourceCulture);
+            }
+        }
+        
+        public static string Config {
+            get {
+                return ResourceManager.GetString("Config", resourceCulture);
+            }
+        }
     }
 }

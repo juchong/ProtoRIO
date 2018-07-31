@@ -18,16 +18,36 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Label FontSize="Medium"
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.ColumnSpan="2"
+                       FontSize="Medium"
                        Text="{lang:Translate SensorA}"
                        HorizontalTextAlignment="Center"/>
-                <Picker Grid.Row="1"
+                <Picker Grid.ColumnSpan="2"
+                        Grid.Row="1"
                         x:Name="sensorAPicker"
                         Title="{lang:Translate SelectSensor}"/>
                 <Label Grid.Row="2"
+                       HorizontalTextAlignment="Center"
                        x:Name="sensorAResults1"
-                       Text="Results" />
+                       Text="{lang:Translate Results}" />  
+                <Label Grid.Row="2"
+                       HorizontalTextAlignment="Center"
+                       Grid.Column="1"
+                       x:Name="sensorAResults2"
+                       Text="{lang:Translate Results}" />
+                <Entry Grid.Row="4"
+                       Grid.ColumnSpan="2"
+                       x:Name="sensorASetting"
+                       Placeholder="{lang:Translate Config}"
+                       IsEnabled="false"/>
+                
             </Grid>
             <Grid Grid.Row="1"
                   VerticalOptions="Center">
@@ -35,16 +55,35 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Label FontSize="Medium"
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.ColumnSpan="2"
+                       FontSize="Medium"
                        Text="{lang:Translate SensorB}"
                        HorizontalTextAlignment="Center"/>
-                <Picker Grid.Row="1"
+                <Picker Grid.ColumnSpan="2"
+                        Grid.Row="1"
                         x:Name="sensorBPicker"
                         Title="{lang:Translate SelectSensor}"/>
                 <Label Grid.Row="2"
+                       HorizontalTextAlignment="Center"
                        x:Name="sensorBResults1"
-                       Text="Results" />
+                       Text="{lang:Translate Results}" />  
+                <Label Grid.Row="2"
+                       HorizontalTextAlignment="Center"
+                       Grid.Column="1"
+                       x:Name="sensorBResults2"
+                       Text="{lang:Translate Results}" />
+                <Entry Grid.Row="4"
+                       Grid.ColumnSpan="2"
+                       x:Name="sensorBSetting"
+                       Placeholder="{lang:Translate Config}"
+                       IsEnabled="false"/>
             </Grid>
         </Grid>
     </ContentPage.Content>
