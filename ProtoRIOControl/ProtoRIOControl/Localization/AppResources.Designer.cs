@@ -274,5 +274,47 @@ namespace ProtoRIOControl.Localization {
                 return ResourceManager.GetString("Connecting", resourceCulture);
             }
         }
+        
+        public static string AlertConnectFailTitle {
+            get {
+                return ResourceManager.GetString("AlertConnectFailTitle", resourceCulture);
+            }
+        }
+        
+        public static string AlertConnectFailMessage {
+            get {
+                return ResourceManager.GetString("AlertConnectFailMessage", resourceCulture);
+            }
+        }
+        
+        public static string Hide {
+            get {
+                return ResourceManager.GetString("Hide", resourceCulture);
+            }
+        }
+        
+        public static string ConfirmDisconnectTitle {
+            get {
+                return ResourceManager.GetString("ConfirmDisconnectTitle", resourceCulture);
+            }
+        }
+        
+        public static string ConfirmDisconnectMessage {
+            get {
+                return ResourceManager.GetString("ConfirmDisconnectMessage", resourceCulture);
+            }
+        }
+        
+        public static string Yes {
+            get {
+                return ResourceManager.GetString("Yes", resourceCulture);
+            }
+        }
+        
+        public static string No {
+            get {
+                return ResourceManager.GetString("No", resourceCulture);
+            }
+        }
     }
 }

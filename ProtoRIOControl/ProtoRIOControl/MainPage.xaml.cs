@@ -23,6 +23,8 @@ namespace ProtoRIOControl {
         public static string connectedDeviceName = AppResources.UnknownDevice;
         public static int requestTime = -1;
 
+        public static bool manualDisconnect = false;
+
         public static int deviceToConnectTo = -1;
 
         private static IProgressDialog connectProgressDialog;
@@ -34,29 +36,47 @@ namespace ProtoRIOControl {
 
         protected override void OnDisappearing() {
             base.OnDisappearing();
-            bluetooth.endEnumeration();
-            bluetooth.disconnect();
-            statusPage.setStatusLabel(AppResources.StatusNotConnected, Color.Red);
         }
 
         void OnConnectClicked(object src, EventArgs e) {
-            bluetooth.endEnumeration();
-            bluetooth.disconnect();
-            BtError error = bluetooth.checkBtSupport();
-            switch (error) {
-                case BtError.Disabled:
-                    bluetooth.showEnableBtPrompt(AppResources.EnableBTTitle, AppResources.EnableBTMessage, AppResources.EnableBTConfirm, AppResources.EnableBTCancel);
-                    requestTime = Environment.TickCount;
-                    break;
-                case BtError.None:
-                    discoveredDevices.Clear();
-                    deviceNames.Clear();
-                    bluetoothDevicePage = new BluetoothDevicePage();
-                    Navigation.PushModalAsync(bluetoothDevicePage);
-                    break;
-                default:
-                    DisplayAlert(AppResources.AlertBtErrorTitle, AppResources.AlertBtErrorMessage, AppResources.AlertOk);
-                    break;
+            Debug.WriteLine("IsConnected: " + bluetooth.isConnected());
+            if(!bluetooth.isConnected()){
+                bluetooth.endEnumeration();
+                bluetooth.disconnect();
+                BtError error = bluetooth.checkBtSupport();
+                switch (error) {
+                    case BtError.Disabled:
+                        bluetooth.showEnableBtPrompt(AppResources.EnableBTTitle, AppResources.EnableBTMessage, AppResources.EnableBTConfirm, AppResources.EnableBTCancel);
+                        requestTime = Environment.TickCount;
+                        break;
+                    case BtError.None:
+                        // Do not allow this to be shown more than once at a time
+                        if (bluetoothDevicePage == null) {
+                            discoveredDevices.Clear();
+                            deviceNames.Clear();
+                            bluetooth.enumerateDevices();
+                            bluetoothDevicePage = new BluetoothDevicePage();
+                            Navigation.PushModalAsync(bluetoothDevicePage);
+                        }
+                        break;
+                    default:
+                        UserDialogs.Instance.Alert(AppResources.AlertBtErrorMessage, AppResources.AlertBtErrorTitle, AppResources.AlertOk);
+                        break;
+                }
+            }else{
+                UserDialogs.Instance.Confirm(new ConfirmConfig() {
+                    Title = AppResources.ConfirmDisconnectTitle,
+                    Message = AppResources.ConfirmDisconnectMessage.Replace("%DEV%", connectedDeviceName),
+                    OkText = AppResources.Yes,
+                    CancelText = AppResources.No,
+                    OnAction = (result) => {
+                        if (result) {
+                            bluetooth.endEnumeration();
+                            manualDisconnect = true;
+                            bluetooth.disconnect();
+                        }
+                    }
+                });
             }
         }
 
@@ -65,7 +85,7 @@ namespace ProtoRIOControl {
             if(bluetoothDevicePage != null){
                 bluetoothDevicePage = null;
                 bluetooth.endEnumeration();
-                if(deviceToConnectTo > 0){
+                if(deviceToConnectTo > -1){
                     if(deviceToConnectTo >= discoveredDevices.Count){
                         Debug.WriteLine("An invalid device was selected. Index was " + deviceToConnectTo + " but there were only " + discoveredDevices.Count + " devices.");
                         return;
@@ -75,11 +95,14 @@ namespace ProtoRIOControl {
                         new ProgressDialogConfig() {
                             Title = AppResources.Connecting + deviceNames[deviceToConnectTo],
                             IsDeterministic = false,
-                            OnCancel = () => { bluetooth.disconnect(); },
-                            CancelText = AppResources.Cancel
+                            OnCancel = () => {
+                                Device.BeginInvokeOnMainThread(() => connectProgressDialog.Show()); // Do not allow cancel!!! The bt connectino will time out
+                            },
+                            CancelText = ""
                         }
                     );
                     connectProgressDialog.Show();
+                    connectedDeviceName = deviceNames[deviceToConnectTo];
                     deviceToConnectTo = -1;
                 }
             }
@@ -99,18 +122,27 @@ namespace ProtoRIOControl {
                     connectProgressDialog.Hide();
                     connectProgressDialog = null;
                 });
-                if (bluetooth.hasUartService()) {
-                    bluetooth.subscribeToUartChars();
-                    connectedDeviceName = name;
-                    Device.BeginInvokeOnMainThread(() => instance.statusPage.setStatusLabel(AppResources.StatusConnected + name, Color.Green));
-                } else {
-                    bluetooth.disconnect();
-                    instance.DisplayAlert(AppResources.AlertInvalidDeviceTitle, AppResources.AlertInvalidDeviceMessage, AppResources.AlertOk);
+                if(success){
+                    if (bluetooth.hasUartService()) {
+                        bluetooth.subscribeToUartChars();
+                        connectedDeviceName = name;
+                        Device.BeginInvokeOnMainThread(() => instance.statusPage.setStatusLabel(AppResources.StatusConnected + name, Color.Green));
+                    } else {
+                        manualDisconnect = true;
+                        bluetooth.disconnect();
+                        Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.Alert(AppResources.AlertInvalidDeviceMessage, AppResources.AlertInvalidDeviceTitle, AppResources.AlertOk));
+                    }
+                }else{
+                    Device.BeginInvokeOnMainThread(() => UserDialogs.Instance.Alert(AppResources.AlertConnectFailMessage, AppResources.AlertConnectFailTitle + connectedDeviceName, AppResources.AlertOk));
                 }
             }
             public void onDisconnectFromDevice(string address, string name) {
-                instance.DisplayAlert(AppResources.AlertLostConnectionTitle, AppResources.AlertLostConnectionMessage, AppResources.AlertOk);
-                Device.BeginInvokeOnMainThread(() => instance.statusPage.setStatusLabel(AppResources.StatusNotConnected, Color.Red));
+                Device.BeginInvokeOnMainThread(() => { 
+                    if (!manualDisconnect)
+                        UserDialogs.Instance.Alert(AppResources.AlertLostConnectionMessage, AppResources.AlertLostConnectionTitle, AppResources.AlertOk);
+                    instance.statusPage.setStatusLabel(AppResources.StatusNotConnected, Color.Red);
+                    manualDisconnect = false;
+                });
             }
 
             // Data events

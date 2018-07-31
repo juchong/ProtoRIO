@@ -17,10 +17,6 @@ namespace ProtoRIOControl {
             devicesList.ItemsSource = MainPage.deviceNames;
         }
 
-        protected override void OnAppearing() {
-            MainPage.bluetooth.enumerateDevices(); // This MUST be called here or the callback will not work on Android
-        }
-
         private void onCancelClicked(object sender, EventArgs e) {
             Navigation.PopModalAsync();
         }

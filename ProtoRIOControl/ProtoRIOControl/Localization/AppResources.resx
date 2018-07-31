@@ -231,4 +231,25 @@
   <data name="Connecting" xml:space="preserve">
     <value>Connecting to </value>
   </data>
+  <data name="AlertConnectFailTitle" xml:space="preserve">
+    <value>Connect Failed</value>
+  </data>
+  <data name="AlertConnectFailMessage" xml:space="preserve">
+    <value>Failed to connect to </value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="ConfirmDisconnectTitle" xml:space="preserve">
+    <value>Disconnect?</value>
+  </data>
+  <data name="ConfirmDisconnectMessage" xml:space="preserve">
+    <value>Disconnect from %DEV%?</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
 </root>

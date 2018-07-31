@@ -7,14 +7,11 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace ProtoRIOControl
-{
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class SensorsPage : ContentPage
-	{
-		public SensorsPage ()
-		{
-			InitializeComponent ();
-		}
-	}
+namespace ProtoRIOControl {
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class SensorsPage : ContentPage {
+        public SensorsPage() {
+            InitializeComponent();
+        }
+    }
 }

@@ -25,5 +25,7 @@ namespace ProtoRIO.Bluetooth {
         void subscribeToUartChars();
         void writeToUart(byte[] data);
         bool hasUartService();
+        bool isConnected();
+        bool isEnumerating();
     }
 }

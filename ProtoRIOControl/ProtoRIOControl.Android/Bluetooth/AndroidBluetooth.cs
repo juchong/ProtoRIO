@@ -34,7 +34,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
         private BluetoothGatt gattConnection = null;
 
         private bool isScanning = false;
-        private bool isConnected = false;
+        private bool _isConnected = false;
 
         Thread btCheckThread;
 
@@ -87,13 +87,13 @@ namespace ProtoRIOControl.Droid.Bluetooth {
         }
 
         public void disconnect() {
-            if (isConnected) {
+            if (_isConnected) {
                 serviceObjects.Clear();
                 characteristicObjects.Clear();
                 descriptorObjects.Clear();
-                gattConnection?.Disconnect();
+                gattConnection.Disconnect();
                 gattConnection = null;
-                isConnected = false;
+                _isConnected = false;
             }
         }
 
@@ -109,7 +109,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
         }
 
         public BtError enumerateDevices() {
-            if (!isScanning && !isConnected) {
+            if (!isScanning && !_isConnected) {
                 devices.Clear();
                 deviceAddresses.Clear();
                 serviceObjects.Clear();
@@ -175,6 +175,13 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                     return true;
             }
             return false;
+        }
+
+        public bool isConnected(){
+            return _isConnected;
+        }
+        public bool isEnumerating(){
+            return isScanning;
         }
 
         /*
@@ -284,16 +291,16 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                     if (newState == ProfileState.Connected && status != GattStatus.Success) {
                         gatt.DiscoverServices();
                         client.callback.onConnectToDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name, false);
-                        client.isConnected = true;
                     }else if(newState == ProfileState.Connected){
                         gatt.DiscoverServices();
+                        client._isConnected = true;
                     }
                     if (newState == ProfileState.Disconnected) {
                         client.serviceObjects.Clear();
                         client.characteristicObjects.Clear();
                         client.descriptorObjects.Clear();
                         client.callback.onDisconnectFromDevice(gatt.Device.Address.ToUpper(), gatt.Device.Name);
-                        client.isConnected = false;
+                        client._isConnected = false;
                     }
                 }
             }

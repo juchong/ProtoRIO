@@ -44,7 +44,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
         private BTCallback callback;
 
         private bool isScanning = false;
-        private bool isConnected = false;
+        private bool _isConnected = false;
 
         private CoreDispatcher mainThread = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
 
@@ -122,7 +122,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
 #pragma warning restore 4014
 
         private async Task<BtError> _enumerateDevices() {
-            if (!isScanning && !isConnected) {
+            if (!isScanning && !_isConnected) {
                 devices.Clear();
                 deviceAddresses.Clear();
                 serviceObjects.Clear();
@@ -163,7 +163,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
             BluetoothLEDevice device = devices.First(f => (f.BluetoothAddress + "").ToUpper().Equals(deviceAddress.ToUpper()));
             GattDeviceServicesResult result = await device.GetGattServicesAsync(BluetoothCacheMode.Uncached);
             if (result.Status == GattCommunicationStatus.Success) {
-                isConnected = true;
+                _isConnected = true;
                 connectedDevice = device;
                 device.ConnectionStatusChanged += ConnectionStatusChanged;
                 foreach (GattDeviceService service in result.Services) {
@@ -182,7 +182,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
         }
 
         public void disconnect() {
-            if (isConnected) {
+            if (_isConnected) {
                 // Don't need to watch value changes anymore
                 foreach (GattCharacteristic c in characteristicObjects) {
                     c.ValueChanged -= CharacteristicValueChanged;
@@ -205,7 +205,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
                 characteristicObjects.Clear();
                 descriptorObjects.Clear();
                 subscribeCharacteristics.Clear();
-                isConnected = false;
+                _isConnected = false;
             }
         }
 
@@ -315,6 +315,14 @@ namespace ProtoRIOControl.UWP.Bluetooth {
                     return true;
             }
             return false;
+        }
+
+        public bool isConnected(){
+            return _isConnected;
+        }
+
+        public bool isEnumerating(){
+            return isScanning;
         }
 
         #region Event Handlers

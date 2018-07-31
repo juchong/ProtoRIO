@@ -19,7 +19,7 @@ namespace ProtoRIOControl.iOS.Bluetooth {
         private List<string> scanServices = new List<string>();
 
         private bool isScanning = false;
-        private bool isConnected = false;
+        private bool _isConnected = false;
 
         BTCallback callback;
 
@@ -134,13 +134,13 @@ namespace ProtoRIOControl.iOS.Bluetooth {
         }
 
         public void disconnect() {
-            if (isConnected) {
+            if (_isConnected) {
                 centralManager.CancelPeripheralConnection(connectedPeripheral);
                 serviceObjects.Clear();
                 characteristicObjects.Clear();
                 descriptorObjects.Clear();
                 connectedPeripheral = null;
-                isConnected = false;
+                _isConnected = false;
             }
         }
 
@@ -165,6 +165,13 @@ namespace ProtoRIOControl.iOS.Bluetooth {
                     return true;
             }
             return false;
+        }
+
+        public bool isConnected(){
+            return _isConnected;
+        }
+        public bool isEnumerating(){
+            return isScanning;
         }
 
         /*
