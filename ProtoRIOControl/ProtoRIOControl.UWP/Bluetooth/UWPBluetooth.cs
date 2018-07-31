@@ -53,7 +53,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
             this.callback = btCallback;
             Task.Run(async () => {
                 BtError error = await _checkBtSupport();
-                if (error != BtError.NoBluetooth && error != BtError.NoBLE && error != BtError.NoServer) {
+                if (error != BtError.NoBluetooth && error != BtError.NoBLE) {
                     var lastState = error == BtError.None;
                     // Watch for bt power changes
                     while (true) {

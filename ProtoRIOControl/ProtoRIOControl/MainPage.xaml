@@ -9,8 +9,8 @@
     <TabbedPage.ToolbarItems>
         <ToolbarItem Name="ConnectOption" Clicked="OnConnectClicked" Text="Connect" Icon="bluetooth.png"/>
     </TabbedPage.ToolbarItems>
-    <local:StatusPage />
-    <local:PWMPage />
-    <local:SensorsPage />
-    <local:PneumaticsPage />
+    <local:StatusPage x:Name="statusPage" x:FieldModifier="public"/>
+    <local:PWMPage x:Name="pwmPage" x:FieldModifier="public"/>
+    <local:SensorsPage x:Name="sensorsPage" x:FieldModifier="public"/>
+    <local:PneumaticsPage x:Name="pneumaticsPage" x:FieldModifier="public"/>
 </TabbedPage>

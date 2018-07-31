@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace ProtoRIOControl
-{
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class StatusPage : ContentPage
-	{
-		public StatusPage ()
-		{
-			InitializeComponent ();
-		}
-	}
+namespace ProtoRIOControl {
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class StatusPage : ContentPage {
+        public StatusPage() {
+            InitializeComponent();
+        }
+        public void setStatusLabel(string text, Color textColor) {
+            connectionStatusLabel.Text = text;
+            connectionStatusLabel.TextColor = textColor;
+        }
+    }
 }

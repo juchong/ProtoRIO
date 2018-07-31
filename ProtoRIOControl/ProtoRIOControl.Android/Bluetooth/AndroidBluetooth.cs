@@ -224,6 +224,7 @@ namespace ProtoRIOControl.Droid.Bluetooth {
 
             public override void OnScanFailed(ScanFailure errorCode) {
                 base.OnScanFailed(errorCode);
+                System.Diagnostics.Debug.WriteLine("Scan Failed with error: " + errorCode);
             }
             public override void OnScanResult(ScanCallbackType callbackType, ScanResult result) {
                 base.OnScanResult(callbackType, result);

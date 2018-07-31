@@ -61,6 +61,69 @@ namespace ProtoRIOControl.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bluetooth Low Energy (4.0) is not supported on this device..
+        /// </summary>
+        public static string AlertBtErrorMessage {
+            get {
+                return ResourceManager.GetString("AlertBtErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bluetooth Error.
+        /// </summary>
+        public static string AlertBtErrorTitle {
+            get {
+                return ResourceManager.GetString("AlertBtErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The connected device does not appear to be a ProtoRIO. Communication could not be established..
+        /// </summary>
+        public static string AlertInvalidDeviceMessage {
+            get {
+                return ResourceManager.GetString("AlertInvalidDeviceMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Device.
+        /// </summary>
+        public static string AlertInvalidDeviceTitle {
+            get {
+                return ResourceManager.GetString("AlertInvalidDeviceTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection to the bluetooth device was lost..
+        /// </summary>
+        public static string AlertLostConnectionMessage {
+            get {
+                return ResourceManager.GetString("AlertLostConnectionMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lost Connection.
+        /// </summary>
+        public static string AlertLostConnectionTitle {
+            get {
+                return ResourceManager.GetString("AlertLostConnectionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string AlertOk {
+            get {
+                return ResourceManager.GetString("AlertOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allow both on at the same time.
         /// </summary>
         public static string AllowBothSolenoid {
@@ -93,6 +156,15 @@ namespace ProtoRIOControl.Localization {
         public static string BatteryVoltage {
             get {
                 return ResourceManager.GetString("BatteryVoltage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
             }
         }
         
@@ -277,6 +349,15 @@ namespace ProtoRIOControl.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connected to .
+        /// </summary>
+        public static string StatusConnected {
+            get {
+                return ResourceManager.GetString("StatusConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not Connected.
         /// </summary>
         public static string StatusNotConnected {
@@ -291,6 +372,24 @@ namespace ProtoRIOControl.Localization {
         public static string StatusTab {
             get {
                 return ResourceManager.GetString("StatusTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose a device to connect to.
+        /// </summary>
+        public static string TapToConnect {
+            get {
+                return ResourceManager.GetString("TapToConnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string UnknownDevice {
+            get {
+                return ResourceManager.GetString("UnknownDevice", resourceCulture);
             }
         }
     }

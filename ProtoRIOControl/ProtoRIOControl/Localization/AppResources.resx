@@ -195,4 +195,37 @@
   <data name="SensorB" xml:space="preserve">
     <value>Sensor B</value>
   </data>
+  <data name="AlertBtErrorMessage" xml:space="preserve">
+    <value>Bluetooth Low Energy (4.0) is not supported on this device.</value>
+  </data>
+  <data name="AlertBtErrorTitle" xml:space="preserve">
+    <value>Bluetooth Error</value>
+  </data>
+  <data name="AlertInvalidDeviceMessage" xml:space="preserve">
+    <value>The connected device does not appear to be a ProtoRIO. Communication could not be established.</value>
+  </data>
+  <data name="AlertInvalidDeviceTitle" xml:space="preserve">
+    <value>Invalid Device</value>
+  </data>
+  <data name="AlertLostConnectionMessage" xml:space="preserve">
+    <value>Connection to the bluetooth device was lost.</value>
+  </data>
+  <data name="AlertLostConnectionTitle" xml:space="preserve">
+    <value>Lost Connection</value>
+  </data>
+  <data name="AlertOk" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="TapToConnect" xml:space="preserve">
+    <value>Choose a device to connect to</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="UnknownDevice" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="StatusConnected" xml:space="preserve">
+    <value>Connected to </value>
+  </data>
 </root>

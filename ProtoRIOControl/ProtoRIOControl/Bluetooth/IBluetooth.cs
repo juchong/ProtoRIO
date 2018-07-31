@@ -5,7 +5,7 @@ using System.Text;
 namespace ProtoRIO.Bluetooth {
 
     #region Types
-    public enum BtError { None, NoBluetooth, NoBLE, Disabled, NoServer, AlreadyRunning, Unknown, UnsupportedPlatform }
+    public enum BtError { None, NoBluetooth, NoBLE, Disabled, AlreadyRunning, Unknown, UnsupportedPlatform }
     #endregion
 
     public static class BTValues {
