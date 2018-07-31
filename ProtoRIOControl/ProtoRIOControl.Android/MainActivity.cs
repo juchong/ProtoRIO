@@ -13,6 +13,8 @@ using Android;
 using System.Collections.Generic;
 using Android.Support.V4.Content;
 using Android.Support.V4.App;
+using Acr.UserDialogs;
+using Xamarin.Forms;
 
 namespace ProtoRIOControl.Droid {
     [Activity(Label = "ProtoRIOControl", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
@@ -33,6 +35,7 @@ namespace ProtoRIOControl.Droid {
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+            UserDialogs.Init(this);
             LoadApplication(new App());
         }
 

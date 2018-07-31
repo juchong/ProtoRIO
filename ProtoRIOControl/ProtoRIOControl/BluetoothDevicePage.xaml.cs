@@ -18,9 +18,7 @@ namespace ProtoRIOControl {
         }
 
         protected override void OnAppearing() {
-            // DO NOT START ENUMERATING BEFORE THIS PAGE IS SHOWN!!!
-            // Otherwise the callback events will be missed due beacause the main thread will be busy.
-            MainPage.bluetooth.enumerateDevices();
+            MainPage.bluetooth.enumerateDevices(); // This MUST be called here or the callback will not work on Android
         }
 
         private void onCancelClicked(object sender, EventArgs e) {

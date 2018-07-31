@@ -46,7 +46,7 @@ namespace ProtoRIOControl {
                 case BtError.None:
                     discoveredDevices.Clear();
                     deviceNames.Clear();
-                    bluetoothDevicePage = new BluetoothDevicePage(bluetooth);
+                    bluetoothDevicePage = new BluetoothDevicePage();
                     Navigation.PushModalAsync(bluetoothDevicePage);
                     break;
                 default:
@@ -74,7 +74,7 @@ namespace ProtoRIOControl {
                 if (bluetooth.hasUartService()) {
                     bluetooth.subscribeToUartChars();
                     connectedDeviceName = name;
-                    instance.statusPage.setStatusLabel(AppResources.StatusConnected + name, Color.Green);
+                    Device.BeginInvokeOnMainThread(() => instance.statusPage.setStatusLabel(AppResources.StatusConnected + name, Color.Green));
                 } else {
                     bluetooth.disconnect();
                     instance.DisplayAlert(AppResources.AlertInvalidDeviceTitle, AppResources.AlertInvalidDeviceMessage, AppResources.AlertOk);
@@ -82,7 +82,7 @@ namespace ProtoRIOControl {
             }
             public void onDisconnectFromDevice(string address, string name) {
                 instance.DisplayAlert(AppResources.AlertLostConnectionTitle, AppResources.AlertLostConnectionMessage, AppResources.AlertOk);
-                instance.statusPage.setStatusLabel(AppResources.StatusNotConnected, Color.Red);
+                Device.BeginInvokeOnMainThread(() => instance.statusPage.setStatusLabel(AppResources.StatusNotConnected, Color.Red));
             }
 
             // Data events
