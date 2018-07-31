@@ -174,6 +174,12 @@ namespace ProtoRIOControl.iOS.Bluetooth {
             return isScanning;
         }
 
+        public void cancelConnect(){
+            if(connectedPeripheral != null){
+                centralManager.CancelPeripheralConnection(connectedPeripheral);
+            }
+        }
+
         /*
          * Get a desc/char/service from a UUID
          */

@@ -27,5 +27,6 @@ namespace ProtoRIO.Bluetooth {
         bool hasUartService();
         bool isConnected();
         bool isEnumerating();
+        void cancelConnect();
     }
 }

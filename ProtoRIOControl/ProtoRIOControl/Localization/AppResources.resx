@@ -261,4 +261,10 @@
   <data name="Config" xml:space="preserve">
     <value>Sensor Setting</value>
   </data>
+  <data name="AmpsSymbol" xml:space="preserve">
+    <value>A</value>
+  </data>
+  <data name="VoltsSymbol" xml:space="preserve">
+    <value>V</value>
+  </data>
 </root>

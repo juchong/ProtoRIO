@@ -184,6 +184,15 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             return isScanning;
         }
 
+        public void cancelConnect(){
+            if (gattConnection != null) {
+                gattConnection.Close();
+                gattConnection.Disconnect();
+                gattConnection.Dispose();
+                gattConnection = null;
+            }
+        }
+
         /*
          * Get a desc/char/service from a UUID
          */

@@ -1,8 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ProtoRIOControl.App">
 	<Application.Resources>
-    
+        <ResourceDictionary>
+            <Color x:Key="adiRed">#990033</Color>
+            <Color x:Key="adiOrange">#FF7200</Color>
+            <Color x:Key="adiGreen">#27B34F</Color>
+        </ResourceDictionary>
 	</Application.Resources>
 </Application>

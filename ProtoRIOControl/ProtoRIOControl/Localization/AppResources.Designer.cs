@@ -334,5 +334,17 @@ namespace ProtoRIOControl.Localization {
                 return ResourceManager.GetString("Config", resourceCulture);
             }
         }
+        
+        public static string AmpsSymbol {
+            get {
+                return ResourceManager.GetString("AmpsSymbol", resourceCulture);
+            }
+        }
+        
+        public static string VoltsSymbol {
+            get {
+                return ResourceManager.GetString("VoltsSymbol", resourceCulture);
+            }
+        }
     }
 }

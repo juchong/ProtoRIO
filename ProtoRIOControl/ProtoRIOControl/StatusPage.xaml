@@ -25,22 +25,28 @@
                     </Grid.ColumnDefinitions>
                     <Label Grid.Row="0"
                            Grid.Column="0"
+                           TextColor="Black"
                            Text="{lang:Translate BatteryVoltage}"
                            HorizontalTextAlignment="Center"
                            FontSize="Small"/>
                     <Label Grid.Row="0"
                            Grid.Column="1"
+                           TextColor="Black"
                            Text="{lang:Translate BatteryCurrent}"
                            HorizontalTextAlignment="Center"
                            FontSize="Small"/>
                     <Label Grid.Row="1"
+                           x:Name="voltageLabel"
                            Grid.Column="0"
                            Text="0 V"
-                           BackgroundColor="Red"
+                           TextColor="Black"
+                           BackgroundColor="{StaticResource adiRed}"
                            HorizontalTextAlignment="Center"
                            FontSize="Large"/>
                     <Label Grid.Row="1"
                            Grid.Column="1"
+                           TextColor="Black"
+                           x:Name="currentLabel"
                            Text="0 A"
                            HorizontalTextAlignment="Center"
                            FontSize="Large"/>
@@ -49,7 +55,7 @@
             <Label Grid.Row="1"
                    x:Name="connectionStatusLabel"
                    Text="{lang:Translate StatusNotConnected}"
-                   TextColor="Red"
+                   TextColor="{StaticResource adiRed}"
                    FontSize="Medium"/>
         </Grid>
     </ContentPage.Content>

@@ -325,6 +325,10 @@ namespace ProtoRIOControl.UWP.Bluetooth {
             return isScanning;
         }
 
+        public void cancelConnection() {
+            throw new NotImplementedException("I NEED TO DO THIS STILL!!!!");
+        }
+
         #region Event Handlers
         // AdvertisementWatcher Detected device
         private async void DeviceDiscovered(BluetoothLEAdvertisementWatcher sender, BluetoothLEAdvertisementReceivedEventArgs args) {
