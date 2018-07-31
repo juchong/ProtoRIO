@@ -53,8 +53,8 @@ namespace ProtoRIOControl {
                 case BtError.None:
                     discoveredDevices.Clear();
                     deviceNames.Clear();
-                    bluetoothDevicePage = new BluetoothDevicePage();
-                    Navigation.PushModalAsync(bluetoothDevicePage);
+                    //bluetoothDevicePage = new BluetoothDevicePage();
+                    //Navigation.PushModalAsync(bluetoothDevicePage);
                     break;
             }
         }

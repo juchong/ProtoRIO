@@ -4,7 +4,8 @@
              x:Class="ProtoRIOControl.PneumaticsPage"
              xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl"
              Title="{lang:Translate PneumaticsTab}"
-             Icon="gauge.png">
+             Icon="gauge.png"
+             Padding="5">
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
@@ -25,7 +26,8 @@
                         x:Name="solenoidAButton"
                         Text="{lang:Translate Off}"
                         BackgroundColor="Red"
-                        FontSize="Large"/>
+                        FontSize="Large"
+                        TextColor="Black"/>
             </Grid>
             <Grid Grid.Row="1"
                   VerticalOptions="Center">
@@ -40,7 +42,8 @@
                         x:Name="solenoidBButton"
                         Text="{lang:Translate Off}"
                         BackgroundColor="Red"
-                        FontSize="Large"/>
+                        FontSize="Large"
+                        TextColor="Black"/>
             </Grid>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>

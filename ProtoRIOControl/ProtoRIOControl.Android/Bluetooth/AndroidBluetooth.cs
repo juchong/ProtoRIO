@@ -127,7 +127,10 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                 scanServices.ForEach((item) => {
                     filters.Add(new ScanFilter.Builder().SetServiceUuid(new ParcelUuid(UUID.FromString(item))).Build());
                 });
-                btAdapter.BluetoothLeScanner.StartScan(filters, settings, scanCallback);
+                if (filters.Count == 0)
+                    btAdapter.BluetoothLeScanner.StartScan(scanCallback);
+                else
+                    btAdapter.BluetoothLeScanner.StartScan(filters, settings, scanCallback);
                 isScanning = true;
                 return BtError.None;
             } else {

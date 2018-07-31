@@ -4,7 +4,8 @@
              x:Class="ProtoRIOControl.StatusPage"
              xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl"
              Title="{lang:Translate StatusTab}"
-             Icon="info.png">
+             Icon="info.png"
+             Padding="5">
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>

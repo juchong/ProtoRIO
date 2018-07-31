@@ -4,7 +4,8 @@
              x:Class="ProtoRIOControl.PWMPage"
              xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl"
              Title="{lang:Translate PWMTab}"
-             Icon="wave.png">    
+             Icon="wave.png"
+             Padding="5">    
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>

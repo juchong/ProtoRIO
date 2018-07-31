@@ -4,7 +4,8 @@
              x:Class="ProtoRIOControl.SensorsPage"
              xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl"
              Title="{lang:Translate SensorsTab}"
-             Icon="scan.png">
+             Icon="scan.png"
+             Padding="5">
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
