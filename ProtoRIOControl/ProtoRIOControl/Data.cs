@@ -13,4 +13,7 @@ namespace ProtoRIOControl {
         public const string sensorBRes2 = "R2B";      // The second result from sensor A
         public const string sensorBEnd = "Z";         // The end of sensor A data
     }
+    public static class OutData{
+        public const string requestRead = "BTRD";     // Request a read of sensors and battery
+    }
 }

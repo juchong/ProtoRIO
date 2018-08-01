@@ -15,7 +15,7 @@
                    FontSize="Large"/>
             <ListView Grid.Row="1"
                       x:Name="devicesList"
-                      ItemSelected="onDeviceSelected"/>
+                      ItemTapped="onDeviceSelected"/>
             <Button Grid.Row="2"
                     Text="{lang:Translate Cancel}"
                     Clicked="onCancelClicked"/>

@@ -4,9 +4,13 @@
              x:Class="ProtoRIOControl.App">
 	<Application.Resources>
         <ResourceDictionary>
-            <Color x:Key="adiRed">#990033</Color>
-            <Color x:Key="adiOrange">#FF7200</Color>
-            <Color x:Key="adiGreen">#27B34F</Color>
+            <Color x:Key="batteryHighColor">#008000</Color>
+            <Color x:Key="batteryMedColor">#ffff00</Color>
+            <Color x:Key="batteryLowColor">#ff0000</Color>
+            <Color x:Key="redLabelColor">#ff0000</Color>
+            <Color x:Key="greenLabelColor">#008000</Color>
+            <Color x:Key="onColor">#008000</Color>
+            <Color x:Key="offColor">#ff0000</Color>
         </ResourceDictionary>
 	</Application.Resources>
 </Application>

@@ -20,12 +20,13 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Label FontSize="Medium"
+                       TextColor="Black"
                        Text="{lang:Translate SolenoidA}"
                        HorizontalTextAlignment="Center"/>
                 <Button Grid.Row="1"
                         x:Name="solenoidAButton"
                         Text="{lang:Translate Off}"
-                        BackgroundColor="Red"
+                        BackgroundColor="{StaticResource offColor}"
                         FontSize="Large"
                         TextColor="Black"/>
             </Grid>
@@ -36,12 +37,13 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Label FontSize="Medium"
+                       TextColor="Black"
                        Text="{lang:Translate SolenoidB}"
                        HorizontalTextAlignment="Center"/>
                 <Button Grid.Row="1"
                         x:Name="solenoidBButton"
                         Text="{lang:Translate Off}"
-                        BackgroundColor="Red"
+                        BackgroundColor="{StaticResource offColor}"
                         FontSize="Large"
                         TextColor="Black"/>
             </Grid>
@@ -56,7 +58,7 @@
                        VerticalTextAlignment="Center"
                        Text="{lang:Translate AllowBothSolenoid}"
                        FontAttributes="Bold"
-                       TextColor="Red"/>
+                       TextColor="{StaticResource redLabelColor}"/>
             </Grid>
         </Grid>
     </ContentPage.Content>

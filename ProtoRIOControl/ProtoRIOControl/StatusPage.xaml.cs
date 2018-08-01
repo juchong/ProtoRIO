@@ -20,17 +20,17 @@ namespace ProtoRIOControl {
         }
         public void setStatusLabel(string text, bool isConnected) {
             connectionStatusLabel.Text = text;
-            connectionStatusLabel.TextColor = isConnected ? ((Color)Application.Current.Resources["adiGreen"]) : ((Color)Application.Current.Resources["adiRed"]);
+            connectionStatusLabel.TextColor = isConnected ? ((Color)Application.Current.Resources["greenLabelColor"]) : ((Color)Application.Current.Resources["redLabelColor"]);
         }
         public void setBatteryInfo(string voltage, string current){
             try{
                 double v = double.Parse(voltage);
                 if (v >= highBat)
-                    voltageLabel.BackgroundColor = (Color)Application.Current.Resources["adiGreen"];
-                else if(v >= medBat)
-                    voltageLabel.BackgroundColor = (Color)Application.Current.Resources["adiOrange"];
+                    voltageLabel.BackgroundColor = (Color)Application.Current.Resources["batteryHighColor"];
+                else if (v >= medBat)
+                    voltageLabel.BackgroundColor = (Color)Application.Current.Resources["batteryMedColor"];
                 else
-                    voltageLabel.BackgroundColor = (Color)Application.Current.Resources["adiRed"];
+                    voltageLabel.BackgroundColor = (Color)Application.Current.Resources["batteryLowColor"];
                 voltageLabel.Text = String.Format("{0:0.00}", v) + " " + AppResources.VoltsSymbol;
 
                 double c = double.Parse(current);

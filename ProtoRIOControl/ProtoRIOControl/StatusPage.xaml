@@ -40,7 +40,7 @@
                            Grid.Column="0"
                            Text="0 V"
                            TextColor="Black"
-                           BackgroundColor="{StaticResource adiRed}"
+                           BackgroundColor="{StaticResource batteryLowColor}"
                            HorizontalTextAlignment="Center"
                            FontSize="Large"/>
                     <Label Grid.Row="1"
@@ -55,7 +55,7 @@
             <Label Grid.Row="1"
                    x:Name="connectionStatusLabel"
                    Text="{lang:Translate StatusNotConnected}"
-                   TextColor="{StaticResource adiRed}"
+                   TextColor="{StaticResource redLabelColor}"
                    FontSize="Medium"/>
         </Grid>
     </ContentPage.Content>

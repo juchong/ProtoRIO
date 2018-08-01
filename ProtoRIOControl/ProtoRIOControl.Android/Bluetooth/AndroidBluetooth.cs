@@ -243,11 +243,10 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             }
 
             public override void OnScanFailed(ScanFailure errorCode) {
-                base.OnScanFailed(errorCode);
                 System.Diagnostics.Debug.WriteLine("Scan Failed with error: " + errorCode);
             }
             public override void OnScanResult(ScanCallbackType callbackType, ScanResult result) {
-                base.OnScanResult(callbackType, result);
+                System.Diagnostics.Debug.WriteLine("ScanResult");
                 if (result != null) {
                     if (!client.deviceAddresses.Contains(result.Device.Address)) {
                         client.devices.Add(result.Device);
@@ -257,11 +256,16 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                 }
             }
             public override void OnBatchScanResults(IList<ScanResult> results) {
-                base.OnBatchScanResults(results);
+                System.Diagnostics.Debug.WriteLine("BatchScanResult");
                 if (results != null) {
                     foreach(var result in results){
-                        client.devices.Add(result.Device);
-                        client.callback.onDeviceDiscovered(result.Device.Address.ToUpper(), result.Device.Name, result.Rssi);
+                        if (result != null) {
+                            if (!client.deviceAddresses.Contains(result.Device.Address)) {
+                                client.devices.Add(result.Device);
+                                client.deviceAddresses.Add(result.Device.Address);
+                            }
+                            client.callback.onDeviceDiscovered(result.Device.Address.ToUpper(), result.Device.Name, result.Rssi);
+                        }
                     }
                 }
             }
@@ -275,19 +279,16 @@ namespace ProtoRIOControl.Droid.Bluetooth {
             }
 
             public override void OnCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, GattStatus status) {
-                base.OnCharacteristicRead(gatt, characteristic, status);
                 if (characteristic != null && characteristic.Uuid.ToString().ToUpper().Equals(BTValues.txCharacteristic.ToUpper()) && status == GattStatus.Success) {
                     client.callback.onUartDataReceived(characteristic.GetValue());
                 }
             }
             public override void OnCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, GattStatus status) {
-                base.OnCharacteristicWrite(gatt, characteristic, status);
                 if (characteristic != null && characteristic.Uuid.ToString().ToUpper().Equals(BTValues.rxCharacteristic.ToUpper())) {
                     client.callback.onUartDataSent(characteristic.GetValue());
                 }
             }
             public override void OnServicesDiscovered(BluetoothGatt gatt, GattStatus status) {
-                base.OnServicesDiscovered(gatt, status);
                 if (gatt != null) {
                     foreach(var service in gatt.Services) {
                         client.AddService(service);
@@ -299,7 +300,6 @@ namespace ProtoRIOControl.Droid.Bluetooth {
                 OnCharacteristicRead(gatt, characteristic, GattStatus.Success);
             }
             public override void OnConnectionStateChange(BluetoothGatt gatt, GattStatus status, ProfileState newState) {
-                base.OnConnectionStateChange(gatt, status, newState);
                 if (gatt != null) {
                     if (newState == ProfileState.Connected && status != GattStatus.Success) {
                         gatt.DiscoverServices();

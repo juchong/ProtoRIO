@@ -7,11 +7,14 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
+using Timer = System.Timers.Timer;
+
 namespace ProtoRIOControl {
-    public partial class MainPage : TabbedPage{
+    public partial class MainPage : TabbedPage {
         public static MainPage instance;
 
         public static IBluetooth bluetooth;
@@ -28,9 +31,28 @@ namespace ProtoRIOControl {
 
         private static IProgressDialog connectProgressDialog;
 
+        public static Timer readRequestTimer;
+
         public MainPage() {
             InitializeComponent();
-            instance = this;
+            if(instance == null)
+                instance = this;
+            if (readRequestTimer == null) {
+                readRequestTimer = new Timer(500); // Request a read every 500ms
+                readRequestTimer.AutoReset = true;
+                readRequestTimer.Elapsed += RequestRead;
+            }
+        }
+
+        /// <summary>
+        /// Request that the ProtRIO send sensor information
+        /// </summary>
+        /// <param name="sender">The source timer</param>
+        /// <param name="e">Event args</param>
+        public static void RequestRead(object sender, System.Timers.ElapsedEventArgs e){
+            if(bluetooth.isConnected()){
+                bluetooth.writeToUart(Encoding.ASCII.GetBytes(OutData.requestRead + '\n'));
+            }
         }
 
         /// <summary>
@@ -140,6 +162,8 @@ namespace ProtoRIOControl {
         /// <param name="startText">The text to start at.</param>
         /// <param name="endText">The text to end at.</param>
         public static string substring(string source, string startText, string endText) {
+            if (source == null || startText == null || endText == null)
+                return null;
             int start = source.IndexOf(startText, StringComparison.CurrentCulture);
             int end = source.IndexOf(endText, StringComparison.CurrentCulture);
             if(start < 0 || start > end || end < 0){
@@ -155,6 +179,8 @@ namespace ProtoRIOControl {
         /// <param name="source">The source string</param>
         /// <param name="tag">The tag</param>
         public static string getValue(string source, string tag){
+            if (source == null || tag == null)
+                return null;
             int index = source.IndexOf(tag, StringComparison.CurrentCulture);
             if (index < 0)
                 return null;
@@ -170,7 +196,7 @@ namespace ProtoRIOControl {
             public void onDeviceDiscovered(string address, string name, int rssi) {
                 if (!discoveredDevices.Contains(address)){
                     discoveredDevices.Add(address);
-v                    deviceNames.Add(name == null ? AppResources.UnknownDevice : name);
+                    deviceNames.Add(name == null ? AppResources.UnknownDevice : name);
                 }
             }
             public void onConnectToDevice(string address, string name, bool success) {
@@ -183,6 +209,7 @@ v                    deviceNames.Add(name == null ? AppResources.UnknownDevice :
                         bluetooth.subscribeToUartChars();
                         connectedDeviceName = name;
                         Device.BeginInvokeOnMainThread(() => instance.statusPage.setStatusLabel(AppResources.StatusConnected + name, true));
+                        readRequestTimer.Start(); // Start polling for data
                     } else {
                         manualDisconnect = true;
                         bluetooth.disconnect();
@@ -193,6 +220,7 @@ v                    deviceNames.Add(name == null ? AppResources.UnknownDevice :
                 }
             }
             public void onDisconnectFromDevice(string address, string name) {
+                readRequestTimer.Stop();
                 Device.BeginInvokeOnMainThread(() => { 
                     if (!manualDisconnect)
                         UserDialogs.Instance.Alert(AppResources.AlertLostConnectionMessage, AppResources.AlertLostConnectionTitle, AppResources.AlertOk);

@@ -6,6 +6,7 @@ using Foundation;
 using ProtoRIO.Bluetooth;
 using ProtoRIOControl.iOS.Bluetooth;
 using UIKit;
+using Xamarin.Forms.Platform.iOS;
 
 namespace ProtoRIOControl.iOS {
     // The UIApplicationDelegate for the application. This class is responsible for launching the 
@@ -23,6 +24,20 @@ namespace ProtoRIOControl.iOS {
         public override bool FinishedLaunching(UIApplication app, NSDictionary options) {
 
             MainPage.bluetooth = new IOSBluetooth(MainPage.btCallback);
+
+            // Apply our theme
+            UIColor tintColor = Xamarin.Forms.Color.FromHex("#009FBD").ToUIColor();
+
+            // This color must be set to each element individualy
+            UIButton.Appearance.TintColor = tintColor;
+            UIButton.Appearance.SetTitleColor(tintColor, UIControlState.Normal);
+
+            UISlider.Appearance.ThumbTintColor = tintColor;
+            UISlider.Appearance.MinimumTrackTintColor = tintColor;
+            UISlider.Appearance.MaximumTrackTintColor = tintColor;
+
+            UINavigationBar.Appearance.TintColor = tintColor;
+            UITabBar.Appearance.TintColor = tintColor;
 
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());

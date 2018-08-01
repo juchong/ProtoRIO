@@ -26,6 +26,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="1"
                        FontSize="Medium"
+                       TextColor="Black"
                        Text="{lang:Translate PWMA}"
                        HorizontalTextAlignment="Center"/>
                 <Switch Grid.Column="2"
@@ -70,6 +71,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="1"
                        FontSize="Medium"
+                       TextColor="Black"
                        Text="{lang:Translate PWMB}"
                        HorizontalTextAlignment="Center"/>
                 <Switch Grid.Column="2"

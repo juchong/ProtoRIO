@@ -27,6 +27,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.ColumnSpan="2"
                        FontSize="Medium"
+                       TextColor="Black"
                        Text="{lang:Translate SensorA}"
                        HorizontalTextAlignment="Center"/>
                 <Picker Grid.ColumnSpan="2"
@@ -36,10 +37,12 @@
                 <Label Grid.Row="2"
                        HorizontalTextAlignment="Center"
                        x:Name="sensorAResults1"
+                       TextColor="Black"
                        Text="{lang:Translate Results}" />  
                 <Label Grid.Row="2"
                        HorizontalTextAlignment="Center"
                        Grid.Column="1"
+                       TextColor="Black"
                        x:Name="sensorAResults2"
                        Text="{lang:Translate Results}" />
                 <Entry Grid.Row="4"
@@ -64,6 +67,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.ColumnSpan="2"
                        FontSize="Medium"
+                       TextColor="Black"
                        Text="{lang:Translate SensorB}"
                        HorizontalTextAlignment="Center"/>
                 <Picker Grid.ColumnSpan="2"
@@ -72,11 +76,13 @@
                         Title="{lang:Translate SelectSensor}"/>
                 <Label Grid.Row="2"
                        HorizontalTextAlignment="Center"
+                       TextColor="Black"
                        x:Name="sensorBResults1"
                        Text="{lang:Translate Results}" />  
                 <Label Grid.Row="2"
                        HorizontalTextAlignment="Center"
                        Grid.Column="1"
+                       TextColor="Black"
                        x:Name="sensorBResults2"
                        Text="{lang:Translate Results}" />
                 <Entry Grid.Row="4"
