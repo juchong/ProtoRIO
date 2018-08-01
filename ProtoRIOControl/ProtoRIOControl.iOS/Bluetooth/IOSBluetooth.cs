@@ -125,6 +125,7 @@ namespace ProtoRIOControl.iOS.Bluetooth {
             if (dev == null) {
                 return;
             }
+            connectedPeripheral = dev; // Make sure we have a reference to this so that it can be canceled while connection is pending
             var options = new PeripheralConnectionOptions();
             options.NotifyOnConnection = true;
             options.NotifyOnDisconnection = true;
@@ -224,6 +225,7 @@ namespace ProtoRIOControl.iOS.Bluetooth {
                 client.callback.onBluetoothPowerChanged(result);
             }
             public override void ConnectedPeripheral(CBCentralManager central, CBPeripheral peripheral) {
+                client._isConnected = true;
                 peripheral.Delegate = client.peripheralDelegate;
                 peripheral.DiscoverServices(null);
                 client.connectedPeripheral = peripheral;

@@ -86,7 +86,6 @@ namespace ProtoRIOControl {
                         if (bluetoothDevicePage == null) {
                             discoveredDevices.Clear();
                             deviceNames.Clear();
-                            bluetooth.enumerateDevices();
                             bluetoothDevicePage = new BluetoothDevicePage();
                             Navigation.PushModalAsync(bluetoothDevicePage);
                         }
@@ -171,7 +170,7 @@ namespace ProtoRIOControl {
             public void onDeviceDiscovered(string address, string name, int rssi) {
                 if (!discoveredDevices.Contains(address)){
                     discoveredDevices.Add(address);
-                    deviceNames.Add(name == null ? AppResources.UnknownDevice : name);
+v                    deviceNames.Add(name == null ? AppResources.UnknownDevice : name);
                 }
             }
             public void onConnectToDevice(string address, string name, bool success) {
