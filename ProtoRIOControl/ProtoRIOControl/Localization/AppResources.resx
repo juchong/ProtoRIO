@@ -267,4 +267,82 @@
   <data name="VoltsSymbol" xml:space="preserve">
     <value>V</value>
   </data>
+  <data name="SensorAnalog" xml:space="preserve">
+    <value>Analog Read</value>
+  </data>
+  <data name="SensorHCSR04" xml:space="preserve">
+    <value>HC-SR04</value>
+  </data>
+  <data name="SensorLidarLite" xml:space="preserve">
+    <value>LIDAR Lite</value>
+  </data>
+  <data name="SensorMB1cm" xml:space="preserve">
+    <value>MaxBotix 1cm</value>
+  </data>
+  <data name="SensorMB2cm" xml:space="preserve">
+    <value>MaxBotix 2cm</value>
+  </data>
+  <data name="SensorNone" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="SensorSA02" xml:space="preserve">
+    <value>Sharp GP2YOA02</value>
+  </data>
+  <data name="SensorSA21" xml:space="preserve">
+    <value>Sharp GP2YOA21</value>
+  </data>
+  <data name="SensorSA41" xml:space="preserve">
+    <value>Sharp GP2YOA41</value>
+  </data>
+  <data name="SensorSA51" xml:space="preserve">
+    <value>Sharp GP2YOA51</value>
+  </data>
+  <data name="SensorSA60" xml:space="preserve">
+    <value>Sharp GP2YOA60</value>
+  </data>
+  <data name="SensorVL53L0XTOF" xml:space="preserve">
+    <value>VL53L0X TOF</value>
+  </data>
+  <data name="SettingCmPerCount" xml:space="preserve">
+    <value>cm/count</value>
+  </data>
+  <data name="SettingTickPerRev" xml:space="preserve">
+    <value>ticks/Rev</value>
+  </data>
+  <data name="UnitCentimeters" xml:space="preserve">
+    <value>cm</value>
+  </data>
+  <data name="UnitInches" xml:space="preserve">
+    <value>In</value>
+  </data>
+  <data name="UnitRPM" xml:space="preserve">
+    <value>RPM</value>
+  </data>
+  <data name="UnitTicks" xml:space="preserve">
+    <value>ticks</value>
+  </data>
+  <data name="SensorEncoder" xml:space="preserve">
+    <value>Encoder</value>
+  </data>
+  <data name="SettingCmMax" xml:space="preserve">
+    <value>cm Max</value>
+  </data>
+  <data name="UnitRaw" xml:space="preserve">
+    <value>Raw (0-1023)</value>
+  </data>
+  <data name="UnitVolts" xml:space="preserve">
+    <value>Volts</value>
+  </data>
+  <data name="Connect5VI2C" xml:space="preserve">
+    <value>5V I2C</value>
+  </data>
+  <data name="ConnectAnalog" xml:space="preserve">
+    <value>AN+</value>
+  </data>
+  <data name="ConnectEncoder" xml:space="preserve">
+    <value>DIO A&amp;B</value>
+  </data>
+  <data name="ConnectHCSR04" xml:space="preserve">
+    <value>Trig: DIO_ Echo: DIO*</value>
+  </data>
 </root>

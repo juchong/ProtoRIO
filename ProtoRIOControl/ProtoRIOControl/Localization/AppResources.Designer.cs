@@ -223,6 +223,42 @@ namespace ProtoRIOControl.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 5V I2C.
+        /// </summary>
+        public static string Connect5VI2C {
+            get {
+                return ResourceManager.GetString("Connect5VI2C", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AN+.
+        /// </summary>
+        public static string ConnectAnalog {
+            get {
+                return ResourceManager.GetString("ConnectAnalog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DIO A&amp;B.
+        /// </summary>
+        public static string ConnectEncoder {
+            get {
+                return ResourceManager.GetString("ConnectEncoder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trig: DIO_ Echo: DIO*.
+        /// </summary>
+        public static string ConnectHCSR04 {
+            get {
+                return ResourceManager.GetString("ConnectHCSR04", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connecting to .
         /// </summary>
         public static string Connecting {
@@ -403,6 +439,15 @@ namespace ProtoRIOControl.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Analog Read.
+        /// </summary>
+        public static string SensorAnalog {
+            get {
+                return ResourceManager.GetString("SensorAnalog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sensor B.
         /// </summary>
         public static string SensorB {
@@ -412,11 +457,146 @@ namespace ProtoRIOControl.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Encoder.
+        /// </summary>
+        public static string SensorEncoder {
+            get {
+                return ResourceManager.GetString("SensorEncoder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HC-SR04.
+        /// </summary>
+        public static string SensorHCSR04 {
+            get {
+                return ResourceManager.GetString("SensorHCSR04", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LIDAR Lite.
+        /// </summary>
+        public static string SensorLidarLite {
+            get {
+                return ResourceManager.GetString("SensorLidarLite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxBotix 1cm.
+        /// </summary>
+        public static string SensorMB1cm {
+            get {
+                return ResourceManager.GetString("SensorMB1cm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxBotix 2cm.
+        /// </summary>
+        public static string SensorMB2cm {
+            get {
+                return ResourceManager.GetString("SensorMB2cm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        public static string SensorNone {
+            get {
+                return ResourceManager.GetString("SensorNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sharp GP2YOA02.
+        /// </summary>
+        public static string SensorSA02 {
+            get {
+                return ResourceManager.GetString("SensorSA02", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sharp GP2YOA21.
+        /// </summary>
+        public static string SensorSA21 {
+            get {
+                return ResourceManager.GetString("SensorSA21", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sharp GP2YOA41.
+        /// </summary>
+        public static string SensorSA41 {
+            get {
+                return ResourceManager.GetString("SensorSA41", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sharp GP2YOA51.
+        /// </summary>
+        public static string SensorSA51 {
+            get {
+                return ResourceManager.GetString("SensorSA51", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sharp GP2YOA60.
+        /// </summary>
+        public static string SensorSA60 {
+            get {
+                return ResourceManager.GetString("SensorSA60", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sensors.
         /// </summary>
         public static string SensorsTab {
             get {
                 return ResourceManager.GetString("SensorsTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VL53L0X TOF.
+        /// </summary>
+        public static string SensorVL53L0XTOF {
+            get {
+                return ResourceManager.GetString("SensorVL53L0XTOF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to cm Max.
+        /// </summary>
+        public static string SettingCmMax {
+            get {
+                return ResourceManager.GetString("SettingCmMax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to cm/count.
+        /// </summary>
+        public static string SettingCmPerCount {
+            get {
+                return ResourceManager.GetString("SettingCmPerCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ticks/Rev.
+        /// </summary>
+        public static string SettingTickPerRev {
+            get {
+                return ResourceManager.GetString("SettingTickPerRev", resourceCulture);
             }
         }
         
@@ -480,6 +660,60 @@ namespace ProtoRIOControl.Localization {
         public static string Unit {
             get {
                 return ResourceManager.GetString("Unit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to cm.
+        /// </summary>
+        public static string UnitCentimeters {
+            get {
+                return ResourceManager.GetString("UnitCentimeters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In.
+        /// </summary>
+        public static string UnitInches {
+            get {
+                return ResourceManager.GetString("UnitInches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Raw (0-1023).
+        /// </summary>
+        public static string UnitRaw {
+            get {
+                return ResourceManager.GetString("UnitRaw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RPM.
+        /// </summary>
+        public static string UnitRPM {
+            get {
+                return ResourceManager.GetString("UnitRPM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ticks.
+        /// </summary>
+        public static string UnitTicks {
+            get {
+                return ResourceManager.GetString("UnitTicks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Volts.
+        /// </summary>
+        public static string UnitVolts {
+            get {
+                return ResourceManager.GetString("UnitVolts", resourceCulture);
             }
         }
         
