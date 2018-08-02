@@ -7,13 +7,14 @@
              Icon="info.png"
              Padding="5">
     <ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="auto" />
-            </Grid.RowDefinitions>
+        <ScrollView>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
 
-            <Grid HorizontalOptions="FillAndExpand"
+                <Grid HorizontalOptions="FillAndExpand"
                   VerticalOptions="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
@@ -51,12 +52,13 @@
                            HorizontalTextAlignment="Center"
                            FontSize="Large"/>
                 </Grid>
-            
-            <Label Grid.Row="1"
+
+                <Label Grid.Row="1"
                    x:Name="connectionStatusLabel"
                    Text="{lang:Translate StatusNotConnected}"
                    TextColor="{StaticResource redLabelColor}"
                    FontSize="Medium"/>
-        </Grid>
+            </Grid>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

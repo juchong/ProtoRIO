@@ -10,32 +10,38 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/> <!--Use this row for a disable all button if needed-->
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0"
+            <ScrollView Grid.Row="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0"
                   VerticalOptions="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="1"
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="1"
                        FontSize="Medium"
                        TextColor="Black"
                        VerticalTextAlignment="Center"
                        Text="{lang:Translate PWMA}"
                        HorizontalTextAlignment="Center"/>
-                <Switch Grid.Column="2"
+                        <Switch Grid.Column="2"
                         IsToggled="false"
                         Toggled="pwmaToggled"
                         HorizontalOptions="End"
                         x:Name="pwmaSwitch"/>
-                <Slider Grid.Row="1"
+                        <Slider Grid.Row="1"
                         Grid.Column="0"
                         Grid.ColumnSpan="3"
                         x:Name="pwmaSlider"
@@ -44,52 +50,52 @@
                         Value="0"
                         IsEnabled="false"
                         ValueChanged="pwmaChanged"/>
-                <Button Grid.Row="2"
+                        <Button Grid.Row="2"
                         Grid.Column="0"
                         IsEnabled="false"
                         Clicked="buttonClicked"
                         Text="{lang:Translate NegFull}"
                         x:Name="pwmaReverseButton"
                         HorizontalOptions="Start"/>
-                <Button Grid.Row="2"
+                        <Button Grid.Row="2"
                         Grid.Column="1"
                         IsEnabled="false"
                         Clicked="buttonClicked"
                         Text="{lang:Translate Neutral}"
                         x:Name="pwmaNeutralButton"
                         HorizontalOptions="Center"/>
-                <Button Grid.Row="2"
+                        <Button Grid.Row="2"
                         Grid.Column="2"
                         IsEnabled="false"
                         Clicked="buttonClicked"
                         Text="{lang:Translate Full}"
                         x:Name="pwmaForwardButton"
                         HorizontalOptions="End"/>
-            </Grid>
-            <Grid Grid.Row="1"
+                    </Grid>
+                    <Grid Grid.Row="1"
                   VerticalOptions="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="1"
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="1"
                        FontSize="Medium"
                        TextColor="Black"
                        VerticalTextAlignment="Center"
                        Text="{lang:Translate PWMB}"
                        HorizontalTextAlignment="Center"/>
-                <Switch Grid.Column="2"
+                        <Switch Grid.Column="2"
                         IsToggled="false"
                         Toggled="pwmbToggled"
                         HorizontalOptions="End"
                         x:Name="pwmbSwitch"/>
-                <Slider Grid.Row="1"
+                        <Slider Grid.Row="1"
                         Grid.Column="0"
                         Grid.ColumnSpan="3"
                         x:Name="pwmbSlider"
@@ -98,28 +104,30 @@
                         IsEnabled="false"
                         Value="0"
                         ValueChanged="pwmbChanged"/>
-                <Button Grid.Row="2"
+                        <Button Grid.Row="2"
                         Grid.Column="0"
                         IsEnabled="false"
                         Clicked="buttonClicked"
                         Text="{lang:Translate NegFull}"
                         x:Name="pwmbReverseButton"
                         HorizontalOptions="Start"/>
-                <Button Grid.Row="2"
+                        <Button Grid.Row="2"
                         Grid.Column="1"
                         IsEnabled="false"
                         Clicked="buttonClicked"
                         Text="{lang:Translate Neutral}"
                         x:Name="pwmbNeutralButton"
                         HorizontalOptions="Center"/>
-                <Button Grid.Row="2"
+                        <Button Grid.Row="2"
                         Grid.Column="2"
                         IsEnabled="false"
                         Clicked="buttonClicked"
                         Text="{lang:Translate Full}"
                         x:Name="pwmbForwardButton"
                         HorizontalOptions="End"/>
-            </Grid>
+                    </Grid>
+                </Grid>
+            </ScrollView>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

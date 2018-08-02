@@ -10,20 +10,25 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0"
+            <ScrollView>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0"
                   VerticalOptions="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <Label FontSize="Medium"
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label FontSize="Medium"
                        TextColor="Black"
                        Text="{lang:Translate SolenoidA}"
                        HorizontalTextAlignment="Center"/>
-                <Button Grid.Row="1"
+                        <Button Grid.Row="1"
                         x:Name="solenoidAButton"
                         Clicked="buttonClicked"
                         Text="{lang:Translate Off}"
@@ -31,18 +36,18 @@
                         IsEnabled="False"
                         FontSize="Large"
                         TextColor="Black"/>
-            </Grid>
-            <Grid Grid.Row="1"
+                    </Grid>
+                    <Grid Grid.Row="1"
                   VerticalOptions="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <Label FontSize="Medium"
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Label FontSize="Medium"
                        TextColor="Black"
                        Text="{lang:Translate SolenoidB}"
                        HorizontalTextAlignment="Center"/>
-                <Button Grid.Row="1"
+                        <Button Grid.Row="1"
                         x:Name="solenoidBButton"
                         Text="{lang:Translate Off}"
                         Clicked="buttonClicked"
@@ -50,8 +55,10 @@
                         BackgroundColor="{StaticResource offColor}"
                         FontSize="Large"
                         TextColor="Black"/>
-            </Grid>
-            <Grid Grid.Row="2">
+                    </Grid>
+                </Grid>
+            </ScrollView>
+            <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
