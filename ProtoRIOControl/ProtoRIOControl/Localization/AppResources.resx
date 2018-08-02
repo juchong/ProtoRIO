@@ -171,15 +171,6 @@
   <data name="Neutral" xml:space="preserve">
     <value>0%</value>
   </data>
-  <data name="ServoNeg" xml:space="preserve">
-    <value>0°</value>
-  </data>
-  <data name="ServoNeutral" xml:space="preserve">
-    <value>90°</value>
-  </data>
-  <data name="ServoFull" xml:space="preserve">
-    <value>180°</value>
-  </data>
   <data name="SolenoidA" xml:space="preserve">
     <value>Solenoid A</value>
   </data>
@@ -275,11 +266,5 @@
   </data>
   <data name="VoltsSymbol" xml:space="preserve">
     <value>V</value>
-  </data>
-  <data name="ModePercent" xml:space="preserve">
-    <value>Percent</value>
-  </data>
-  <data name="ModeServo" xml:space="preserve">
-    <value>Servo</value>
   </data>
 </root>

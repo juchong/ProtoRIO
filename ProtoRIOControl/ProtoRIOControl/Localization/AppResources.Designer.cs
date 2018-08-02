@@ -295,24 +295,6 @@ namespace ProtoRIOControl.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Percent.
-        /// </summary>
-        public static string ModePercent {
-            get {
-                return ResourceManager.GetString("ModePercent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Servo.
-        /// </summary>
-        public static string ModeServo {
-            get {
-                return ResourceManager.GetString("ModeServo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to -100%.
         /// </summary>
         public static string NegFull {
@@ -435,33 +417,6 @@ namespace ProtoRIOControl.Localization {
         public static string SensorsTab {
             get {
                 return ResourceManager.GetString("SensorsTab", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 180°.
-        /// </summary>
-        public static string ServoFull {
-            get {
-                return ResourceManager.GetString("ServoFull", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 0°.
-        /// </summary>
-        public static string ServoNeg {
-            get {
-                return ResourceManager.GetString("ServoNeg", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 90°.
-        /// </summary>
-        public static string ServoNeutral {
-            get {
-                return ResourceManager.GetString("ServoNeutral", resourceCulture);
             }
         }
         

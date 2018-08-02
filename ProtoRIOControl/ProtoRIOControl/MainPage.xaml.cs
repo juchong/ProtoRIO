@@ -131,7 +131,7 @@ namespace ProtoRIOControl {
         /// </summary>
         /// <param name="position">A percentage (-100 to 100) or a servo angle (0 to 180)</param>
         /// <param name="isServo">Is this server data (an angle not a percent)</param>
-        public static void sendPWMA(double position, bool isServo = false) {
+        public static void sendPWMA(double position) {
             // Convert from the -100 to 100 range of the slider into the 0 to 200 range used by the ProtoRIO
             position += 100;
             bluetooth.writeToUart(Encoding.ASCII.GetBytes(OutData.sendPWMA + position + '\n'));
@@ -142,7 +142,7 @@ namespace ProtoRIOControl {
         /// </summary>
         /// <param name="position">A percentage (-100 to 100) or a servo angle (0 to 180)</param>
         /// <param name="isServo">Is this server data (an angle not a percent)</param>
-        public static void sendPWMB(double position, bool isServer = false) {
+        public static void sendPWMB(double position) {
             // Convert from the -100 to 100 range of the slider into the 0 to 200 range used by the ProtoRIO
             position += 100;
             bluetooth.writeToUart(Encoding.ASCII.GetBytes(OutData.sendPWMB + position + '\n'));
