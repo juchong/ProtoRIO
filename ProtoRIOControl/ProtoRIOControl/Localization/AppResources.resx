@@ -328,7 +328,7 @@
     <value>cm Max</value>
   </data>
   <data name="UnitRaw" xml:space="preserve">
-    <value>Raw (0-1023)</value>
+    <value>/ 1023</value>
   </data>
   <data name="UnitVolts" xml:space="preserve">
     <value>Volts</value>
@@ -344,5 +344,8 @@
   </data>
   <data name="ConnectHCSR04" xml:space="preserve">
     <value>Trig: DIO_ Echo: DIO*</value>
+  </data>
+  <data name="Connection" xml:space="preserve">
+    <value>Connection:</value>
   </data>
 </root>

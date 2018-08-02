@@ -2,33 +2,37 @@
 using System;
 namespace ProtoRIOControl {
     public static class InData {
-        public const string batteryVIn = "RBV";        // The battery voltage
-        public const string batteryIIn = "RBI";        // The battery current draw
-        public const string batteryEnd = "X";          // The end of battery data
+        public const string batteryVIn = "RBV";           // The battery voltage
+        public const string batteryIIn = "RBI";           // The battery current draw
+        public const string batteryEnd = "X";             // The end of battery data
 
-        public const string sensorARes1 = "R1A";      // The first result from sensor A
-        public const string sensorARes2 = "R2A";      // The second result from sensor A
-        public const string sensorAEnd = "Y";         // The end of sensor A data
+        public const string sensorARes1 = "R1A";         // The first result from sensor A
+        public const string sensorARes2 = "R2A";         // The second result from sensor A
+        public const string sensorAEnd = "Y";            // The end of sensor A data
 
-        public const string sensorBRes1 = "R1B";      // The first result from sensor A
-        public const string sensorBRes2 = "R2B";      // The second result from sensor A
-        public const string sensorBEnd = "Z";         // The end of sensor A data
+        public const string sensorBRes1 = "R1B";         // The first result from sensor B
+        public const string sensorBRes2 = "R2B";         // The second result from sensor B
+        public const string sensorBEnd = "Z";            // The end of sensor B data
     }
     public static class OutData{
-        public const string requestRead = "BTRD";     // Request a read of sensors and battery
-        public const string sendPWMA = "PA";          // Set PWM A speed
-        public const string sendPWMB = "PB";          // Set PWM B speed
-        public const string sendSolenoid = "SO";      // Set Solenoid state
-        public const int solenoidAOn = 1;                // Solenoid A on B off
-        public const int solenoidBOn = 2;                // Solenoid B on A off
-        public const int bothSolenoidsOn = 3;            // Solenoid A on B on
-        public const int bothSolenoidsOff = 0;           // Solenoid a off B off
+        public const string requestRead = "BTRD";        // Request a read of sensors and battery
+        public const string sendPWMA = "PA";             // Set PWM A speed
+        public const string sendPWMB = "PB";             // Set PWM B speed
+        public const string sendSolenoid = "SO";         // Set Solenoid state:
+        public const int solenoidAOn = 1;                   // A on B off
+        public const int solenoidBOn = 2;                   // B on A off
+        public const int bothSolenoidsOn = 3;               // A on B on
+        public const int bothSolenoidsOff = 0;              // a off B off
+        public const string sendSensorA = "SA";          // Configure the selected sensor for sensor A
+        public const string sendSensorB = "SB";          // Configure the selected sensor for sensor B
+        public const string sendSensorASetting = "EA";   // Configure the setting for sensor A
+        public const string sendSensorBSetting = "EB";   // Configure the setting for sensor B
     }
 
     /// <summary>
     /// A type to hold all needed info for each sensor
     /// </summary>
-    public struct Sensor {
+    public class Sensor {
         public Sensor(int sensorType, string name, string firstUnit, string secondUnit, int? setting, string settingUnit, bool userSetting, string connection) {
             this.sensorType = sensorType;
             this.name = name;
@@ -39,14 +43,14 @@ namespace ProtoRIOControl {
             this.userSetting = userSetting;
             this.connection = connection;
         }
-        public readonly int sensorType;
-        public readonly string name;
-        public readonly string firstUnit;
-        public readonly string secondUnit;
-        public readonly int? setting;
-        public readonly string settingUnit;
-        public readonly bool userSetting;
-        public readonly string connection;
+        public int sensorType { get; private set; }
+        public string name { get; private set; }
+        public string firstUnit { get; private set; }
+        public string secondUnit { get; private set; }
+        public int? setting { get; private set; }
+        public string settingUnit { get; private set; }
+        public bool userSetting { get; private set; }
+        public string connection { get; private set; }
     }
 
     /* 

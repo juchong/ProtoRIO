@@ -1,98 +1,153 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ProtoRIOControl.SensorsPage"
-             xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl"
-             Title="{lang:Translate SensorsTab}"
-             Icon="scan.png"
-             Padding="5">
-    <ContentPage.Content>
-        <ScrollView>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0"
-                  VerticalOptions="Center">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.ColumnSpan="2"
-                       FontSize="Medium"
-                       TextColor="Black"
-                       Text="{lang:Translate SensorA}"
-                       HorizontalTextAlignment="Center"/>
-                    <Picker Grid.ColumnSpan="2"
-                        Grid.Row="1"
-                        x:Name="sensorAPicker"
-                        Title="{lang:Translate SelectSensor}"/>
-                    <Label Grid.Row="2"
-                       HorizontalTextAlignment="Center"
-                       x:Name="sensorAResults1"
-                       TextColor="Black"
-                       Text="{lang:Translate Results}" />
-                    <Label Grid.Row="2"
-                       HorizontalTextAlignment="Center"
-                       Grid.Column="1"
-                       TextColor="Black"
-                       x:Name="sensorAResults2"
-                       Text="{lang:Translate Results}" />
-                    <Entry Grid.Row="4"
-                       Grid.ColumnSpan="2"
-                       x:Name="sensorASetting"
-                       Placeholder="{lang:Translate Config}"
-                       IsEnabled="false"/>
 
-                </Grid>
-                <Grid Grid.Row="1"
-                  VerticalOptions="Center">
+   <!--
+          This page and the status page have several labels with HorizontalOptions used instead of HorizontalTextAlignment
+          THIS IS BAD FORM, BUT INTENTIONAL. There is an android bug that makes this necessary. 
+          See https://bugzilla.xamarin.com/show_bug.cgi?id=55359
+    
+          This is only an issue if the text of a label is updated while the label is off the screen.
+    -->
+    
+    <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 x:Class="ProtoRIOControl.SensorsPage"
+                 xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl"
+                 xmlns:local="clr-namespace:ProtoRIOControl;assembly=ProtoRIOControl"
+                 Title="{lang:Translate SensorsTab}"
+                 Icon="scan.png"
+                 Padding="5">
+        <ContentPage.Content>
+            <ScrollView>
+                <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.ColumnSpan="2"
-                       FontSize="Medium"
-                       TextColor="Black"
-                       Text="{lang:Translate SensorB}"
-                       HorizontalTextAlignment="Center"/>
-                    <Picker Grid.ColumnSpan="2"
-                        Grid.Row="1"
-                        x:Name="sensorBPicker"
-                        Title="{lang:Translate SelectSensor}"/>
-                    <Label Grid.Row="2"
-                       HorizontalTextAlignment="Center"
-                       TextColor="Black"
-                       x:Name="sensorBResults1"
-                       Text="{lang:Translate Results}" />
-                    <Label Grid.Row="2"
-                       HorizontalTextAlignment="Center"
-                       Grid.Column="1"
-                       TextColor="Black"
-                       x:Name="sensorBResults2"
-                       Text="{lang:Translate Results}" />
-                    <Entry Grid.Row="4"
-                       Grid.ColumnSpan="2"
-                       x:Name="sensorBSetting"
-                       Placeholder="{lang:Translate Config}"
-                       IsEnabled="false"/>
+                    <Grid Grid.Row="0"
+                          VerticalOptions="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.ColumnSpan="2"
+                               FontSize="Medium"
+                               TextColor="Black"
+                               Text="{lang:Translate SensorA}"
+                               HorizontalOptions="CenterAndExpand"/>
+                        <Picker Grid.ColumnSpan="2"
+                                Grid.Row="1"
+                                SelectedIndexChanged="sensorASelected"
+                                ItemsSource="{Binding sensorASensors}"
+                                ItemDisplayBinding="{Binding name}"
+                                x:Name="sensorAPicker"
+                                IsEnabled="False"
+                                Title="{lang:Translate SelectSensor}"/>
+                        <Label Grid.Row="2"
+                               HorizontalOptions="CenterAndExpand"
+                               x:Name="sensorAResults1"
+                               TextColor="Black" />
+                        <Label Grid.Row="2"
+                               HorizontalOptions="CenterAndExpand"
+                               Grid.Column="1"
+                               TextColor="Black"
+                               x:Name="sensorAUnit1" />
+                        <Label Grid.Row="3"
+                               HorizontalOptions="CenterAndExpand"
+                               x:Name="sensorAResults2"
+                               TextColor="Black" />
+                        <Label Grid.Row="3"
+                               HorizontalOptions="CenterAndExpand"
+                               Grid.Column="1"
+                               TextColor="Black"
+                               x:Name="sensorAUnit2" />
+                        <Entry Grid.Row="4"
+                               x:Name="sensorASetting"
+                               Completed="sensorASettingChanged"
+                               Placeholder="{lang:Translate Config}"
+                               IsEnabled="false">
+                            <Entry.Behaviors>
+                                <local:NumericValidationBehavior />
+                            </Entry.Behaviors>
+                        </Entry>
+                        <Label Grid.Row="4"
+                               Grid.Column="1"
+                               TextColor="Black"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="CenterAndExpand"
+                               x:Name="sensorASettingUnit"/>
+
+                    </Grid>
+                    <Grid Grid.Row="1"
+                          VerticalOptions="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.ColumnSpan="2"
+                               FontSize="Medium"
+                               TextColor="Black"
+                               Text="{lang:Translate SensorB}"
+                               HorizontalOptions="CenterAndExpand"/>
+                        <Picker Grid.ColumnSpan="2"
+                                Grid.Row="1"
+                                SelectedIndexChanged="sensorBSelected"
+                                IsEnabled="False"
+                                ItemsSource="{Binding sensorBSensors}"
+                                ItemDisplayBinding="{Binding name}"
+                                x:Name="sensorBPicker"
+                                Title="{lang:Translate SelectSensor}"/>
+                        <Label Grid.Row="2"
+                               HorizontalOptions="CenterAndExpand"
+                               x:Name="sensorBResults1"
+                               TextColor="Black" />
+                        <Label Grid.Row="2"
+                               HorizontalOptions="CenterAndExpand"
+                               Grid.Column="1"
+                               TextColor="Black"
+                               x:Name="sensorBUnit1" />
+                        <Label Grid.Row="3"
+                               HorizontalOptions="CenterAndExpand"
+                               x:Name="sensorBResults2"
+                               TextColor="Black" />
+                        <Label Grid.Row="3"
+                               HorizontalOptions="CenterAndExpand"
+                               Grid.Column="1"
+                               TextColor="Black"
+                               x:Name="sensorBUnit2" />
+                        <Entry Grid.Row="4"
+                               x:Name="sensorBSetting"
+                               Completed="sensorBSettingChanged"
+                               Keyboard="Numeric"
+                               Placeholder="{lang:Translate Config}"
+                               IsEnabled="false">
+                            <Entry.Behaviors>
+                                <local:NumericValidationBehavior />
+                            </Entry.Behaviors>
+                        </Entry>
+                    <Label Grid.Row="4"
+                               Grid.Column="1"
+                               TextColor="Black"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="CenterAndExpand"
+                               x:Name="sensorBSettingUnit"/>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </ScrollView>
-    </ContentPage.Content>
-</ContentPage>
+            </ScrollView>
+        </ContentPage.Content>
+    </ContentPage>

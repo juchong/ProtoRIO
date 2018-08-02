@@ -268,6 +268,15 @@ namespace ProtoRIOControl.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connection:.
+        /// </summary>
+        public static string Connection {
+            get {
+                return ResourceManager.GetString("Connection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connect.
         /// </summary>
         public static string ConnectText {
@@ -682,7 +691,7 @@ namespace ProtoRIOControl.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Raw (0-1023).
+        ///   Looks up a localized string similar to / 1023.
         /// </summary>
         public static string UnitRaw {
             get {

@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ProtoRIOControl.PneumaticsPage"
-             xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl"
-             Title="{lang:Translate PneumaticsTab}"
-             Icon="gauge.png"
-             Padding="5">
-    <ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <ScrollView>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0"
-                  VerticalOptions="Center">
+    <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 x:Class="ProtoRIOControl.PneumaticsPage"
+                 xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl"
+                 Title="{lang:Translate PneumaticsTab}"
+                 Icon="gauge.png"
+                 Padding="5">
+        <ContentPage.Content>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <ScrollView>
+                    <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Label FontSize="Medium"
-                       TextColor="Black"
-                       Text="{lang:Translate SolenoidA}"
-                       HorizontalTextAlignment="Center"/>
-                        <Button Grid.Row="1"
-                        x:Name="solenoidAButton"
-                        Clicked="buttonClicked"
-                        Text="{lang:Translate Off}"
-                        BackgroundColor="{StaticResource offColor}"
-                        IsEnabled="False"
-                        FontSize="Large"
-                        TextColor="Black"/>
+                        <Grid Grid.Row="0"
+                              VerticalOptions="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Label FontSize="Medium"
+                                   TextColor="Black"
+                                   Text="{lang:Translate SolenoidA}"
+                                   HorizontalTextAlignment="Center"/>
+                            <Button Grid.Row="1"
+                                    x:Name="solenoidAButton"
+                                    Clicked="buttonClicked"
+                                    Text="{lang:Translate Off}"
+                                    BackgroundColor="{StaticResource offColor}"
+                                    IsEnabled="False"
+                                    FontSize="Large"
+                                    TextColor="Black"/>
+                        </Grid>
+                        <Grid Grid.Row="1"
+                              VerticalOptions="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Label FontSize="Medium"
+                                   TextColor="Black"
+                                   Text="{lang:Translate SolenoidB}"
+                                   HorizontalTextAlignment="Center"/>
+                            <Button Grid.Row="1"
+                                    x:Name="solenoidBButton"
+                                    Text="{lang:Translate Off}"
+                                    Clicked="buttonClicked"
+                                    IsEnabled="False"
+                                    BackgroundColor="{StaticResource offColor}"
+                                    FontSize="Large"
+                                    TextColor="Black"/>
+                        </Grid>
                     </Grid>
-                    <Grid Grid.Row="1"
-                  VerticalOptions="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
-                        <Label FontSize="Medium"
-                       TextColor="Black"
-                       Text="{lang:Translate SolenoidB}"
-                       HorizontalTextAlignment="Center"/>
-                        <Button Grid.Row="1"
-                        x:Name="solenoidBButton"
-                        Text="{lang:Translate Off}"
-                        Clicked="buttonClicked"
-                        IsEnabled="False"
-                        BackgroundColor="{StaticResource offColor}"
-                        FontSize="Large"
-                        TextColor="Black"/>
-                    </Grid>
+                </ScrollView>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Switch x:Name="allowBothSwitch"
+                            IsToggled="false"
+                            IsEnabled="false"
+                            Toggled="allowBothToggled"/>
+                    <Label Grid.Column="1"
+                           VerticalTextAlignment="Center"
+                           Text="{lang:Translate AllowBothSolenoid}"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource redLabelColor}"/>
                 </Grid>
-            </ScrollView>
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Switch x:Name="allowBothSwitch"
-                        IsToggled="false"
-                        IsEnabled="false"
-                        Toggled="allowBothToggled"/>
-                <Label Grid.Column="1"
-                       VerticalTextAlignment="Center"
-                       Text="{lang:Translate AllowBothSolenoid}"
-                       FontAttributes="Bold"
-                       TextColor="{StaticResource redLabelColor}"/>
             </Grid>
-        </Grid>
-    </ContentPage.Content>
-</ContentPage>
+        </ContentPage.Content>
+    </ContentPage>

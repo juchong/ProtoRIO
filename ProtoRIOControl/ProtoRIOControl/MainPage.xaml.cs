@@ -165,6 +165,38 @@ namespace ProtoRIOControl {
         }
 
         /// <summary>
+        /// Select a sensor for sensor A
+        /// </summary>
+        /// <param name="sensorType">The sensor type</param>
+        public static void sendSensorASelection(int sensorType) {
+            bluetooth.writeToUart(Encoding.ASCII.GetBytes(OutData.sendSensorA + sensorType + '\n'));
+        }
+
+        /// <summary>
+        /// Select a sensor for sensor B
+        /// </summary>
+        /// <param name="sensorType">The sensor type</param>
+        public static void sendSensorBSelection(int sensorType) {
+            bluetooth.writeToUart(Encoding.ASCII.GetBytes(OutData.sendSensorB + sensorType + '\n'));
+        }
+
+        /// <summary>
+        /// Send the user configured setting for sensor A
+        /// </summary>
+        /// <param name="setting">The setting</param>
+        public static void sendSensorASetting(int setting) {
+            bluetooth.writeToUart(Encoding.ASCII.GetBytes(OutData.sendSensorASetting + setting + '\n'));
+        }
+
+        /// <summary>
+        /// Send the user configured setting for sensor B
+        /// </summary>
+        /// <param name="setting">The setting</param>
+        public static void sendSensorBSetting(int setting) {
+            bluetooth.writeToUart(Encoding.ASCII.GetBytes(OutData.sendSensorBSetting + setting + '\n'));
+        }
+
+        /// <summary>
         /// Request that the ProtRIO send sensor information
         /// </summary>
         /// <param name="sender">The source timer</param>
@@ -199,6 +231,8 @@ namespace ProtoRIOControl {
             string sensorBRes2 = getValue(substring(data, InData.sensorBRes2, InData.sensorBEnd), InData.sensorBRes2);
             Device.BeginInvokeOnMainThread(() => {
                 instance.statusPage.setBatteryInfo(batteryVoltage, batteryCurrent);
+                instance.sensorsPage.setSensorAInfo(sensorARes1, sensorARes2);
+                instance.sensorsPage.setSensorBInfo(sensorBRes1, sensorBRes2);
             });
         }
 
@@ -262,6 +296,8 @@ namespace ProtoRIOControl {
                         connectedDeviceName = name;
                         Device.BeginInvokeOnMainThread(() => {
                             instance.statusPage.setStatusLabel(AppResources.StatusConnected + name, true);
+                            instance.pwmPage.enableAll();
+                            instance.sensorsPage.enableAll();
                             instance.pneumaticsPage.enableSolenoids();
                         });
                         readRequestTimer.Start(); // Start polling for data
@@ -281,6 +317,7 @@ namespace ProtoRIOControl {
                         UserDialogs.Instance.Alert(AppResources.AlertLostConnectionMessage, AppResources.AlertLostConnectionTitle, AppResources.AlertOk);
                     instance.statusPage.setStatusLabel(AppResources.StatusNotConnected, false);
                     instance.pwmPage.disableAll();
+                    instance.sensorsPage.disableAll();
                     instance.pneumaticsPage.disableSolenoids();
                     manualDisconnect = false;
                 });

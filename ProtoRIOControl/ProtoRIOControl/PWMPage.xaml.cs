@@ -18,6 +18,13 @@ namespace ProtoRIOControl {
         public void disableAll(){
             pwmaSwitch.IsToggled = false;
             pwmbSwitch.IsToggled = false;
+            pwmaSwitch.IsEnabled = false;
+            pwmbSwitch.IsEnabled = false;
+        }
+
+        public void enableAll() {
+            pwmaSwitch.IsEnabled = true;
+            pwmbSwitch.IsEnabled = true;
         }
 
         void buttonClicked(object sender, EventArgs e) {
@@ -36,11 +43,6 @@ namespace ProtoRIOControl {
         }
 
         void pwmaToggled(object sender, ToggledEventArgs e) {
-            // Do not allow enable if there is no connection
-            if(pwmaSwitch.IsToggled && !MainPage.bluetooth.isConnected()){
-                pwmaSwitch.IsToggled = false;
-                return;
-            }
             pwmaSlider.IsEnabled = pwmaSwitch.IsToggled;
             pwmaForwardButton.IsEnabled = pwmaSwitch.IsToggled;
             pwmaNeutralButton.IsEnabled = pwmaSwitch.IsToggled;
@@ -60,11 +62,6 @@ namespace ProtoRIOControl {
         }
 
         void pwmbToggled(object sender, ToggledEventArgs e){
-            // Do not allow enable if there is no connection
-            if (pwmbSwitch.IsToggled && !MainPage.bluetooth.isConnected()) {
-                pwmbSwitch.IsToggled = false;
-                return;
-            }
             pwmbSlider.IsEnabled = pwmbSwitch.IsToggled;
             pwmbForwardButton.IsEnabled = pwmbSwitch.IsToggled;
             pwmbNeutralButton.IsEnabled = pwmbSwitch.IsToggled;

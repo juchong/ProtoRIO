@@ -1,64 +1,82 @@
 <?xml version="1.0" encoding="utf-8" ?>
+
+
+<!--
+          This page and the sensors page have several labels with HorizontalOptions used instead of HorizontalTextAlignment
+          THIS IS BAD FORM, BUT INTENTIONAL. There is an android bug that makes this necessary. 
+          See https://bugzilla.xamarin.com/show_bug.cgi?id=55359
+    
+          This is only an issue if the text of a label is updated while the label is off the screen.
+    
+          NOTE: The bg color for the voltage indicator is a seperate label for this reason. The bg needs to fill. The text must center.
+    -->
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ProtoRIOControl.StatusPage"
-             xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl"
-             Title="{lang:Translate StatusTab}"
-             Icon="info.png"
-             Padding="5">
-    <ContentPage.Content>
-        <ScrollView>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
-
-                <Grid HorizontalOptions="FillAndExpand"
-                  VerticalOptions="Center">
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 x:Class="ProtoRIOControl.StatusPage"
+                 xmlns:lang="clr-namespace:ProtoRIOControl.Localization;assembly=ProtoRIOControl"
+                 Title="{lang:Translate StatusTab}"
+                 Icon="info.png"
+                 Padding="5">
+        <ContentPage.Content>
+            <ScrollView>
+                <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Row="0"
-                           Grid.Column="0"
-                           TextColor="Black"
-                           Text="{lang:Translate BatteryVoltage}"
-                           HorizontalTextAlignment="Center"
-                           FontSize="Small"/>
-                    <Label Grid.Row="0"
-                           Grid.Column="1"
-                           TextColor="Black"
-                           Text="{lang:Translate BatteryCurrent}"
-                           HorizontalTextAlignment="Center"
-                           FontSize="Small"/>
-                    <Label Grid.Row="1"
-                           x:Name="voltageLabel"
-                           Grid.Column="0"
-                           Text="0 V"
-                           TextColor="Black"
-                           BackgroundColor="{StaticResource batteryLowColor}"
-                           HorizontalTextAlignment="Center"
-                           FontSize="Large"/>
-                    <Label Grid.Row="1"
-                           Grid.Column="1"
-                           TextColor="Black"
-                           x:Name="currentLabel"
-                           Text="0 A"
-                           HorizontalTextAlignment="Center"
-                           FontSize="Large"/>
-                </Grid>
 
-                <Label Grid.Row="1"
-                   x:Name="connectionStatusLabel"
-                   Text="{lang:Translate StatusNotConnected}"
-                   TextColor="{StaticResource redLabelColor}"
-                   FontSize="Medium"/>
-            </Grid>
-        </ScrollView>
-    </ContentPage.Content>
-</ContentPage>
+                    <Grid HorizontalOptions="FillAndExpand"
+                          VerticalOptions="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0"
+                               Grid.Column="0"
+                               TextColor="Black"
+                               Text="{lang:Translate BatteryVoltage}"
+                               HorizontalOptions="CenterAndExpand"
+                               FontSize="Small"/>
+                        <Label Grid.Row="0"
+                               Grid.Column="1"
+                               TextColor="Black"
+                               Text="{lang:Translate BatteryCurrent}"
+                               HorizontalOptions="CenterAndExpand"
+                               FontSize="Small"/>
+                        <Label Grid.Row="1"
+                               x:Name="voltageLabelBg"
+                               Grid.Column="0"
+                               TextColor="Transparent"
+                               BackgroundColor="{StaticResource batteryLowColor}"
+                               HorizontalOptions="FillAndExpand"
+                               VerticalOptions="FillAndExpand"/>
+                        <Label Grid.Row="1"
+                               x:Name="voltageLabel"
+                               Grid.Column="0"
+                               Text="0 V"
+                               TextColor="Black"
+                               HorizontalOptions="CenterAndExpand"
+                               FontSize="Large"/>
+                        <Label Grid.Row="1"
+                               Grid.Column="1"
+                               TextColor="Black"
+                               x:Name="currentLabel"
+                               Text="0 A"
+                               HorizontalOptions="CenterAndExpand"
+                               FontSize="Large"/>
+                    </Grid>
+
+                    <Label Grid.Row="1"
+                           x:Name="connectionStatusLabel"
+                           Text="{lang:Translate StatusNotConnected}"
+                           TextColor="{StaticResource redLabelColor}"
+                           FontSize="Medium"/>
+                </Grid>
+            </ScrollView>
+        </ContentPage.Content>
+    </ContentPage>

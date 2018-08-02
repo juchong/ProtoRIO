@@ -26,17 +26,17 @@ namespace ProtoRIOControl {
             try{
                 double v = double.Parse(voltage);
                 if (v >= highBat)
-                    voltageLabel.BackgroundColor = (Color)Application.Current.Resources["batteryHighColor"];
+                    voltageLabelBg.BackgroundColor = (Color)Application.Current.Resources["batteryHighColor"];
                 else if (v >= medBat)
-                    voltageLabel.BackgroundColor = (Color)Application.Current.Resources["batteryMedColor"];
+                    voltageLabelBg.BackgroundColor = (Color)Application.Current.Resources["batteryMedColor"];
                 else
-                    voltageLabel.BackgroundColor = (Color)Application.Current.Resources["batteryLowColor"];
+                    voltageLabelBg.BackgroundColor = (Color)Application.Current.Resources["batteryLowColor"];
                 voltageLabel.Text = String.Format("{0:0.00}", v) + " " + AppResources.VoltsSymbol;
 
                 double c = double.Parse(current);
                 currentLabel.Text = String.Format("{0:0.00}", c) + " " + AppResources.AmpsSymbol;
             }catch(Exception e){
-                voltageLabel.BackgroundColor = Color.Transparent;
+                voltageLabelBg.BackgroundColor = Color.Transparent;
                 voltageLabel.Text = "???";
                 currentLabel.Text = "???";
             }
