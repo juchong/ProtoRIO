@@ -15,5 +15,7 @@ namespace ProtoRIOControl {
     }
     public static class OutData{
         public const string requestRead = "BTRD";     // Request a read of sensors and battery
+        public const string sendPWMA = "PA";
+        public const string sendPWMB = "PB";
     }
 }

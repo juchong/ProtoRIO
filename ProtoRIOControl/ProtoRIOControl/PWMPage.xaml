@@ -31,6 +31,7 @@
                        HorizontalTextAlignment="Center"/>
                 <Switch Grid.Column="2"
                         IsToggled="false"
+                        Toggled="pwmaToggled"
                         HorizontalOptions="End"
                         x:Name="pwmaSwitch"/>
                 <Slider Grid.Row="1"
@@ -40,21 +41,28 @@
                         Minimum="-100"
                         Maximum="100"
                         Value="0"
+                        IsEnabled="false"
                         ValueChanged="pwmaChanged"/>
                 <Button Grid.Row="2"
                         Grid.Column="0"
+                        IsEnabled="false"
+                        Clicked="buttonClicked"
                         Text="{lang:Translate NegFull}"
                         x:Name="pwmaReverseButton"
                         HorizontalOptions="Start"/>
                 <Button Grid.Row="2"
                         Grid.Column="1"
+                        IsEnabled="false"
+                        Clicked="buttonClicked"
                         Text="{lang:Translate Neutral}"
                         x:Name="pwmaNeutralButton"
                         HorizontalOptions="Center"/>
                 <Button Grid.Row="2"
                         Grid.Column="2"
+                        IsEnabled="false"
+                        Clicked="buttonClicked"
                         Text="{lang:Translate Full}"
-                        x:Name="pwmaForward"
+                        x:Name="pwmaForwardButton"
                         HorizontalOptions="End"/>
             </Grid>
             <Grid Grid.Row="1"
@@ -76,6 +84,7 @@
                        HorizontalTextAlignment="Center"/>
                 <Switch Grid.Column="2"
                         IsToggled="false"
+                        Toggled="pwmbToggled"
                         HorizontalOptions="End"
                         x:Name="pwmbSwitch"/>
                 <Slider Grid.Row="1"
@@ -84,22 +93,29 @@
                         x:Name="pwmbSlider"
                         Minimum="-100"
                         Maximum="100"
+                        IsEnabled="false"
                         Value="0"
                         ValueChanged="pwmbChanged"/>
                 <Button Grid.Row="2"
                         Grid.Column="0"
+                        IsEnabled="false"
+                        Clicked="buttonClicked"
                         Text="{lang:Translate NegFull}"
                         x:Name="pwmbReverseButton"
                         HorizontalOptions="Start"/>
                 <Button Grid.Row="2"
                         Grid.Column="1"
+                        IsEnabled="false"
+                        Clicked="buttonClicked"
                         Text="{lang:Translate Neutral}"
                         x:Name="pwmbNeutralButton"
                         HorizontalOptions="Center"/>
                 <Button Grid.Row="2"
                         Grid.Column="2"
+                        IsEnabled="false"
+                        Clicked="buttonClicked"
                         Text="{lang:Translate Full}"
-                        x:Name="pwmbForward"
+                        x:Name="pwmbForwardButton"
                         HorizontalOptions="End"/>
             </Grid>
         </Grid>

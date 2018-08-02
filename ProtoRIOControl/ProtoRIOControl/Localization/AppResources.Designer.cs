@@ -155,6 +155,24 @@ namespace ProtoRIOControl.Localization {
             }
         }
         
+        public static string ServoNeg {
+            get {
+                return ResourceManager.GetString("ServoNeg", resourceCulture);
+            }
+        }
+        
+        public static string ServoNeutral {
+            get {
+                return ResourceManager.GetString("ServoNeutral", resourceCulture);
+            }
+        }
+        
+        public static string ServoFull {
+            get {
+                return ResourceManager.GetString("ServoFull", resourceCulture);
+            }
+        }
+        
         public static string SolenoidA {
             get {
                 return ResourceManager.GetString("SolenoidA", resourceCulture);

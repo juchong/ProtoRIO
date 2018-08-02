@@ -32,9 +32,9 @@ namespace ProtoRIOControl.iOS {
             UIButton.Appearance.TintColor = tintColor;
             UIButton.Appearance.SetTitleColor(tintColor, UIControlState.Normal);
 
-            UISlider.Appearance.ThumbTintColor = tintColor;
+            //UISlider.Appearance.ThumbTintColor = tintColor;
             UISlider.Appearance.MinimumTrackTintColor = tintColor;
-            UISlider.Appearance.MaximumTrackTintColor = tintColor;
+            //UISlider.Appearance.MaximumTrackTintColor = tintColor;
 
             UINavigationBar.Appearance.TintColor = tintColor;
             UITabBar.Appearance.TintColor = tintColor;

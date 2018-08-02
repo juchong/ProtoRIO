@@ -38,20 +38,9 @@ namespace ProtoRIOControl {
             if(instance == null)
                 instance = this;
             if (readRequestTimer == null) {
-                readRequestTimer = new Timer(500); // Request a read every 500ms
+                readRequestTimer = new Timer(250); // Request a read every 250ms
                 readRequestTimer.AutoReset = true;
                 readRequestTimer.Elapsed += RequestRead;
-            }
-        }
-
-        /// <summary>
-        /// Request that the ProtRIO send sensor information
-        /// </summary>
-        /// <param name="sender">The source timer</param>
-        /// <param name="e">Event args</param>
-        public static void RequestRead(object sender, System.Timers.ElapsedEventArgs e){
-            if(bluetooth.isConnected()){
-                bluetooth.writeToUart(Encoding.ASCII.GetBytes(OutData.requestRead + '\n'));
             }
         }
 
@@ -133,6 +122,49 @@ namespace ProtoRIOControl {
             }
         }
 
+
+
+        #region Bluetooth Write Functions
+
+        /// <summary>
+        /// Set the value of PWM A
+        /// </summary>
+        /// <param name="position">A percentage (-100 to 100) or a servo angle (0 to 180)</param>
+        /// <param name="isServo">Is this server data (an angle not a percent)</param>
+        public static void sendPWMA(double position, bool isServo = false) {
+            // Convert from the -100 to 100 range of the slider into the 0 to 200 range used by the ProtoRIO
+            position += 100;
+            bluetooth.writeToUart(Encoding.ASCII.GetBytes(OutData.sendPWMA + position + '\n'));
+        }
+
+        /// <summary>
+        /// Set the value of PWM B
+        /// </summary>
+        /// <param name="position">A percentage (-100 to 100) or a servo angle (0 to 180)</param>
+        /// <param name="isServo">Is this server data (an angle not a percent)</param>
+        public static void sendPWMB(double position, bool isServer = false) {
+            // Convert from the -100 to 100 range of the slider into the 0 to 200 range used by the ProtoRIO
+            position += 100;
+            bluetooth.writeToUart(Encoding.ASCII.GetBytes(OutData.sendPWMB + position + '\n'));
+        }
+
+        /// <summary>
+        /// Request that the ProtRIO send sensor information
+        /// </summary>
+        /// <param name="sender">The source timer</param>
+        /// <param name="e">Event args</param>
+        public static void RequestRead(object sender, System.Timers.ElapsedEventArgs e) {
+            if (bluetooth.isConnected()) {
+                bluetooth.writeToUart(Encoding.ASCII.GetBytes(OutData.requestRead + '\n'));
+            }
+        }
+
+        #endregion
+
+
+
+        #region Bluetooth Read Processing
+
         /// <summary>
         /// Handle data sent by the ProtoRIO
         /// </summary>
@@ -187,6 +219,10 @@ namespace ProtoRIOControl {
             return source.Substring(index + tag.Length);
         }
 
+        #endregion
+
+
+
         /// <summary>
         /// A callback to be used with the app's IBluetooth object
         /// </summary>
@@ -225,6 +261,7 @@ namespace ProtoRIOControl {
                     if (!manualDisconnect)
                         UserDialogs.Instance.Alert(AppResources.AlertLostConnectionMessage, AppResources.AlertLostConnectionTitle, AppResources.AlertOk);
                     instance.statusPage.setStatusLabel(AppResources.StatusNotConnected, false);
+                    instance.pwmPage.disableAll();
                     manualDisconnect = false;
                 });
             }
@@ -235,7 +272,7 @@ namespace ProtoRIOControl {
                     readBuffer += (char)b;
                     if(readBuffer.EndsWith("\n", StringComparison.CurrentCulture)){
                         Debug.WriteLine("Got Complete data: " + readBuffer.Length);
-                        processData(String.Copy(readBuffer)); // DO NOT AWAIT THIS OR DATA MAY BE LOST!!!
+                        processData(String.Copy(readBuffer)); // DO NOT AWAIT THIS OR DATA MAY BE MISSED!!!
                         readBuffer = "";
                     }
                 }

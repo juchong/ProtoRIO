@@ -163,13 +163,22 @@
     <value>PWM B</value>
   </data>
   <data name="NegFull" xml:space="preserve">
-    <value>-100</value>
+    <value>-100%</value>
   </data>
   <data name="Full" xml:space="preserve">
-    <value>100</value>
+    <value>100%</value>
   </data>
   <data name="Neutral" xml:space="preserve">
-    <value>0</value>
+    <value>0%</value>
+  </data>
+  <data name="ServoNeg" xml:space="preserve">
+    <value>0°</value>
+  </data>
+  <data name="ServoNeutral" xml:space="preserve">
+    <value>90°</value>
+  </data>
+  <data name="ServoFull" xml:space="preserve">
+    <value>180°</value>
   </data>
   <data name="SolenoidA" xml:space="preserve">
     <value>Solenoid A</value>
