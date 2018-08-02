@@ -276,4 +276,10 @@
   <data name="VoltsSymbol" xml:space="preserve">
     <value>V</value>
   </data>
+  <data name="ModePercent" xml:space="preserve">
+    <value>Percent</value>
+  </data>
+  <data name="ModeServo" xml:space="preserve">
+    <value>Servo</value>
+  </data>
 </root>

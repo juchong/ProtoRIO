@@ -11,6 +11,9 @@ namespace ProtoRIOControl {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PWMPage : ContentPage {
 
+        bool pwmaPercentMode = true;
+        bool pwmbPercentMode = true;
+
         public PWMPage() {
             InitializeComponent();
         }
@@ -20,7 +23,7 @@ namespace ProtoRIOControl {
             pwmbSwitch.IsToggled = false;
         }
 
-        void buttonClicked(object sender, EventArgs e){
+        void buttonClicked(object sender, EventArgs e) {
             if (sender == pwmaNeutralButton)
                 pwmaSlider.Value = (pwmaSlider.Maximum + pwmaSlider.Minimum) / 2;
             else if (sender == pwmaForwardButton)
@@ -33,6 +36,11 @@ namespace ProtoRIOControl {
                 pwmbSlider.Value = pwmbSlider.Maximum;
             else if (sender == pwmbReverseButton)
                 pwmbSlider.Value = pwmbSlider.Minimum;
+            else if (sender == pwmaModeButton) {
+
+            }else if(sender == pwmbModeButton) {
+
+            }
         }
 
         void pwmaToggled(object sender, ToggledEventArgs e) {
@@ -45,6 +53,7 @@ namespace ProtoRIOControl {
             pwmaForwardButton.IsEnabled = pwmaSwitch.IsToggled;
             pwmaNeutralButton.IsEnabled = pwmaSwitch.IsToggled;
             pwmaReverseButton.IsEnabled = pwmaSwitch.IsToggled;
+            pwmaModeButton.IsEnabled = pwmaSwitch.IsToggled;
             if(!pwmaSwitch.IsToggled){
                 pwmaSlider.Value = (pwmaSlider.Maximum + pwmaSlider.Minimum) / 2;
             }else{
@@ -69,6 +78,7 @@ namespace ProtoRIOControl {
             pwmbForwardButton.IsEnabled = pwmbSwitch.IsToggled;
             pwmbNeutralButton.IsEnabled = pwmbSwitch.IsToggled;
             pwmbReverseButton.IsEnabled = pwmbSwitch.IsToggled;
+            pwmbModeButton.IsEnabled = pwmbSwitch.IsToggled;
             if (!pwmbSwitch.IsToggled) {
                 pwmbSlider.Value = (pwmbSlider.Maximum + pwmbSlider.Minimum) / 2;
             } else {

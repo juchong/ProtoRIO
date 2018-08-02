@@ -24,9 +24,15 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
+                <Button Grid.Column="0"
+                        Text="{lang:Translate ModePercent}"
+                        x:Name="pwmaModeButton"
+                        IsEnabled="False"
+                        Clicked="buttonClicked"/>
                 <Label Grid.Column="1"
                        FontSize="Medium"
                        TextColor="Black"
+                       VerticalTextAlignment="Center"
                        Text="{lang:Translate PWMA}"
                        HorizontalTextAlignment="Center"/>
                 <Switch Grid.Column="2"
@@ -77,9 +83,15 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
+                <Button Grid.Column="0"
+                        Text="{lang:Translate ModePercent}"
+                        x:Name="pwmbModeButton"
+                        IsEnabled="False"
+                        Clicked="buttonClicked"/>
                 <Label Grid.Column="1"
                        FontSize="Medium"
                        TextColor="Black"
+                       VerticalTextAlignment="Center"
                        Text="{lang:Translate PWMB}"
                        HorizontalTextAlignment="Center"/>
                 <Switch Grid.Column="2"
