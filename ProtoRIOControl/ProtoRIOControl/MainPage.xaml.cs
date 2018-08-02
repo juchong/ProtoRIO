@@ -149,6 +149,22 @@ namespace ProtoRIOControl {
         }
 
         /// <summary>
+        /// Set which solenoids are on
+        /// </summary>
+        /// <param name="aOn">Set soleoid a on</param>
+        /// <param name="bOn">Set solenoid b on</param>
+        public static void sendSolenoid(bool aOn, bool bOn) {
+            int state = OutData.bothSolenoidsOff;
+            if (aOn && bOn)
+                state = OutData.bothSolenoidsOn;
+            else if (aOn)
+                state = OutData.solenoidAOn;
+            else if (bOn)
+                state = OutData.solenoidBOn;
+            bluetooth.writeToUart(Encoding.ASCII.GetBytes(OutData.sendSolenoid + state + '\n'));
+        }
+
+        /// <summary>
         /// Request that the ProtRIO send sensor information
         /// </summary>
         /// <param name="sender">The source timer</param>
@@ -244,7 +260,10 @@ namespace ProtoRIOControl {
                     if (bluetooth.hasUartService()) {
                         bluetooth.subscribeToUartChars();
                         connectedDeviceName = name;
-                        Device.BeginInvokeOnMainThread(() => instance.statusPage.setStatusLabel(AppResources.StatusConnected + name, true));
+                        Device.BeginInvokeOnMainThread(() => {
+                            instance.statusPage.setStatusLabel(AppResources.StatusConnected + name, true);
+                            instance.pneumaticsPage.enableSolenoids();
+                        });
                         readRequestTimer.Start(); // Start polling for data
                     } else {
                         manualDisconnect = true;
@@ -262,6 +281,7 @@ namespace ProtoRIOControl {
                         UserDialogs.Instance.Alert(AppResources.AlertLostConnectionMessage, AppResources.AlertLostConnectionTitle, AppResources.AlertOk);
                     instance.statusPage.setStatusLabel(AppResources.StatusNotConnected, false);
                     instance.pwmPage.disableAll();
+                    instance.pneumaticsPage.disableSolenoids();
                     manualDisconnect = false;
                 });
             }

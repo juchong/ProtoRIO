@@ -15,7 +15,12 @@ namespace ProtoRIOControl {
     }
     public static class OutData{
         public const string requestRead = "BTRD";     // Request a read of sensors and battery
-        public const string sendPWMA = "PA";
-        public const string sendPWMB = "PB";
+        public const string sendPWMA = "PA";          // Set PWM A speed
+        public const string sendPWMB = "PB";          // Set PWM B speed
+        public const string sendSolenoid = "SO";      // Set Solenoid state
+        public const int solenoidAOn = 1;                // Solenoid A on B off
+        public const int solenoidBOn = 2;                // Solenoid B on A off
+        public const int bothSolenoidsOn = 3;            // Solenoid A on B on
+        public const int bothSolenoidsOff = 0;           // Solenoid a off B off
     }
 }

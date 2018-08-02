@@ -11,9 +11,6 @@ namespace ProtoRIOControl {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PWMPage : ContentPage {
 
-        bool pwmaPercentMode = true;
-        bool pwmbPercentMode = true;
-
         public PWMPage() {
             InitializeComponent();
         }

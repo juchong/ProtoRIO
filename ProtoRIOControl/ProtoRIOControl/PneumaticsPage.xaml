@@ -25,8 +25,10 @@
                        HorizontalTextAlignment="Center"/>
                 <Button Grid.Row="1"
                         x:Name="solenoidAButton"
+                        Clicked="buttonClicked"
                         Text="{lang:Translate Off}"
                         BackgroundColor="{StaticResource offColor}"
+                        IsEnabled="False"
                         FontSize="Large"
                         TextColor="Black"/>
             </Grid>
@@ -43,6 +45,8 @@
                 <Button Grid.Row="1"
                         x:Name="solenoidBButton"
                         Text="{lang:Translate Off}"
+                        Clicked="buttonClicked"
+                        IsEnabled="False"
                         BackgroundColor="{StaticResource offColor}"
                         FontSize="Large"
                         TextColor="Black"/>
@@ -53,7 +57,9 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Switch x:Name="allowBothSwitch"
-                        IsToggled="false"/>
+                        IsToggled="false"
+                        IsEnabled="false"
+                        Toggled="allowBothToggled"/>
                 <Label Grid.Column="1"
                        VerticalTextAlignment="Center"
                        Text="{lang:Translate AllowBothSolenoid}"
