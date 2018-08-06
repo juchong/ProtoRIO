@@ -26,8 +26,9 @@ namespace ProtoRIOControl {
         }
 
         private void onDeviceSelected(object sender, ItemTappedEventArgs e) {
-            MainPage.deviceToConnectTo = MainPage.deviceNames.IndexOf((string)e.Item);
-            ((ListView)sender).SelectedItem = null;
+            int i = MainPage.deviceNames.IndexOf((string)e.Item);
+            MainPage.deviceToConnectTo = i;
+            ((ListView)sender).SelectedItem = null; // Do not allow selections
             Navigation.PopModalAsync();
         }
     }

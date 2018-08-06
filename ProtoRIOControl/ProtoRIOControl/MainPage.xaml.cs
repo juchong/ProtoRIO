@@ -50,6 +50,7 @@ namespace ProtoRIOControl {
         protected override void OnAppearing() {
             // Just returned from some other page that no longer exists
             if (bluetoothDevicePage != null) {
+                Debug.WriteLine("NonNull Bt page");
                 bluetoothDevicePage = null;
                 bluetooth.endEnumeration();
                 if (deviceToConnectTo > -1) {
@@ -72,6 +73,8 @@ namespace ProtoRIOControl {
                     connectProgressDialog.Show();
                     connectedDeviceName = deviceNames[deviceToConnectTo];
                     deviceToConnectTo = -1;
+                } else {
+                    Debug.WriteLine("Was told to connect to -1");
                 }
             }
         }
@@ -282,7 +285,10 @@ namespace ProtoRIOControl {
             public void onDeviceDiscovered(string address, string name, int rssi) {
                 if (!discoveredDevices.Contains(address)){
                     discoveredDevices.Add(address);
-                    deviceNames.Add(name == null ? AppResources.UnknownDevice : name);
+                    // On UWP this must be run on the UI thread b/c it directly affects the ListView
+                    Device.BeginInvokeOnMainThread(() => {
+                        deviceNames.Add(name == null ? AppResources.UnknownDevice : name);
+                    });
                 }
             }
             public void onConnectToDevice(string address, string name, bool success) {

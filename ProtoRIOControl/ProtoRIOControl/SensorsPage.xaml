@@ -69,6 +69,7 @@
                                TextColor="Black"
                                x:Name="sensorAUnit2" />
                         <Entry Grid.Row="4"
+                               Keyboard="Numeric"
                                x:Name="sensorASetting"
                                Completed="sensorASettingChanged"
                                Placeholder="{lang:Translate Config}"

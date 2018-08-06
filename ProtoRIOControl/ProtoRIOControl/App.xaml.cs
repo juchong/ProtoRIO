@@ -26,9 +26,13 @@ namespace ProtoRIOControl {
         }
 
         protected override void OnSleep() {
-            ProtoRIOControl.MainPage.bluetooth.endEnumeration();
-            ProtoRIOControl.MainPage.bluetooth.disconnect();
-            Device.BeginInvokeOnMainThread(() => ProtoRIOControl.MainPage.instance.statusPage.setStatusLabel(AppResources.StatusNotConnected, false));
+            try {
+                ProtoRIOControl.MainPage.bluetooth.endEnumeration();
+                ProtoRIOControl.MainPage.bluetooth.disconnect();
+                Device.BeginInvokeOnMainThread(() => ProtoRIOControl.MainPage.instance.statusPage.setStatusLabel(AppResources.StatusNotConnected, false));
+            } catch(Exception e) {
+
+            }
         }
 
         protected override void OnResume() {

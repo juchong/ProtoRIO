@@ -10,8 +10,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="auto"/>
-                    <!--Use this row for a disable all button if needed-->
+                    <RowDefinition Height="auto"/><!--Use this row for a disable all button if needed-->
                 </Grid.RowDefinitions>
                 <ScrollView Grid.Row="0">
                     <Grid>
@@ -94,6 +93,7 @@
                                    HorizontalTextAlignment="Center"/>
                             <Switch Grid.Column="2"
                                     IsToggled="false"
+                                    IsEnabled="false"
                                     Toggled="pwmbToggled"
                                     HorizontalOptions="End"
                                     x:Name="pwmbSwitch"/>

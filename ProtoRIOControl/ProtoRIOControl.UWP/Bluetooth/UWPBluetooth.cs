@@ -325,16 +325,9 @@ namespace ProtoRIOControl.UWP.Bluetooth {
             return isScanning;
         }
 
-        public async void _cancelConnection() {
-
-        }
-        public void cancelConnection() {
-            if(connectedDevice != null) {
-                if (_isConnected)
-                    disconnect();
-                else
-                    connectedDevice.Dispose();
-            }
+        public void cancelConnect() {
+            _isConnected = true; // Force the disconnect method to run
+            try { disconnect(); } catch (Exception e) { }
         }
 
         #region Event Handlers
@@ -371,7 +364,7 @@ namespace ProtoRIOControl.UWP.Bluetooth {
                 }
             }
         }
-        private async void CharacteristicValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args) {
+        private void CharacteristicValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args) {
             if (sender.Uuid.ToString().ToUpper().Equals(BTValues.txCharacteristic.ToUpper())) {
                 callback.onUartDataReceived(args.CharacteristicValue.ToArray());
             }
