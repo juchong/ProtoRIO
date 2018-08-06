@@ -84,6 +84,7 @@ namespace ProtoRIOControl {
             sensorASetting.Text = (sensor.setting == null) ? "" : (sensor.setting + "");
             sensorASettingUnit.Text = sensor.settingUnit;
             sensorASetting.IsEnabled = sensor.userSetting;
+            sensorAConfig.Text = Sensors.getConnectionText(sensor.connection, true);
         }
 
         /// <summary>
@@ -110,6 +111,7 @@ namespace ProtoRIOControl {
             sensorBSetting.Text = (sensor.setting == null) ? "" : (sensor.setting + "");
             sensorBSettingUnit.Text = sensor.settingUnit;
             sensorBSetting.IsEnabled = sensor.userSetting;
+            sensorBConfig.Text = Sensors.getConnectionText(sensor.connection, false);
         }
 
         public SensorsPage() {

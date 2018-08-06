@@ -32,6 +32,7 @@
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
@@ -84,8 +85,14 @@
                                HorizontalOptions="CenterAndExpand"
                                VerticalOptions="CenterAndExpand"
                                x:Name="sensorASettingUnit"/>
+                        <Label Grid.Row="5"
+                               Grid.ColumnSpan="2"
+                               TextColor="Black"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="CenterAndExpand"
+                               x:Name="sensorAConfig"/>
 
-                    </Grid>
+                </Grid>
                     <Grid Grid.Row="1"
                           VerticalOptions="Center">
                         <Grid.RowDefinitions>
@@ -95,7 +102,8 @@
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="*"/>
@@ -141,12 +149,18 @@
                                 <local:NumericValidationBehavior />
                             </Entry.Behaviors>
                         </Entry>
-                    <Label Grid.Row="4"
+                        <Label Grid.Row="4"
                                Grid.Column="1"
                                TextColor="Black"
                                HorizontalOptions="CenterAndExpand"
                                VerticalOptions="CenterAndExpand"
                                x:Name="sensorBSettingUnit"/>
+                        <Label Grid.Row="5"
+                               Grid.ColumnSpan="2"
+                               TextColor="Black"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="CenterAndExpand"
+                               x:Name="sensorBConfig"/>
                     </Grid>
                 </Grid>
             </ScrollView>

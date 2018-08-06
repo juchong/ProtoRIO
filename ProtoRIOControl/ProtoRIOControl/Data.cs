@@ -66,6 +66,14 @@ namespace ProtoRIOControl {
      * if sensor B that would become "Trig:DIOC Echo:DIOD"
      */
     public static class Sensors {
+
+        public static string getConnectionText(string source, bool isA) {
+            source.Replace('_', isA ? 'A' : 'C');
+            source.Replace('*', isA ? 'B' : 'D');
+            source.Replace('+', isA ? 'A' : 'B');
+            return source;
+        }
+
         public static Sensor none = new Sensor(0, AppResources.SensorNone, "", "", null, "", false, "");
         public static Sensor encoder = new Sensor(1, AppResources.SensorEncoder, AppResources.UnitTicks, AppResources.UnitRPM, null, AppResources.SettingTickPerRev, true, AppResources.ConnectEncoder);
         public readonly static Sensor hcsr04 = new Sensor(2, AppResources.SensorHCSR04, AppResources.UnitCentimeters, AppResources.UnitInches, null, "", false, AppResources.ConnectHCSR04);

@@ -48,9 +48,8 @@ namespace ProtoRIOControl {
         /// Called when starting the app (and loading this page) or when returning to this page from another page
         /// </summary>
         protected override void OnAppearing() {
-            // Just returned from some other page that no longer exists
+            // Just returned from bluetooth device page that is no longer visible
             if (bluetoothDevicePage != null) {
-                Debug.WriteLine("NonNull Bt page");
                 bluetoothDevicePage = null;
                 bluetooth.endEnumeration();
                 if (deviceToConnectTo > -1) {
@@ -124,8 +123,6 @@ namespace ProtoRIOControl {
                 });
             }
         }
-
-
 
         #region Bluetooth Write Functions
 
@@ -212,8 +209,6 @@ namespace ProtoRIOControl {
 
         #endregion
 
-
-
         #region Bluetooth Read Processing
 
         /// <summary>
@@ -273,8 +268,6 @@ namespace ProtoRIOControl {
         }
 
         #endregion
-
-
 
         /// <summary>
         /// A callback to be used with the app's IBluetooth object
