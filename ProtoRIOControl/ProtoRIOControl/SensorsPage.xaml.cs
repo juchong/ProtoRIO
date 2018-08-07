@@ -53,6 +53,8 @@ namespace ProtoRIOControl {
         public void disableAll() {
             sensorAPicker.SelectedIndex = 0;
             sensorBPicker.SelectedIndex = 0;
+            sensorAPicker.IsEnabled = false;
+            sensorBPicker.IsEnabled = false;
         }
 
         public void enableAll() {
