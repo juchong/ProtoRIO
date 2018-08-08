@@ -17,7 +17,7 @@ using Acr.UserDialogs;
 using Xamarin.Forms;
 
 namespace ProtoRIOControl.Droid {
-    [Activity(Label = "ProtoRIOControl", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "ProtoRIOControl", Icon = "@mipmap/ic_launcher", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity {
 
         public static Context MainContext;
