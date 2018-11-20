@@ -2,13 +2,10 @@
  * Code for ProtoRio with Bluetooth module 
  * Edited ProtoRIO Rev 1.1: Leonardo using LTC2947 & RN4871
  * Written by Bill Walter
- * Working 8/28/2018
+ * Working 11/19/2018
  */
  
 #include <stdint.h>
-#include "LT_I2C.h"
-#include "UserInterface.h"
-#include "LTC2947.h"
 #include <VL53L0X.h>
 #include <Servo.h>
 #include <Wire.h>
