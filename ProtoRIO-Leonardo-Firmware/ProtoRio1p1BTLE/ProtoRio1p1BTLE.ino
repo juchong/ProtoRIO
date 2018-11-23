@@ -1,8 +1,9 @@
 /*
- * Code for ProtoRio with Bluetooth module 
- * Edited ProtoRIO Rev 1.1: Leonardo using LTC2947 & RN4871
+ * Code for ProtoRio with RN4871 Bluetooth module 
+ * ProtoRIO Rev B: Leonardo using LTC2947 & RN4871
  * Written by Bill Walter
- * Working 11/19/2018
+ * Working 11/19/2018 - Removed unused LTC libraries
+ * Working 11/22/2018 - Add limit stops for motor control (encoder, switch or pot)
  */
  
 #include <stdint.h>
@@ -48,6 +49,9 @@ unsigned int encACntPerRev=1;
 unsigned long lastTime=0;
 unsigned long lastTime2=0;
 long distance=0;
+int PWMBOff=(PWMBMin+PWMBMax)/2;  // PWMB Off Value
+int PWMAOff=(PWMAMin+PWMAMax)/2;  // PWMA Off Value
+int PWMALast=PWMAOff;             // variable to hold last PWMA state
 
 float fAnalog=0;     // Floationg point variable for analog calculations
 int  iAnalog=0;      // Integer variable for analog reading and other calculations
@@ -57,6 +61,13 @@ int  SensorBType=0;  // place holder defines sensor B type (0=none)
 bool BTRD=0;         // Bluetooth call to read sensors
 bool ComEN=0;        // indicates that USB Input is connected and talking
 bool Meter=1;        // set to 0 if LTC2947 is missing
+int LimA=-32767;     // Sets first limit count for ENC/POT (-32,767:off)
+int LimB=-32767;     // Sets second limit count for ENC/POT (-32,767:off)
+byte LimC=0;         // Sets condition for limit switch DIOC (0:off,1:on invert,2:on)
+byte LimD=0;         // Sets condition for limit switch DIOD (0:off,1:on invert,2:on)
+byte Lim=0;          // Indicates when limit is hit (A:1,B:2,C:4,D:8)
+bool PWMADir=0;      // Boolean indicating the direction of PWMA (0:Rev,1:For)
+
 
 void setup() {
   pinMode(AlertPin, INPUT_PULLUP);   // Alert pin for LTC2947 (active low)
@@ -72,9 +83,9 @@ void setup() {
 
   // set servos to drive for off/midpoint position then shut off
   myservoB.attach(PWMBPin);
-  myservoB.writeMicroseconds((PWMBMin+PWMBMax)/2);
+  myservoB.writeMicroseconds(PWMBOff);  // Set PWMB to Off State
   myservoA.attach(PWMAPin);
-  myservoA.writeMicroseconds((PWMAMin+PWMAMax)/2);
+  myservoA.writeMicroseconds(PWMAOff);  // Set PWMA to Off State
 
   delay(500);               // Wait to make sure everything is setup 
   myservoB.detach();
@@ -127,7 +138,77 @@ void loop() {
     BTWrite();
     BTRD=0;
   }
-    
+
+  if (PWMALast != PWMAOff) {
+    if (SensorAType==10 && LimA>-1 && LimB>-1){
+      iAnalog=analogRead(AnalogInAPin);
+      if (PWMADir){
+        if (LimB>LimA){
+          if (iAnalog>=LimB) {
+            myservoA.writeMicroseconds(PWMAOff); // Set PWM to Off state
+            PWMALast=PWMAOff;
+            Lim=2; 
+          }        
+        }
+        else {
+          if (iAnalog<=LimB) {
+            myservoA.writeMicroseconds(PWMAOff); // Set PWM to Off state
+            PWMALast=PWMAOff;
+            Lim=2; 
+          }                
+        }
+      }
+      else {
+        if (LimB>LimA){
+          if (iAnalog<=LimA) {
+            myservoA.writeMicroseconds(PWMAOff); // Set PWM to Off state
+            PWMALast=PWMAOff;
+            Lim=1; 
+          }        
+        }
+        else {
+          if (iAnalog>=LimA) {
+            myservoA.writeMicroseconds(PWMAOff); // Set PWM to Off state
+            PWMALast=PWMAOff;
+            Lim=1; 
+          }                
+        }
+      }
+    }
+    if (PWMADir) {
+      if (LimD == 1) {
+        if (digitalRead(DIODPin)) {
+           myservoA.writeMicroseconds(PWMAOff); // Set PWM to Off state
+           PWMALast=PWMAOff;
+           Lim=8; 
+        }
+      }
+      else if (LimD == 2) {
+        if (!digitalRead(DIODPin)){
+           myservoA.writeMicroseconds(PWMAOff); // Set PWM to Off state
+           PWMALast=PWMAOff;
+           Lim=8;          
+        }      
+      }
+    }
+    else {
+      if (LimC == 1){
+        if (digitalRead(DIOCPin)){
+           myservoA.writeMicroseconds(PWMAOff); // Set PWM to Off state
+           PWMALast=PWMAOff;
+           Lim=4;           
+        }
+      }
+      else if (LimC == 2) {
+        if (!digitalRead(DIOCPin)){
+           myservoA.writeMicroseconds(PWMAOff); // Set PWM to Off state
+           PWMALast=PWMAOff;
+           Lim=4;           
+        }      
+      }
+    } 
+  }
+     
   // Exit mode program, start loop over
 }
 
@@ -138,6 +219,19 @@ void doEncoder() {
   } else {
     encoderCnt++;  // ENC B low on rising edge of ENC A for count down
   }
+  if (PWMADir && LimB>-32767){
+    if (encoderCnt == LimB){
+       myservoA.writeMicroseconds(PWMAOff); // Set PWM to Off state
+       PWMALast=PWMAOff;
+       Lim=2;         
+    }
+  }
+  if (!PWMADir && LimA>-32767){
+    if (encoderCnt == LimA){
+       myservoA.writeMicroseconds(PWMAOff); // Set PWM to Off state
+       PWMALast=PWMAOff;
+       Lim=1;         
+    }
+  }
 }
-
 

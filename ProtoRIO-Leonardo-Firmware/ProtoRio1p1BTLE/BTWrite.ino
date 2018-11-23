@@ -18,7 +18,7 @@ void BTWrite(void) {
     SData += fAnalog;
     // Send NA for battery current information
     SData += "RBINAX";
-    }
+  }
 
   // Read and send Sensor A information
   if ( SensorAType == 1) {                  // Encoder selected
@@ -54,7 +54,13 @@ void BTWrite(void) {
   }
 
   // Read and send Sensor B information
-  if ( SensorBType > 1) {
+  if (LimC || LimD) {
+      SData += "R1B";
+      SData += digitalRead(DIOCPin);
+      SData += "R2B";
+      SData += digitalRead(DIODPin);  
+  }
+  else if ( SensorBType > 1) {
     SensorRead(SensorBType, 1);
     if (SensorBType == 10) {                 // Analog read so just send count
       SData += "R1B";
@@ -72,7 +78,12 @@ void BTWrite(void) {
       iAnalog = fAnalog;
       SData += iAnalog;                      // Distance in in
     }
-    SData += "Z";                            // 'Z' denotes end of Sensor B Results 
+  }
+  SData += "Z";                            // 'Z' denotes end of Sensor B Results 
+  if (Lim>0) {
+    SData += "LIM";
+    SData += Lim;
+    Lim=0;
   }
   SData = String(SData + '\n');
   lastTime =  millis();                      // save current time

@@ -13,12 +13,20 @@ void BTRead(void) {
       if (SData.startsWith("PA")) { 
         SData.remove(0,2);
         iAnalog = SData.toInt();
+        if (iAnalog < 100 ){
+          PWMADir=0;                // PWMA direction is negative
+        }
+        else {
+          PWMADir=1;                // PWMA direction is posative
+        }
+
         if (iAnalog < 0 || iAnalog > 200){
           myservoA.detach();                // Disable the PWM pin if out of range
         }
         else if (iAnalog == 100){
-          myservoA.attach(PWMAPin);                        // Setup the PWM pin to work with servo lib
-          myservoA.writeMicroseconds((PWMAMin+PWMAMax)/2); // Set PWM to Off state         
+          myservoA.attach(PWMAPin);                 // Setup the PWM pin to work with servo lib
+          myservoA.writeMicroseconds(PWMAOff);      // Set PWM to Off state         
+          PWMALast=PWMAOff;
         }
         else {
           //Serial.println(iAnalog);                // for debugging only
@@ -28,7 +36,8 @@ void BTRead(void) {
           //Serial.println(fAnalog);                // for debugging only
           fAnalog=fAnalog+PWMAMin;
           //Serial.println(int(fAnalog));           // for debugging only
-          myservoA.writeMicroseconds(int(fAnalog)); 
+          PWMALast=int(fAnalog);
+          myservoA.writeMicroseconds(PWMALast); 
         }
       }
       else if (SData.startsWith("PB")) { 
@@ -39,7 +48,7 @@ void BTRead(void) {
         }
         else if (iAnalog == 100){
           myservoB.attach(PWMBPin);                        // Setup the PWM pin to work with servo lib
-          myservoB.writeMicroseconds((PWMBMin+PWMBMax)/2); // Set PWM to Off state         
+          myservoB.writeMicroseconds(PWMBOff); // Set PWM to Off state         
         }
         else {
           //Serial.println(iAnalog);                // for debugging only
@@ -112,6 +121,54 @@ void BTRead(void) {
           digitalWrite(SolenoidA, LOW); 
           digitalWrite(SolenoidB, LOW); 
         }
+      }
+      else if (SData.startsWith("ZE")) {           // Zero Encoder Value
+        encoderCnt=0;  
+      }
+      else if (SData.startsWith("LA")) {           // Sets Reverse limit Count
+        SData.remove(0,2);
+        LimA = SData.toInt();
+      }
+      else if (SData.startsWith("LB")) {           // Sets Forward limit Count
+        SData.remove(0,2);
+        LimB = SData.toInt();
+      }
+      else if (SData.startsWith("LC")) {           // Indicator for DIO C limit switch
+        SData.remove(0,2);
+        LimC = SData.toInt();
+        pinMode(DIOCPin, INPUT_PULLUP);            // Set DIOCPin to input w/pull-up
+      }
+      else if (SData.startsWith("LD")) {           // Indicator for DIO D limit switch
+        SData.remove(0,2);
+        LimD = SData.toInt();
+        pinMode(DIODPin, INPUT_PULLUP);            // Set DIODPin to input w/pull-up
+      }
+      else if (SData.startsWith("OA")) {          // Set Off value for PWMA
+        SData.remove(0,2);
+        iAnalog = SData.toInt();
+        //Serial.println(iAnalog);                // for debugging only
+        fAnalog=(PWMBMax-PWMBMin)/200;
+        //Serial.println(fAnalog);                // for debugging only
+        fAnalog=fAnalog*iAnalog;
+        //Serial.println(fAnalog);                // for debugging only
+        fAnalog=fAnalog+PWMBMin;
+        //Serial.println(int(fAnalog));           // for debugging only
+        PWMAOff=int(fAnalog); 
+        myservoA.writeMicroseconds(PWMAOff);
+        PWMALast=PWMAOff;      
+        }
+      else if (SData.startsWith("OB")) {          // Set Off value for PWMB
+        SData.remove(0,2);
+        iAnalog = SData.toInt();
+        //Serial.println(iAnalog);                // for debugging only
+        fAnalog=(PWMBMax-PWMBMin)/200;
+        //Serial.println(fAnalog);                // for debugging only
+        fAnalog=fAnalog*iAnalog;
+        //Serial.println(fAnalog);                // for debugging only
+        fAnalog=fAnalog+PWMBMin;
+        //Serial.println(int(fAnalog));           // for debugging only
+        PWMBOff=int(fAnalog); 
+        myservoB.writeMicroseconds(PWMBOff);
       }
       SData = "";
     }
